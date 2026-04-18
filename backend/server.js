@@ -28,13 +28,17 @@ import socketService from './services/socketService.js';
 
 // Express Middleware
 const app = express();
-const server = http.createServer(app);
-const PORT = process.env.PORT || 5001;
 
+if (process.env.MODE === "production"){
+app.set('trust proxy', 1);
+}
 app.use(cors({
   origin: process.env.MODE === "production" ? process.env.ORIGIN : '*',
   credentials: true,
 }));
+
+const server = http.createServer(app);
+const PORT = process.env.PORT || 5001;
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
