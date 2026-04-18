@@ -32,32 +32,15 @@ export const SocketProvider = ({ children }) => {
 
         const rawUrl = import.meta.env.VITE_API_URL || window.location.origin;
         
-        // Parse the URL to handle cases where it might include a path (like /api)
-        // Socket.io-client interprets paths in the URL as namespaces, 
-        // but we want the default namespace ('/') with a specific connection path.
-        let socketOrigin = rawUrl;
-        let socketPath = '/socket.io'; // Default Socket.io path
-
-        try {
-            const url = new URL(rawUrl);
-            socketOrigin = url.origin;
-            if (url.pathname !== '/') {
-                // If VITE_API_URL is "https://domain.com/api", 
-                // then path should be "/api/socket.io"
-                socketPath = `${url.pathname.replace(/\/$/, '')}/socket.io`;
-            }
-        } catch (e) {
-            // Fallback for relative URLs or invalid URLs
-            if (rawUrl.startsWith('/')) {
-                socketPath = `${rawUrl.replace(/\/$/, '')}/socket.io`;
-                socketOrigin = window.location.origin;
-            }
-        }
+        // Strip the '/api' suffix if present to connect to the root-level socket server
+        // This ensures we connect to the default namespace ('/') and avoids 
+        // connection issues on proxied paths that might not support WebSockets.
+        const socketOrigin = rawUrl.replace(/\/api$/, '');
 
         const newSocket = io(socketOrigin, {
-            path: socketPath,
             withCredentials: true,
-            transports: ['websocket']
+            // Removing explicit 'websocket' transport allows Socket.io to 
+            // use long-polling as a fallback if necessary, which is more reliable.
         });
 
         newSocket.on('connect', () => {
