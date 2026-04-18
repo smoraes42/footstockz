@@ -1,0 +1,162 @@
+
+
+CREATE TABLE `users` (
+  `id`                 INT           NOT NULL AUTO_INCREMENT,
+  `username`           VARCHAR(50)   NOT NULL,
+  `email`              VARCHAR(255)  NOT NULL,
+  `password`           VARCHAR(72)   DEFAULT NULL,
+  `google_id`          VARCHAR(255)  DEFAULT NULL,
+  `avatar_url`         VARCHAR(512)  DEFAULT NULL,
+  `is_verified`        TINYINT(1)    NOT NULL DEFAULT 0,
+  `verification_token` VARCHAR(10)   DEFAULT NULL,
+  `login_attempts`     INT           NOT NULL DEFAULT 0,
+  `lockout_until`      TIMESTAMP     NULL     DEFAULT NULL,
+  `created_at`         TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`         TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_username`  (`username`),
+  UNIQUE KEY `uq_email`     (`email`),
+  UNIQUE KEY `uq_google_id` (`google_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `wallets` (
+  `id`         INT             NOT NULL AUTO_INCREMENT,
+  `user_id`    INT             NOT NULL,
+  `value`      DECIMAL(15,6)   NOT NULL DEFAULT 100.000000,
+  `created_at` TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_wallet_user` (`user_id`),
+  CONSTRAINT `wallets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `leagues` (
+  `id`         INT          NOT NULL AUTO_INCREMENT,
+  `name`       VARCHAR(100) NOT NULL,
+  `country`    VARCHAR(50)  NOT NULL,
+  `created_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+CREATE TABLE `teams` (
+  `id`         INT          NOT NULL AUTO_INCREMENT,
+  `name`       VARCHAR(100) NOT NULL,
+  `league_id`  INT          NOT NULL,
+  `created_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_teams_league` (`league_id`),
+  CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`league_id`) REFERENCES `leagues` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `players` (
+  `id`              INT           NOT NULL AUTO_INCREMENT,
+  `full_name`       VARCHAR(100)  NOT NULL,
+  `nationality`     VARCHAR(50)   DEFAULT NULL,
+  `position`        VARCHAR(50)   NOT NULL, 
+  `team_id`         INT           NOT NULL,
+  `initial_price`   DECIMAL(15,6) NOT NULL DEFAULT 0.000000,
+  `reference_price` DECIMAL(15,6) NOT NULL DEFAULT 0.000000,
+  `total_stock`     INT           NOT NULL DEFAULT 0,
+  `pool_stock`      INT           NOT NULL DEFAULT 0,
+  `pool_amount`     DECIMAL(15,6) NOT NULL DEFAULT 0.000000,
+  `created_at`      TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`      TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_players_team`  (`team_id`),
+  KEY `idx_players_price` (`initial_price`),
+  CONSTRAINT `players_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `orders` (
+  `id`         INT          NOT NULL AUTO_INCREMENT,
+  `user_id`    INT          NOT NULL,
+  `player_id`  INT          NOT NULL,
+  `amount`     DECIMAL(15,6) NOT NULL,
+  `proportion` DECIMAL(15,6) NOT NULL,
+  `type`       VARCHAR(30)  NOT NULL,
+  `created_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_orders_user`   (`user_id`),
+  KEY `idx_orders_player` (`player_id`),
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`)   REFERENCES `users`   (`id`) ON DELETE CASCADE,
+  CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `player_positions` (
+  `id`         INT           NOT NULL AUTO_INCREMENT,
+  `user_id`    INT           NOT NULL,
+  `player_id`  INT           NOT NULL,
+  `proportion` DECIMAL(15,6) NOT NULL,
+  `created_at` TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_position` (`user_id`, `player_id`),
+  KEY `idx_positions_player` (`player_id`),
+  CONSTRAINT `player_positions_ibfk_1` FOREIGN KEY (`user_id`)   REFERENCES `users`   (`id`) ON DELETE CASCADE,
+  CONSTRAINT `player_positions_ibfk_2` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `team_positions` (
+  `id`         INT           NOT NULL AUTO_INCREMENT,
+  `user_id`    INT           NOT NULL,
+  `team_id`    INT           NOT NULL,
+  `proportion` DECIMAL(15,6) NOT NULL,
+  `created_at` TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_team_position` (`user_id`, `team_id`),
+  KEY `idx_team_positions_team` (`team_id`),
+  CONSTRAINT `team_positions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `team_positions_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `portfolio_history` (
+  `id`             INT           NOT NULL AUTO_INCREMENT,
+  `user_id`        INT           NOT NULL,
+  `wallet_value`   DECIMAL(15,6) NOT NULL,
+  `holdings_value` DECIMAL(15,6) NOT NULL,
+  `total_equity`   DECIMAL(15,6) NOT NULL,
+  `created_at`     TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_ph_user_time` (`user_id`, `created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `trades` (
+  `id`          INT           NOT NULL AUTO_INCREMENT,
+  `user_id`     INT           NOT NULL,
+  `player_id`   INT           NULL,
+  `team_id`     INT           NULL,
+  `side`        ENUM('buy','sell') NOT NULL,
+  `price`       DECIMAL(15,6) NOT NULL,
+  `quantity`    DECIMAL(15,6) NOT NULL,
+  `total_value` DECIMAL(15,6) NOT NULL,
+  `created_at`  TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_trades_user`   (`user_id`),
+  KEY `idx_trades_player` (`player_id`),
+  KEY `idx_trades_team`   (`team_id`),
+  CONSTRAINT `trades_ibfk_1` FOREIGN KEY (`user_id`)   REFERENCES `users`   (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trades_ibfk_2` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trades_ibfk_3` FOREIGN KEY (`team_id`)   REFERENCES `teams`   (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `player_prices` (
+  `id`         INT           NOT NULL AUTO_INCREMENT,
+  `player_id`  INT           NOT NULL,
+  `price`      DECIMAL(15,6) NOT NULL,
+  `created_at` TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_pp_player_time` (`player_id`, `created_at`),
+  CONSTRAINT `player_prices_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

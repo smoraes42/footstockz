@@ -1,0 +1,8 @@
+tests/
+.env
+node_modules/
+.DS_Store
+*.bak
+*.env.*
+*.log
+backups/
