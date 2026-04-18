@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall" : "cd website && npm ci && npm run buiild",
+    "postinstall" : "cd website && npm ci && npm run build",
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js"
   },
