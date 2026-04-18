@@ -32,7 +32,7 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 5001;
 
 app.use(cors({
-  origin: process.env.MODE === "production" ? proces.env.ORIGIN : '*',
+  origin: process.env.MODE === "production" ? process.env.ORIGIN : '*',
   credentials: true,
 }));
 
