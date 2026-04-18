@@ -81,6 +81,7 @@ app.get("/*splat", (req, res) => {
 
 const testDbConnection = async (pool, name) => {
   try {
+    console.log('[DEBUG]: FORBIDDEEN CHAR: ', process.env.SMTP_PASSWORD)
     const connection = await pool.getConnection();
     console.log(`Successfully connected to Database: ${name}`);
     connection.release();
