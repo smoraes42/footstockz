@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import { getMe, API_URL } from '../services/api';
 
-const API_BASE = `${API_URL}/api/v1`;
+const API_BASE = `${API_URL}/v1`;
 
 const LeaderboardMobile = () => {
     const navigate = useNavigate();

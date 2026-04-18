@@ -41,7 +41,7 @@ const playSuccessSound = () => {
     }
 };
 
-const API_BASE = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/v1`;
+const API_BASE = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/v1`;
 
 const formatEU = (val, decimals = 2) => {
     if (val === null || val === undefined || val === '') return '';

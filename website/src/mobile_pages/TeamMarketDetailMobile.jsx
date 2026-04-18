@@ -76,7 +76,7 @@ export default function TeamMarketDetailMobile() {
         const fetchConfig = async () => {
             try {
                 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001';
-                const res = await fetch(`${API_BASE}/api/v1/trades/config`, { credentials: 'include' });
+                const res = await fetch(`${API_BASE}/v1/trades/config`, { credentials: 'include' });
                 const config = await res.json();
                 if (config.PRICE_IMPACT_FACTOR) setKFactor(config.PRICE_IMPACT_FACTOR);
             } catch (err) { console.error(err); }

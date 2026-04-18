@@ -339,7 +339,7 @@ const MarketMobile = () => {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                                         <div style={{ width: '45px', height: '45px', borderRadius: '10px', backgroundColor: 'var(--surface-lighter)', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
                                             <img
-                                                src={`${API_URL}/api/v1/players/${player.id}/image`}
+                                                src={`${API_URL}/v1/players/${player.id}/image`}
                                                 alt={player.name}
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 onError={(e) => {
