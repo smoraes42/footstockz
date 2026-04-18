@@ -1,6 +1,6 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
-const API_BASE = `${API_URL}/api/v1/user`;
-const API_PLAYERS = `${API_URL}/api/v1/players`;
+export const API_URL = import.meta.env.VITE_API_URL;
+const API_BASE = `${API_URL}/v1/user`;
+const API_PLAYERS = `${API_URL}/v1/players`;
 
 export const getPlayers = async (params = {}) => {
     const { page = 1, limit = 50, search = '', league_id = '', team_id = '', sort_by = '', sort_dir = '' } = params;
@@ -54,7 +54,7 @@ export const getLeagues = async () => {
 };
 
 export const getPortfolio = async () => {
-    const res = await fetch(`${API_URL}/api/v1/portfolio`, {
+    const res = await fetch(`${API_URL}/v1/portfolio`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -67,7 +67,7 @@ export const getPortfolio = async () => {
 };
 
 export const getPortfolioHistory = async (timeframe = '1D') => {
-    const res = await fetch(`${API_URL}/api/v1/portfolio/history?timeframe=${timeframe}`, {
+    const res = await fetch(`${API_URL}/v1/portfolio/history?timeframe=${timeframe}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -186,7 +186,7 @@ export const getTeamMarket = async (search = '', league_id = null) => {
     if (search) queryParams.append('search', search);
     if (league_id) queryParams.append('league_id', league_id);
     
-    const url = `${API_URL}/api/v1/teams/market?${queryParams.toString()}`;
+    const url = `${API_URL}/v1/teams/market?${queryParams.toString()}`;
     const res = await fetch(url, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -198,7 +198,7 @@ export const getTeamMarket = async (search = '', league_id = null) => {
 };
 
 export const getTeamById = async (id) => {
-    const res = await fetch(`${API_URL}/api/v1/teams/${id}`, {
+    const res = await fetch(`${API_URL}/v1/teams/${id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
@@ -209,7 +209,7 @@ export const getTeamById = async (id) => {
 };
 
 export const getTeamHistory = async (id) => {
-    const res = await fetch(`${API_URL}/api/v1/teams/${id}/history`, {
+    const res = await fetch(`${API_URL}/v1/teams/${id}/history`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
@@ -221,7 +221,7 @@ export const getTeamHistory = async (id) => {
 
 
 export const teamMarketBuy = async (teamId, totalValue) => {
-    const res = await fetch(`${API_URL}/api/v1/trades/team-market-buy`, {
+    const res = await fetch(`${API_URL}/v1/trades/team-market-buy`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -233,7 +233,7 @@ export const teamMarketBuy = async (teamId, totalValue) => {
 };
 
 export const teamMarketSell = async (teamId, quantity) => {
-    const res = await fetch(`${API_URL}/api/v1/trades/team-market-sell`, {
+    const res = await fetch(`${API_URL}/v1/trades/team-market-sell`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -245,7 +245,7 @@ export const teamMarketSell = async (teamId, quantity) => {
 };
 
 export const getUserTradeHistory = async () => {
-    const res = await fetch(`${API_URL}/api/v1/trades/user/history`, {
+    const res = await fetch(`${API_URL}/v1/trades/user/history`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'

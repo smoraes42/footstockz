@@ -501,7 +501,7 @@ const HomeMobile = () => {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                         <div style={{ width: '42px', height: '42px', borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', backgroundColor: 'var(--surface-dark)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                             <img 
-                                                src={`${import.meta.env.VITE_API_URL}/api/v1/players/${player.id}/image`}
+                                                src={`${import.meta.env.VITE_API_URL}/v1/players/${player.id}/image`}
                                                 alt={player.name}
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 onError={(e) => { e.target.style.display = 'none'; }}

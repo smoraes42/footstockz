@@ -5,7 +5,7 @@ import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
 
 
-const API_BASE = `${import.meta.env.VITE_API_URL}/api/v1`;
+const API_BASE = `${import.meta.env.VITE_API_URL}/v1`;
 
 export default function LeaderboardDesktop() {
     const navigate = useNavigate();

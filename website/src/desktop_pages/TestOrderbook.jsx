@@ -3,7 +3,7 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 
-const API_BASE = `${import.meta.env.VITE_API_URL}/api/v1`;
+const API_BASE = `${import.meta.env.VITE_API_URL}/v1`;
 
 export default function TestOrderbook() {
     const [users, setUsers] = useState([]);

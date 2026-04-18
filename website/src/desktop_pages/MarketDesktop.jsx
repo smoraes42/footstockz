@@ -8,8 +8,6 @@ import { useAuth } from '../context/AuthContext';
 import TeamsMarketDesktop from './TeamsMarketDesktop';
 
 
-
-
 const MarketDesktop = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
@@ -382,7 +380,7 @@ const MarketDesktop = () => {
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                                     {/* Using the image endpoint wrapper directly for UI display */}
                                                     <img
-                                                        src={`${import.meta.env.VITE_API_URL}/api/v1/players/${player.id}/image`}
+                                                        src={`${import.meta.env.VITE_API_URL}/v1/players/${player.id}/image`}
                                                         alt={player.name}
                                                         onError={(e) => {
                                                             e.target.style.display = 'none';
@@ -471,7 +469,7 @@ const MarketDesktop = () => {
                                         >
                                             <div style={{ position: 'relative', width: '100px', height: '100px', marginBottom: '1rem' }}>
                                                 <img
-                                                    src={`${import.meta.env.VITE_API_URL}/api/v1/players/${player.id}/image`}
+                                                    src={`${import.meta.env.VITE_API_URL}/v1/players/${player.id}/image`}
                                                     alt={player.name}
                                                     onError={(e) => {
                                                         e.target.style.display = 'none';

@@ -557,7 +557,7 @@ const HomeDesktop = () => {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
                     <div style={{ width: '50px', height: '50px', borderRadius: '12px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.05)', backgroundColor: 'var(--surface-lighter)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <img 
-                        src={`${import.meta.env.VITE_API_URL}/api/v1/players/${player.id}/image`}
+                        src={`${import.meta.env.VITE_API_URL}/v1/players/${player.id}/image`}
                         alt={player.name}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         onError={(e) => { e.target.style.display = 'none'; }}
