@@ -26,6 +26,7 @@ const transporter = nodemailer.createTransport({
 transporter.verify(function (error, success) {
     if (error) {
         console.error('SMTP Connection Error:', error);
+        console.log('[debug] Password:', process.env.SMTP_PASSWORD)
     } else {
         console.log('SMTP Server is ready to take our messages');
     }
