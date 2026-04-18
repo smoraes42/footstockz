@@ -110,10 +110,14 @@ export default function PlayerMarketDesktop() {
             const trades = Array.isArray(tradesData) ? tradesData : [];
 
             // Format time for Recharts
-            const formattedHistory = (history || []).map(h => ({
-                ...h,
-                time: new Date(h.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-            }));
+            const formattedHistory = (history || []).map(h => {
+                const time = new Date(h.time);
+                return {
+                    ...h,
+                    price: parseFloat(h.price) || 0,
+                    time: isNaN(time.getTime()) ? 'Invalid' : time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+                };
+            });
 
             setPriceHistory(formattedHistory);
             setTradeHistory(trades || []);

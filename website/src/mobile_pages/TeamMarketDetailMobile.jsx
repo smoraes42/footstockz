@@ -60,10 +60,14 @@ export default function TeamMarketDetailMobile() {
                 getPortfolio(),
                 getTeamById(teamId)
             ]);
-            setPriceHistory((history || []).map(h => ({
-                ...h,
-                time: new Date(h.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            })));
+            setPriceHistory((history || []).map(h => {
+                const time = new Date(h.time);
+                return {
+                    ...h,
+                    price: parseFloat(h.price) || 0,
+                    time: isNaN(time.getTime()) ? 'Invalid' : time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+            }));
             setPortfolio(port);
             setTeam(tData);
         } catch (err) {

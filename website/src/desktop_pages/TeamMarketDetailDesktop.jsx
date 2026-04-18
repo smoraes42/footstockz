@@ -66,10 +66,14 @@ export default function TeamMarketDetailDesktop() {
                 getTeamById(teamId)
             ]);
 
-            const formattedHistory = (history || []).map(h => ({
-                ...h,
-                time: new Date(h.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            }));
+            const formattedHistory = (history || []).map(h => {
+                const time = new Date(h.time);
+                return {
+                    ...h,
+                    price: parseFloat(h.price) || 0,
+                    time: isNaN(time.getTime()) ? 'Invalid' : time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+            });
 
             setPriceHistory(formattedHistory);
             setPortfolio(port);
@@ -114,6 +118,31 @@ export default function TeamMarketDetailDesktop() {
             return () => unsubscribeFromUser(user.id);
         }
     }, [user, subscribeToUser, unsubscribeFromUser]);
+
+    // WebSocket Listeners for team price updates
+    useEffect(() => {
+        if (!socket || !connected || !teamId) return;
+
+        // Note: For teams, the server might not have a specific 'team' subscription,
+        // but we can listen to all 'price_update' events and recalculate if needed,
+        // or the server might emit 'team_price_update'.
+        // Based on backend/services/socketService.js, emitPriceUpdate is called for players.
+        // Teams are aggregate, so we might need a general listener or a specific team one if implemented.
+        
+        const handlePriceUpdate = (data) => {
+            // If the updated player belongs to this team, we should probably refresh the team data
+            // or perform a partial update. For now, hitting fetchData is safest for index consistency.
+            if (team && team.players && team.players.some(p => p.id === data.playerId)) {
+                fetchData();
+            }
+        };
+
+        socket.on('price_update', handlePriceUpdate);
+
+        return () => {
+            socket.off('price_update', handlePriceUpdate);
+        };
+    }, [socket, connected, teamId, team, fetchData]);
 
     const calculateQuantityFromBuyValue = (value, p0) => {
         if (!value || !p0 || p0 <= 0) return '';

@@ -114,11 +114,14 @@ const PlayerMarketMobile = () => {
             const history = Array.isArray(historyData) ? historyData : [];
             const trades = Array.isArray(tradesData) ? tradesData : [];
 
-            const formattedHistory = (history || []).map(h => ({
-                ...h,
-                timestamp: new Date(h.time).getTime(),
-                price: parseFloat(h.price)
-            }));
+            const formattedHistory = (history || []).map(h => {
+                const time = new Date(h.time);
+                return {
+                    ...h,
+                    timestamp: isNaN(time.getTime()) ? Date.now() : time.getTime(),
+                    price: parseFloat(h.price) || 0
+                };
+            });
 
             setPriceHistory(formattedHistory);
             setTradeHistory(trades || []);
