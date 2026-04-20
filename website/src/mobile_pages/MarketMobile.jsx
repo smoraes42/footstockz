@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { getPlayers, getMe, getLeagues, API_URL } from '../services/api';
+import { LineChart, Line, ResponsiveContainer } from 'recharts';
+import { getPlayers, getMe, getLeagues, getPlayerImageUrl } from '../services/api';
 import fsLogo from '../assets/fs-logo.png';
 import { useSocket } from '../context/SocketContext';
 import TeamsMarketMobile from './TeamsMarketMobile';
@@ -54,7 +55,8 @@ const MarketMobile = () => {
             const playersWithPrices = data.map(p => {
                 const priceNum = parseFloat(p.price) || 0;
                 const changeNum = parseFloat(p.change || 0);
-                return { ...p, price: priceNum, change: changeNum };
+                const sparkline = [priceNum, priceNum, priceNum, priceNum, priceNum];
+                return { ...p, price: priceNum, change: changeNum, sparkline };
             });
 
             if (pageToFetch === 1) {
@@ -95,18 +97,39 @@ const MarketMobile = () => {
         if (!socket || !connected) return;
 
         const handlePriceUpdate = (data) => {
-            // Visual feedback
             setUpdatedPlayerId(data.playerId);
             setTimeout(() => setUpdatedPlayerId(null), 1000);
 
-            setPlayers(prev => prev.map(p => {
-                if (p.id === data.playerId) {
-                    const priceNum = data.price;
-                    const changeNum = parseFloat(data.change || 0);
-                    return { ...p, price: priceNum, change: changeNum };
+            setPlayers(prev => {
+                const updated = prev.map(p => {
+                    if (p.id === data.playerId) {
+                        const priceNum = data.price;
+                        const changeNum = parseFloat(data.change || 0);
+                        const newSparkline = [...(p.sparkline || [priceNum]).slice(1), priceNum];
+                        return { ...p, price: priceNum, change: changeNum, sparkline: newSparkline };
+                    }
+                    return p;
+                });
+
+                // Live re-sort if active (matches desktop behaviour)
+                if (sortConfig.key && sortConfig.direction !== 'default') {
+                    updated.sort((a, b) => {
+                        let valA = a[sortConfig.key];
+                        let valB = b[sortConfig.key];
+                        if (sortConfig.key === 'name') {
+                            valA = (valA || '').toString().toLowerCase();
+                            valB = (valB || '').toString().toLowerCase();
+                        } else {
+                            valA = parseFloat(valA || 0);
+                            valB = parseFloat(valB || 0);
+                        }
+                        if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+                        if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+                        return 0;
+                    });
                 }
-                return p;
-            }));
+                return updated;
+            });
         };
 
         socket.on('price_update', handlePriceUpdate);
@@ -114,7 +137,7 @@ const MarketMobile = () => {
         return () => {
             socket.off('price_update', handlePriceUpdate);
         };
-    }, [socket, connected]);
+    }, [socket, connected, sortConfig]);
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -251,10 +274,10 @@ const MarketMobile = () => {
                                     <div className={styles['mobile-player-info']}>
                                         <div className={styles['mobile-player-avatar-box']}>
                                             <img
-                                                src={`${API_URL}/v1/players/${player.id}/image`}
+                                                src={getPlayerImageUrl(player.id)}
                                                 alt={player.name}
                                                 className={styles['mobile-player-avatar-img']}
-                                                onError={(e) => { e.target.style.display = 'none'; }}
+                                                onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
                                             />
                                             <span className={styles['mobile-player-avatar-placeholder']}>👤</span>
                                         </div>
@@ -264,9 +287,24 @@ const MarketMobile = () => {
                                         </div>
                                     </div>
 
-                                    <div className={styles['mobile-player-price-box']}>
-                                        <PlayerPrice price={player.price} isUpdated={updatedPlayerId === player.id} className={styles['mobile-player-price']} />
-                                        <PlayerChange change={player.change} indicatorType="sign" className={styles['mobile-player-change']} />
+                                    <div className={styles['mobile-player-right']}>
+                                        <div className={styles['mobile-sparkline-wrapper']}>
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <LineChart data={(player.sparkline || []).map((v, i) => ({ v, i }))}>
+                                                    <Line
+                                                        type="monotone"
+                                                        dataKey="v"
+                                                        stroke={player.change >= 0 ? 'var(--accent-neon)' : 'var(--error-red)'}
+                                                        strokeWidth={2}
+                                                        dot={false}
+                                                    />
+                                                </LineChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                        <div className={styles['mobile-player-price-box']}>
+                                            <PlayerPrice price={player.price} isUpdated={updatedPlayerId === player.id} className={styles['mobile-player-price']} />
+                                            <PlayerChange change={player.change} indicatorType="sign" className={styles['mobile-player-change']} />
+                                        </div>
                                     </div>
                                 </Link>
                             ))

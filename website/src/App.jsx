@@ -51,7 +51,7 @@ function App() {
   }, []);
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', width: '100%', overflow: 'hidden' }}>
+    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100dvh', width: '100vw', maxWidth: '100vw', overflowX: 'hidden' }}>
       {loading && (
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,

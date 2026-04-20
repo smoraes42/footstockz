@@ -680,6 +680,18 @@
     gap: 0.25rem;
 }
 
+.mobile-player-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.mobile-sparkline-wrapper {
+    width: 60px;
+    height: 36px;
+}
+
 .mobile-player-price {
     font-weight: 800;
     font-size: 0.95rem;

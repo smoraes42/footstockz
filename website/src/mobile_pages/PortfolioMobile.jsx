@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import { getPortfolio, getMe, getUserTradeHistory } from '../services/api';
+import { useSocket } from '../context/SocketContext';
 import styles from '../styles/Portfolio.module.css';
 
 const formatCompactNumber = (number) => {
     if (number >= 1000000) {
-        return (number / 1000000).toFixed(1) + 'M';
+        return (number / 1000000).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'M €';
     }
     if (number >= 1000) {
-        return (number / 1000).toFixed(1) + 'K';
+        return (number / 1000).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'K €';
     }
-    return Number(number).toFixed(2);
+    return Number(number).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 };
 
 const PortfolioMobile = () => {
@@ -23,19 +24,17 @@ const PortfolioMobile = () => {
     const [loadingTrades, setLoadingTrades] = useState(true);
     const [showActivity, setShowActivity] = useState(true);
 
-    const [sortConfig, setSortConfig] = useState({ key: 'player_name', direction: 'asc' });
+    const { socket, connected } = useSocket();
 
-    const requestSort = (key) => {
-        let direction = 'asc';
-        if (sortConfig.key === key && sortConfig.direction === 'asc') {
-            direction = 'desc';
+    const fetchPortfolioData = async () => {
+        try {
+            const data = await getPortfolio();
+            setPortfolio(data);
+        } catch (error) {
+            console.error('Failed to load portfolio:', error);
+        } finally {
+            setLoading(false);
         }
-        setSortConfig({ key, direction });
-    };
-
-    const getSortIndicator = (key) => {
-        if (sortConfig.key !== key) return '';
-        return sortConfig.direction === 'asc' ? ' ↑' : ' ↓';
     };
 
     useEffect(() => {
@@ -58,6 +57,38 @@ const PortfolioMobile = () => {
         };
         fetchData();
     }, []);
+
+    // WebSocket real-time price updates (same as desktop)
+    useEffect(() => {
+        if (!socket || !connected) return;
+
+        const handlePriceUpdate = (data) => {
+            setPortfolio(prev => {
+                if (!prev) return prev;
+                const k = 0.0001;
+                const updatedHoldings = (prev.holdings || []).map(h => {
+                    if (h.player_id === data.playerId) {
+                        const newPrice = data.price;
+                        const shares = parseFloat(h.shares_owned) || 0;
+                        const newValue = (newPrice / k) * (1 - Math.exp(-k * shares));
+                        return { ...h, current_price: newPrice, position_value: newValue };
+                    }
+                    return h;
+                });
+                return { ...prev, holdings: updatedHoldings };
+            });
+        };
+
+        const handlePortfolioUpdate = () => fetchPortfolioData();
+
+        socket.on('price_update', handlePriceUpdate);
+        socket.on('portfolio_update', handlePortfolioUpdate);
+
+        return () => {
+            socket.off('price_update', handlePriceUpdate);
+            socket.off('portfolio_update', handlePortfolioUpdate);
+        };
+    }, [socket, connected]);
 
     const walletBalance = portfolio ? portfolio.walletBalance : 0;
     const rawHoldings = portfolio ? portfolio.holdings || [] : [];
@@ -190,8 +221,13 @@ const PortfolioMobile = () => {
                                         </div>
 
                                         <div className={styles['mobile-asset-value-box']}>
-                                            <p className={styles['mobile-asset-price']}>€{item.position_value.toFixed(2)}</p>
-                                            <p className={styles['mobile-asset-price-sub']}>€{item.current_price.toFixed(2)}/u</p>
+                                            <p className={styles['mobile-asset-price']}>{item.position_value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                                            <p className={styles['mobile-asset-price-sub']}>{item.current_price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €/u</p>
+                                            {item.variation_24h !== undefined && (
+                                                <p className={`${styles['mobile-asset-change']} ${item.variation_24h >= 0 ? styles['mobile-change-positive'] : styles['mobile-change-negative']}`}>
+                                                    {item.variation_24h >= 0 ? '+' : ''}{Number(item.variation_24h).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
+                                                </p>
+                                            )}
                                         </div>
                                     </Link>
                                 ))}
@@ -237,10 +273,10 @@ const PortfolioMobile = () => {
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className={styles['mobile-asset-value-box']}>
-                                            <p className={styles['mobile-activity-value']}>{parseFloat(trade.total_value).toFixed(2)} €</p>
-                                            <p className={styles['mobile-activity-shares']}>{parseFloat(trade.quantity).toFixed(4)} Acc.</p>
-                                        </div>
+                                    <div className={styles['mobile-asset-value-box']}>
+                                        <p className={styles['mobile-activity-value']}>{parseFloat(trade.total_value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                                        <p className={styles['mobile-activity-shares']}>{parseFloat(trade.quantity).toFixed(4)} Acc.</p>
+                                    </div>
                                     </div>
                                 ))}
                             </div>

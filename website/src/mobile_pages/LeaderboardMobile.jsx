@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import { getMe, getLeaderboard } from '../services/api';
+import { useSocket } from '../context/SocketContext';
 import styles from '../styles/Leaderboard.module.css';
 
 const LeaderboardMobile = () => {
@@ -10,6 +11,7 @@ const LeaderboardMobile = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
+    const { socket, connected } = useSocket();
 
     useEffect(() => {
         const fetchLeaderboard = async () => {
@@ -35,6 +37,29 @@ const LeaderboardMobile = () => {
         };
         fetchUser();
     }, []);
+
+    // Debounced WebSocket refresh (same as desktop)
+    useEffect(() => {
+        if (!socket || !connected) return;
+
+        let debounceTimer;
+        const handlePriceUpdate = () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const data = await getLeaderboard();
+                    setUsers(data);
+                } catch (err) { console.error(err); }
+            }, 3000);
+        };
+
+        socket.on('price_update', handlePriceUpdate);
+
+        return () => {
+            clearTimeout(debounceTimer);
+            socket.off('price_update', handlePriceUpdate);
+        };
+    }, [socket, connected]);
 
     return (
         <div className={styles['mobile-container']}>
@@ -73,13 +98,13 @@ const LeaderboardMobile = () => {
                                     <div>
                                         <p className={styles['mobile-user-name']}>{item.username}</p>
                                         <p className={`${styles['mobile-user-change']} ${item.change24h >= 0 ? styles['mobile-change-positive'] : styles['mobile-change-negative']}`}>
-                                            {item.change24h > 0 ? '+' : ''}{item.change24h}%
+                                            {item.change24h > 0 ? '+' : ''}{Number(item.change24h).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className={styles['mobile-user-value-box']}>
-                                    <p className={styles['mobile-user-value']}>€{Number(item.portfolio_value).toFixed(2)}</p>
+                                    <p className={styles['mobile-user-value']}>{Number(item.portfolio_value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
                                 </div>
                             </Link>
                         ))

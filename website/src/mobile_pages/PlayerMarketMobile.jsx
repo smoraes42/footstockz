@@ -48,7 +48,6 @@ const PlayerMarketMobile = () => {
     const [marketBuyQty, setMarketBuyQty] = useState('');
     const [marketSellQty, setMarketSellQty] = useState('');
     const [marketSellTotal, setMarketSellTotal] = useState('');
-    const [maxSlippage, setMaxSlippage] = useState('0.5'); // 0.5% default
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -396,11 +395,12 @@ const PlayerMarketMobile = () => {
                                 <div className={styles['mobile-input-group']}>
                                     <label className={styles['mobile-input-label']}>CANTIDAD</label>
                                     <input
-                                        type="number"
-                                        placeholder="0.00"
+                                        type="text"
+                                        placeholder="0,0000"
                                         value={marketBuyQty}
                                         onChange={e => {
                                             const val = e.target.value;
+                                            if (val && !/^[0-9.,]*$/.test(val)) return;
                                             setMarketBuyQty(val);
                                             if (val && currentPlayer?.price) {
                                                 setMarketBuyTotal(calculateValueFromQuantity(val, currentPlayer.price));
@@ -414,11 +414,12 @@ const PlayerMarketMobile = () => {
                                 <div className={styles['mobile-input-group']}>
                                     <label className={styles['mobile-input-label']}>TOTAL (€)</label>
                                     <input
-                                        type="number"
-                                        placeholder="0.00"
+                                        type="text"
+                                        placeholder="0,00"
                                         value={marketBuyTotal}
                                         onChange={e => {
                                             const val = e.target.value;
+                                            if (val && !/^[0-9.,]*$/.test(val)) return;
                                             setMarketBuyTotal(val);
                                             if (val && currentPlayer?.price) {
                                                 setMarketBuyQty(calculateQuantityFromValue(val, currentPlayer.price));
@@ -434,28 +435,6 @@ const PlayerMarketMobile = () => {
                                 {[0.25, 0.5, 1].map(p => (
                                     <button key={p} onClick={() => handleQuickBuy(p)} className={styles['mobile-quick-select-btn']}>{p * 100}%</button>
                                 ))}
-                            </div>
-
-                            {/* Slippage Settings */}
-                            <div className={styles['mobile-slippage-box']}>
-                                <label className={styles['mobile-input-label']}>SLIPPAGE (%)</label>
-                                <div className={styles['mobile-slippage-row']}>
-                                    {['0.1', '0.5', '1.0'].map(val => (
-                                        <button
-                                            key={val}
-                                            onClick={() => setMaxSlippage(val)}
-                                            className={`${styles['mobile-slippage-btn']} ${maxSlippage === val ? styles['mobile-slippage-btn-active'] : ''}`}
-                                        >
-                                            {val}%
-                                        </button>
-                                    ))}
-                                    <input
-                                        type="number"
-                                        value={maxSlippage}
-                                        onChange={e => setMaxSlippage(e.target.value)}
-                                        className={styles['mobile-slippage-input']}
-                                    />
-                                </div>
                             </div>
 
                             {error && <p className={styles['mobile-error-msg']}>{error}</p>}
@@ -474,11 +453,12 @@ const PlayerMarketMobile = () => {
                                 <div className={styles['mobile-input-group']}>
                                     <label className={styles['mobile-input-label']}>CANTIDAD</label>
                                     <input
-                                        type="number"
-                                        placeholder="0.00"
+                                        type="text"
+                                        placeholder="0,0000"
                                         value={marketSellQty}
                                         onChange={e => {
                                             const val = e.target.value;
+                                            if (val && !/^[0-9.,]*$/.test(val)) return;
                                             setMarketSellQty(val);
                                             if (val && currentPlayer?.price) {
                                                 setMarketSellTotal(calculateValueFromSellQuantity(val, currentPlayer.price));
@@ -492,11 +472,12 @@ const PlayerMarketMobile = () => {
                                 <div className={styles['mobile-input-group']}>
                                     <label className={styles['mobile-input-label']}>TOTAL (€)</label>
                                     <input
-                                        type="number"
-                                        placeholder="0.00"
+                                        type="text"
+                                        placeholder="0,00"
                                         value={marketSellTotal}
                                         onChange={e => {
                                             const val = e.target.value;
+                                            if (val && !/^[0-9.,]*$/.test(val)) return;
                                             setMarketSellTotal(val);
                                             if (val && currentPlayer?.price) {
                                                 setMarketSellQty(calculateQuantityFromSellValue(val, currentPlayer.price));
@@ -512,28 +493,6 @@ const PlayerMarketMobile = () => {
                                 {[0.25, 0.5, 1].map(p => (
                                     <button key={p} onClick={() => handleQuickSell(p)} className={styles['mobile-quick-select-btn']}>{p * 100}%</button>
                                 ))}
-                            </div>
-
-                            {/* Slippage Settings */}
-                            <div className={styles['mobile-slippage-box']}>
-                                <label className={styles['mobile-input-label']}>SLIPPAGE (%)</label>
-                                <div className={styles['mobile-slippage-row']}>
-                                    {['0.1', '0.5', '1.0'].map(val => (
-                                        <button
-                                            key={val}
-                                            onClick={() => setMaxSlippage(val)}
-                                            className={`${styles['mobile-slippage-btn']} ${maxSlippage === val ? styles['mobile-slippage-btn-active'] : ''}`}
-                                        >
-                                            {val}%
-                                        </button>
-                                    ))}
-                                    <input
-                                        type="number"
-                                        value={maxSlippage}
-                                        onChange={e => setMaxSlippage(e.target.value)}
-                                        className={styles['mobile-slippage-input']}
-                                    />
-                                </div>
                             </div>
 
                             {error && <p className={styles['mobile-error-msg']}>{error}</p>}
