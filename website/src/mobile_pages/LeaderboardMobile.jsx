@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
-import { getMe, API_URL } from '../services/api';
+import { getMe, getLeaderboard } from '../services/api';
 
-const API_BASE = `${API_URL}/v1`;
 
 const LeaderboardMobile = () => {
     const navigate = useNavigate();
@@ -15,12 +14,7 @@ const LeaderboardMobile = () => {
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const res = await fetch(`${API_BASE}/leaderboard`, {
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include'
-                });
-                if (!res.ok) throw new Error('Failed to fetch leaderboard');
-                const data = await res.json();
+                const data = await getLeaderboard();
                 setUsers(data);
             } catch (err) {
                 console.error('Error:', err);

@@ -4,9 +4,10 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import { toast } from 'react-toastify';
-import { getPortfolio, getTeamById, getTeamHistory, getMe, teamMarketBuy, teamMarketSell } from '../services/api';
-import fsLogo from '../assets/fs-logo.png';
+import { getPortfolio, getTeamById, getTeamHistory, getMe, teamMarketBuy, teamMarketSell, getTradeConfig } from '../services/api';
+import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
+import styles from '../styles/TeamMarketDetailDesktop.module.css';
 
 const formatEU = (val, decimals = 2) => {
     if (val === null || val === undefined || val === '') return '';
@@ -98,9 +99,7 @@ export default function TeamMarketDetailDesktop() {
         };
         const fetchConfig = async () => {
             try {
-                const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001';
-                const res = await fetch(`${API_BASE}/v1/trades/config`, { credentials: 'include' });
-                const config = await res.json();
+                const config = await getTradeConfig();
                 if (config.PRICE_IMPACT_FACTOR) {
                     setKFactor(config.PRICE_IMPACT_FACTOR);
                 }
@@ -267,50 +266,28 @@ export default function TeamMarketDetailDesktop() {
     if (teamHolding.value === undefined) teamHolding.value = teamHolding.position_value || 0;
 
     return (
-        <div style={{ backgroundColor: 'var(--bg-main)', height: '100vh', width: '100%', display: 'flex' }}>
-            <aside style={{
-                width: '250px',
-                backgroundColor: 'rgba(28,28,28,0.7)',
-                borderRight: '1px solid rgba(255,255,255,0.05)',
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '2rem 1.5rem',
-                position: 'fixed',
-                height: '100vh',
-                top: 0,
-                left: 0
-            }}>
-                <div style={{ marginBottom: '3rem', paddingLeft: '0.5rem' }}>
-                    <img src={fsLogo} alt="Futstocks Logo" style={{ height: '32px' }} />
-                </div>
-                <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-                    <div onClick={() => navigate('/home')} className="sidebar-link" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '1rem', padding: '12px 16px', borderRadius: '8px', color: 'var(--text-muted)', textDecoration: 'none' }}>Inicio</div>
-                    <div onClick={() => navigate('/portfolio')} className="sidebar-link" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '1rem', padding: '12px 16px', borderRadius: '8px', color: 'var(--text-muted)', textDecoration: 'none' }}>Portfolio</div>
-                    <div onClick={() => navigate('/market')} className="sidebar-link active" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '1rem', padding: '12px 16px', borderRadius: '8px', color: 'var(--text-main)', backgroundColor: 'rgba(57,255,20,0.1)', borderLeft: '3px solid var(--accent-neon)' }}>Mercado</div>
-                </nav>
-            </aside>
+        <div className={styles.container}>
+            <Navbar />
 
-            <main style={{ marginLeft: '250px', flex: 1, padding: '2rem 3rem', overflowY: 'auto', height: '100vh' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                    <button onClick={() => navigate('/market')} style={{
-                        backgroundColor: 'var(--accent-neon)', border: 'none', color: '#000', padding: '8px 20px', borderRadius: '8px', fontWeight: '800', cursor: 'pointer'
-                    }}>Volver</button>
+            <main className={styles.mainContent}>
+                <div className={styles.topHeader}>
+                    <button onClick={() => navigate('/market')} className={styles.backBtn}>Volver</button>
                     {portfolio && (
-                        <div style={{ textAlign: 'right' }}>
-                            <span style={{ fontSize: '0.75rem', color: '#666', fontWeight: '700' }}>WALLET: </span>
-                            <span style={{ fontSize: '1.4rem', fontWeight: '700', color: 'var(--accent-neon)' }}>{formatEU(portfolio.walletBalance)} €</span>
+                        <div className={styles.walletInfo}>
+                            <span className={styles.walletLabel}>WALLET: </span>
+                            <span className={styles.walletValue}>{formatEU(portfolio.walletBalance)} €</span>
                         </div>
                     )}
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
-                    <div>
-                        <div className="glass-panel" style={{ padding: '2rem', borderRadius: '16px', marginBottom: '2rem' }}>
-                            <h2 style={{ color: 'var(--text-main)', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between' }}>
+                <div className={styles.contentGrid}>
+                    <div className={styles.leftCol}>
+                        <div className={`${styles.card} glass-panel`}>
+                            <h2 className={styles.chartTitle}>
                                 {team ? `${team.name} (Índice)` : 'Cargando...'}
-                                {team && <span style={{ color: 'var(--accent-neon)' }}>{formatEU(team.price)} €</span>}
+                                {team && <span className={styles.chartPrice}>{formatEU(team.price)} €</span>}
                             </h2>
-                            <div style={{ width: '100%', height: 350 }}>
+                            <div className={styles.chartContainer}>
                                 <ResponsiveContainer width="100%" height="100%">
                                     <LineChart data={priceHistory}>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#222" />
@@ -323,23 +300,23 @@ export default function TeamMarketDetailDesktop() {
                             </div>
                         </div>
 
-                        <div className="glass-panel" style={{ padding: '2rem', borderRadius: '16px' }}>
-                            <h3 style={{ color: 'var(--text-main)', marginBottom: '1rem' }}>Jugadores del Equipo</h3>
-                            <div style={{ overflowX: 'auto' }}>
-                                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                        <div className={`${styles.playersCard} glass-panel`}>
+                            <h3 className={styles.playersTitle}>Jugadores del Equipo</h3>
+                            <div className={styles.tableContainer}>
+                                <table className={styles.table}>
                                     <thead>
-                                        <tr style={{ borderBottom: '1px solid #333', color: 'var(--text-muted)' }}>
-                                            <th style={{ padding: '1rem' }}>Jugador</th>
-                                            <th style={{ padding: '1rem' }}>Precio</th>
-                                            <th style={{ padding: '1rem' }}>24h</th>
+                                        <tr className={styles.tableHead}>
+                                            <th className={styles.tableHeadCell}>Jugador</th>
+                                            <th className={styles.tableHeadCell}>Precio</th>
+                                            <th className={styles.tableHeadCell}>24h</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {team?.players?.map(p => (
-                                            <tr key={p.id} style={{ borderBottom: '1px solid #222', cursor: 'pointer' }} onClick={() => navigate(`/market/player/${p.id}`)}>
-                                                <td style={{ padding: '1rem', fontWeight: 'bold' }}>{p.name}</td>
-                                                <td style={{ padding: '1rem' }}>{formatEU(p.price)} €</td>
-                                                <td style={{ padding: '1rem', color: p.change >= 0 ? 'var(--accent-neon)' : '#ff4d4d' }}>{p.change >= 0 ? '+' : ''}{Number(p.change).toFixed(2)}%</td>
+                                            <tr key={p.id} className={styles.tableRow} onClick={() => navigate(`/market/player/${p.id}`)}>
+                                                <td className={`${styles.tableCell} ${styles.playerName}`}>{p.name}</td>
+                                                <td className={styles.tableCell}>{formatEU(p.price)} €</td>
+                                                <td className={`${styles.tableCell} ${p.change >= 0 ? styles.playerChangePositive : styles.playerChangeNegative}`}>{p.change >= 0 ? '+' : ''}{Number(p.change).toFixed(2)}%</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -348,49 +325,49 @@ export default function TeamMarketDetailDesktop() {
                         </div>
                     </div>
 
-                    <div>
+                    <div className={styles.rightCol}>
                         {/* Tu Posición */}
-                        <div className="glass-panel" style={{ padding: '2rem', borderRadius: '16px', marginBottom: '2rem' }}>
-                            <h2 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '1.5rem', color: 'var(--text-main)' }}>Tu Posición</h2>
+                        <div className={`${styles.positionCard} glass-panel`}>
+                            <h2 className={styles.positionTitle}>Tu Posición</h2>
                             {teamHolding.shares > 0 ? (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Acciones del Equipo:</span>
-                                        <span style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--text-main)' }}>{Number(teamHolding.shares).toFixed(4)}</span>
+                                <div className={styles.positionGrid}>
+                                    <div className={styles.positionItem}>
+                                        <span className={styles.positionLabel}>Acciones del Equipo:</span>
+                                        <span className={styles.positionValue}>{Number(teamHolding.shares).toFixed(4)}</span>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Valor Total:</span>
-                                        <span style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--accent-neon)' }}>{formatEU(teamHolding.value)} €</span>
+                                    <div className={styles.positionItem}>
+                                        <span className={styles.positionLabel}>Valor Total:</span>
+                                        <span className={`${styles.positionValue} ${styles.positionValueAccent}`}>{formatEU(teamHolding.value)} €</span>
                                     </div>
                                 </div>
                             ) : (
-                                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', textAlign: 'center' }}>No tienes participaciones en este equipo.</p>
+                                <p className={styles.noPosition}>No tienes participaciones en este equipo.</p>
                             )}
                         </div>
 
                         {/* Trade Order */}
-                        <div className="glass-panel" style={{ padding: '2rem', borderRadius: '16px', position: 'sticky', top: '2rem' }}>
-                            <h2 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '1.5rem', color: 'var(--text-main)' }}>Trade Order</h2>
+                        <div className={`${styles.tradeCard} glass-panel`}>
+                            <h2 className={styles.tradeTitle}>Trade Order</h2>
                             
-                            <div style={{ display: 'flex', marginBottom: '1.5rem', gap: '8px', backgroundColor: '#0a0a0a', padding: '4px', borderRadius: '12px', border: '1px solid #222' }}>
+                            <div className={styles.tabRow}>
                                 <button 
-                                    style={{ flex: 1, padding: '10px', borderRadius: '8px', border: 'none', fontWeight: '800', cursor: 'pointer', backgroundColor: activeTab === 'buy' ? 'rgba(57,255,20,0.1)' : 'transparent', color: activeTab === 'buy' ? 'var(--accent-neon)' : '#666' }}
+                                    className={`${styles.tabBtn} ${activeTab === 'buy' ? styles.tabBtnBuy : ''}`}
                                     onClick={() => setActiveTab('buy')}
                                 >BUY</button>
                                 <button 
-                                    style={{ flex: 1, padding: '10px', borderRadius: '8px', border: 'none', fontWeight: '800', cursor: 'pointer', backgroundColor: activeTab === 'sell' ? 'rgba(255,77,77,0.1)' : 'transparent', color: activeTab === 'sell' ? '#ff4d4d' : '#666' }}
+                                    className={`${styles.tabBtn} ${activeTab === 'sell' ? styles.tabBtnSell : ''}`}
                                     onClick={() => setActiveTab('sell')}
                                 >SELL</button>
                             </div>
 
                             {activeTab === 'buy' ? (
                                 <>
-                                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-                                        <div style={{ flex: 1 }}>
-                                            <label style={{ display: 'block', fontSize: '0.7rem', color: '#666', fontWeight: '800', marginBottom: '4px', textTransform: 'uppercase' }}>Cant. Acciones</label>
+                                    <div className={styles.formRow}>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.inputLabel}>Cant. Acciones</label>
                                             <input 
                                                 type="text" 
-                                                style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #333', color: '#fff', outline: 'none' }}
+                                                className={styles.input}
                                                 placeholder="0,0000"
                                                 value={marketBuyQty}
                                                 onChange={e => {
@@ -405,11 +382,11 @@ export default function TeamMarketDetailDesktop() {
                                                 }}
                                             />
                                         </div>
-                                        <div style={{ flex: 1 }}>
-                                            <label style={{ display: 'block', fontSize: '0.7rem', color: '#666', fontWeight: '800', marginBottom: '4px', textTransform: 'uppercase' }}>Valor (€)</label>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.inputLabel}>Valor (€)</label>
                                             <input 
                                                 type="text" 
-                                                style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #333', color: '#fff', outline: 'none' }}
+                                                className={styles.input}
                                                 placeholder="0,00"
                                                 value={marketBuyTotal}
                                                 onChange={e => {
@@ -425,25 +402,25 @@ export default function TeamMarketDetailDesktop() {
                                             />
                                         </div>
                                     </div>
-                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem' }}>
-                                        <button onClick={() => handleQuickBuy(0.25)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '700' }}>25%</button>
-                                        <button onClick={() => handleQuickBuy(0.50)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '700' }}>50%</button>
-                                        <button onClick={() => handleQuickBuy(1.00)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '700' }}>100%</button>
+                                    <div className={styles.quickSelectRow}>
+                                        <button onClick={() => handleQuickBuy(0.25)} className={styles.quickSelectBtn}>25%</button>
+                                        <button onClick={() => handleQuickBuy(0.50)} className={styles.quickSelectBtn}>50%</button>
+                                        <button onClick={() => handleQuickBuy(1.00)} className={styles.quickSelectBtn}>100%</button>
                                     </div>
                                     <button 
                                         onClick={handleMarketBuy}
                                         disabled={loading || !marketBuyTotal}
-                                        style={{ width: '100%', padding: '14px', borderRadius: '10px', backgroundColor: 'var(--accent-neon)', color: '#000', fontWeight: '800', border: 'none', cursor: 'pointer', opacity: loading ? 0.7 : 1 }}
+                                        className={`${styles.submitBtn} ${styles.submitBtnBuy}`}
                                     >MARKET BUY</button>
                                 </>
                             ) : (
                                 <>
-                                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-                                        <div style={{ flex: 1 }}>
-                                            <label style={{ display: 'block', fontSize: '0.7rem', color: '#666', fontWeight: '800', marginBottom: '4px', textTransform: 'uppercase' }}>Cant. Acciones</label>
+                                    <div className={styles.formRow}>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.inputLabel}>Cant. Acciones</label>
                                             <input 
                                                 type="text" 
-                                                style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #333', color: '#fff', outline: 'none' }}
+                                                className={styles.input}
                                                 placeholder="0,0000"
                                                 value={marketSellQty}
                                                 onChange={e => {
@@ -458,11 +435,11 @@ export default function TeamMarketDetailDesktop() {
                                                 }}
                                             />
                                         </div>
-                                        <div style={{ flex: 1 }}>
-                                            <label style={{ display: 'block', fontSize: '0.7rem', color: '#666', fontWeight: '800', marginBottom: '4px', textTransform: 'uppercase' }}>Valor (€)</label>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.inputLabel}>Valor (€)</label>
                                             <input 
                                                 type="text" 
-                                                style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #333', color: '#fff', outline: 'none' }}
+                                                className={styles.input}
                                                 placeholder="0,00"
                                                 value={marketSellTotal}
                                                 onChange={e => {
@@ -478,20 +455,20 @@ export default function TeamMarketDetailDesktop() {
                                             />
                                         </div>
                                     </div>
-                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem' }}>
-                                        <button onClick={() => handleQuickSell(0.25)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '700' }}>25%</button>
-                                        <button onClick={() => handleQuickSell(0.50)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '700' }}>50%</button>
-                                        <button onClick={() => handleQuickSell(1.00)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '700' }}>100%</button>
+                                    <div className={styles.quickSelectRow}>
+                                        <button onClick={() => handleQuickSell(0.25)} className={styles.quickSelectBtn}>25%</button>
+                                        <button onClick={() => handleQuickSell(0.50)} className={styles.quickSelectBtn}>50%</button>
+                                        <button onClick={() => handleQuickSell(1.00)} className={styles.quickSelectBtn}>100%</button>
                                     </div>
                                     <button 
                                         onClick={handleMarketSell}
                                         disabled={loading || !marketSellQty}
-                                        style={{ width: '100%', padding: '14px', borderRadius: '10px', backgroundColor: '#ff4d4d', color: '#fff', fontWeight: '800', border: 'none', cursor: 'pointer', opacity: loading ? 0.7 : 1 }}
+                                        className={`${styles.submitBtn} ${styles.submitBtnSell}`}
                                     >MARKET SELL</button>
                                 </>
                             )}
 
-                            {error && <p style={{ color: '#ff4d4d', fontSize: '0.85rem', marginTop: '1rem', textAlign: 'center' }}>{error}</p>}
+                            {error && <p className={styles.errorText}>{error}</p>}
                         </div>
                     </div>
                 </div>

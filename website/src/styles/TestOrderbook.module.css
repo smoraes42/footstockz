@@ -1,0 +1,439 @@
+.container {
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+    color: #fff;
+    font-family: "Outfit", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.title {
+    font-size: 2.4rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(135deg, #fff 0%, #00e676 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+}
+
+.errorBanner {
+    background-color: #ff525222;
+    color: #ff5252;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid #ff525244;
+    font-size: 0.9rem;
+}
+
+.errorBannerSpacing {
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+.controlsRow {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+    background-color: #111;
+    border-radius: 16px;
+    border: 1px solid #222;
+}
+
+.controlGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.walletInfo {
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.walletValue {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #00e676;
+}
+
+.label {
+    font-size: 0.75rem;
+    color: #666;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.select {
+    padding: 12px 20px;
+    border-radius: 12px;
+    background-color: #000;
+    border: 1px solid #333;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.input {
+    padding: 14px 18px;
+    border-radius: 12px;
+    background-color: #000;
+    border: 1px solid #333;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.input:focus {
+    border-color: #00e676;
+}
+
+.inputError {
+    color: #ff3d00 !important;
+    border-color: #ff3d0044 !important;
+}
+
+.tabRow {
+    display: flex;
+    margin-bottom: 20px;
+    gap: 10px;
+    background-color: #0a0a0a;
+    padding: 5px;
+    border-radius: 12px;
+    border: 1px solid #222;
+}
+
+.tabButton {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background-color: transparent;
+    color: #888;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.positionBox {
+    background-color: #0a0a0a;
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 1px solid #222;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 80px;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.posRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.posValue {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.noPosition {
+    color: #666;
+    font-style: italic;
+    background-color: #0a0a0a;
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 1px solid #222;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.activeTabBuy {
+    background-color: rgba(0, 230, 118, 0.15) !important;
+    color: #00e676 !important;
+    border-color: #00e676 !important;
+}
+
+.activeTabSell {
+    background-color: rgba(255, 61, 0, 0.15) !important;
+    color: #ff3d00 !important;
+    border-color: #ff3d00 !important;
+}
+
+.toggleHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.toggleBtn {
+    background: none;
+    border: none;
+    color: #00e676;
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.mainGrid {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+    gap: 24px;
+    flex: 1;
+}
+
+.leftCol {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.rightCol {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.card {
+    background-color: #0a0a0a;
+    border-radius: 24px;
+    padding: 24px;
+    border: 1px solid #1a1a1a;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.chartWrapper {
+    width: 100%;
+    height: 350px;
+}
+
+.cardTitle {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cardTitleSmall {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 20px 0 12px 0;
+    color: #444;
+    text-transform: uppercase;
+}
+
+.currentPriceTag {
+    font-size: 0.9rem;
+    background-color: rgba(0, 230, 118, 0.06);
+    color: #00e676;
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid rgba(0, 230, 118, 0.13);
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.buttonRow {
+    display: flex;
+    justify-content: center;
+}
+
+.buyButton {
+    padding: 18px;
+    border: none;
+    border-radius: 14px;
+    background-color: #00c853;
+    color: #000;
+    font-weight: 900;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+    width: 50%;
+}
+
+.sellButton {
+    padding: 18px;
+    border: none;
+    border-radius: 14px;
+    background-color: #ff5252;
+    color: #000;
+    font-weight: 900;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+    width: 50%;
+}
+
+.buyButton:hover, .sellButton:hover {
+    opacity: 0.9;
+    transform: scale(0.98);
+}
+
+.buttonDisabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+}
+
+.orderbookGrid {
+    display: flex;
+    flex-direction: column;
+}
+
+.orderbookHeader {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    color: #444;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.asksContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.bidsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.askRow {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: rgba(255, 82, 82, 0.66);
+}
+
+.bidRow {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: rgba(0, 230, 118, 0.66);
+}
+
+.askPrice {
+    color: #ff5252;
+    font-weight: 750;
+}
+
+.bidPrice {
+    color: #00e676;
+    font-weight: 750;
+}
+
+.spreadIndicator {
+    text-align: center;
+    padding: 20px 0;
+    color: #333;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.emptyBook {
+    text-align: center;
+    color: #222;
+    padding: 10px;
+    font-size: 0.8rem;
+}
+
+.openOrdersSection {
+    margin-top: 30px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.openOrderRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #111;
+    color: #888;
+}
+
+.noOrders {
+    color: #222;
+    font-size: 0.8rem;
+}
+
+.orderSection {
+    padding: 10px 0;
+}
+
+.successMessage {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    background-color: rgba(0, 200, 83, 0.06);
+    border: 1px solid rgba(0, 200, 83, 0.26);
+    color: #00c853;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.quickSelectRow {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    gap: 10px;
+}
+
+.quickSelectBtn {
+    flex: 1;
+    padding: 8px 0;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quickSelectBtn:hover {
+    background-color: #222;
+    color: #fff;
+}

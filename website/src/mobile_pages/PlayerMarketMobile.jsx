@@ -4,7 +4,7 @@ import {
     LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer
 } from 'recharts';
 import { toast } from 'react-toastify';
-import { getPortfolio, getPlayers, getMe } from '../services/api';
+import { getPortfolio, getPlayers, getMe, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell } from '../services/api';
 import fsLogo from '../assets/fs-logo.png';
 
 const playSuccessSound = () => {
@@ -29,7 +29,6 @@ const playSuccessSound = () => {
     }
 };
 
-const API_BASE = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/v1`;
 
 const PlayerMarketMobile = () => {
     const { playerId } = useParams();
@@ -100,19 +99,13 @@ const PlayerMarketMobile = () => {
     const fetchData = useCallback(async () => {
         if (!playerId) return;
         try {
-            const [hRes, tRes, port, pData, userData] = await Promise.all([
-                fetch(`${API_BASE}/players/${playerId}/history`),
-                fetch(`${API_BASE}/trades/history/${playerId}`, { credentials: 'include' }),
+            const [history, trades, port, pData, userData] = await Promise.all([
+                getPlayerHistory(playerId),
+                getPlayerTradeHistory(playerId),
                 getPortfolio(),
                 getPlayers(),
                 getMe()
             ]);
-
-            const historyData = await hRes.json();
-            const tradesData = await tRes.json();
-
-            const history = Array.isArray(historyData) ? historyData : [];
-            const trades = Array.isArray(tradesData) ? tradesData : [];
 
             const formattedHistory = (history || []).map(h => {
                 const time = new Date(h.time);
@@ -136,8 +129,7 @@ const PlayerMarketMobile = () => {
     useEffect(() => {
         const fetchConfig = async () => {
             try {
-                const res = await fetch(`${API_BASE}/trades/config`);
-                const config = await res.json();
+                const config = await getTradeConfig();
                 if (config.PRICE_IMPACT_FACTOR) {
                     setKFactor(config.PRICE_IMPACT_FACTOR);
                 }
@@ -163,19 +155,11 @@ const PlayerMarketMobile = () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch(`${API_BASE}/trades/market-buy`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    playerId: parseInt(playerId),
-                    totalValue: parseFloat(marketBuyTotal),
-                    expectedPrice: currentPlayer?.price,
-                    maxSlippage: parseFloat(maxSlippage) / 100
-                })
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Error en la compra.');
+            const data = await marketBuy(
+                parseInt(playerId),
+                parseFloat(marketBuyTotal),
+                currentPlayer?.price
+            );
 
             playSuccessSound();
             toast.success("Compra Exitosa", { position: "top-center", theme: "dark" });
@@ -200,19 +184,11 @@ const PlayerMarketMobile = () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch(`${API_BASE}/trades/market-sell`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    playerId: parseInt(playerId),
-                    quantity: parseFloat(marketSellQty),
-                    expectedPrice: currentPlayer?.price,
-                    maxSlippage: parseFloat(maxSlippage) / 100
-                })
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Error en la venta.');
+            const data = await marketSell(
+                parseInt(playerId),
+                parseFloat(marketSellQty),
+                currentPlayer?.price
+            );
 
             playSuccessSound();
             toast.success("Venta Exitosa", { position: "top-center", theme: "dark" });

@@ -1,0 +1,109 @@
+.container {
+    background-color: var(--bg-main);
+    width: 100%;
+}
+
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+}
+
+.glowEffect {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(57, 255, 20, 0.08) 0%, rgba(16, 16, 16, 0) 70%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.heroContent {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+}
+
+.sloganContainer {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.sloganImg {
+    max-width: 100%;
+    height: auto;
+    max-height: 200px;
+}
+
+.heroDescription {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    line-height: 1.6;
+}
+
+.ctaContainer {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.ctaBtn {
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    text-decoration: none;
+}
+
+.footer {
+    padding: 3rem 4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footerLeft {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.footerLogo {
+    height: 30px;
+    opacity: 0.5;
+}
+
+.copyright {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.footerRight {
+    display: flex;
+    gap: 2rem;
+}
+
+.footerLink {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+}

@@ -1,0 +1,91 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.loading {
+    color: var(--text-muted);
+}
+
+.card {
+    background-color: var(--surface-dark);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.teamInfo {
+}
+
+.teamName {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.teamMeta {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.priceInfo {
+    text-align: right;
+}
+
+.price {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.change {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.changePositive {
+    color: var(--accent-neon);
+}
+
+.changeNegative {
+    color: #ff4d4d;
+}
+
+.chartContainer {
+    height: 60px;
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+}
+
+.actionBtn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--accent-neon);
+    color: #000;
+    font-weight: 800;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.actionBtn:hover {
+    opacity: 0.9;
+}

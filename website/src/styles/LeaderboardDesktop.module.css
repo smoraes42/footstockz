@@ -1,0 +1,138 @@
+.container {
+    background-color: var(--bg-main);
+    height: 100vh;
+    width: 100%;
+    display: flex;
+}
+
+.mainContent {
+    margin-left: 250px;
+    flex: 1;
+    padding: 2rem 3rem;
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.header {
+    margin-bottom: 2.5rem;
+}
+
+.title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--accent-neon);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.subtitle {
+    color: var(--text-muted);
+}
+
+.tableContainer {
+    border-radius: 16px;
+    overflow: hidden;
+    min-height: 400px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.tableHeadRow {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.tableHeaderCell {
+    padding: 1.5rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.tableRow {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.tableRow:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.tableCell {
+    padding: 1.2rem 1.5rem;
+}
+
+.rankCell {
+    font-weight: 800;
+}
+
+.rankTop {
+    color: var(--accent-neon);
+}
+
+.userCellContent {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.userAvatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--surface-lighter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.userName {
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.valueCell {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.changeCell {
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+.changePositive {
+    color: var(--accent-neon);
+}
+
+.changeNegative {
+    color: var(--error-red);
+}
+
+.noData {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.loading, .error {
+    padding: 4rem;
+    text-align: center;
+}
+
+.loading {
+    color: var(--text-muted);
+}
+
+.error {
+    color: var(--error-red);
+}

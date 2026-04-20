@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import fsLogo from '../assets/fs-logo.png';
-import { getPlayers, getPortfolio, getPortfolioHistory } from '../services/api';
+import Navbar from '../components/Navbar';
+import { getPlayers, getPortfolio, getPortfolioHistory, getPlayerImageUrl } from '../services/api';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
+import styles from '../styles/HomeDesktop.module.css';
 
 
 const formatCompactNumber = (number) => {
@@ -34,24 +35,25 @@ const HomeDesktop = () => {
 
   const timeframes = ['D', 'W', 'M', 'Y', 'Max'];
 
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      try {
-        const data = await getPlayers({ sort_by: 'price', sort_dir: 'desc', limit: 50 });
-        // Using actual prices from the database API
-        const playersWithPrices = data.data.map(p => {
-          const priceNum = parseFloat(p.price) || 0;
-          const changeNum = parseFloat(p.change || 0);
+  const fetchPlayers = async () => {
+    try {
+      const data = await getPlayers({ sort_by: 'price', sort_dir: 'desc', limit: 50 });
+      // Using actual prices from the database API
+      const playersWithPrices = data.data.map(p => {
+        const priceNum = parseFloat(p.price) || 0;
+        const changeNum = parseFloat(p.change || 0);
 
-          return { ...p, price: priceNum, change: changeNum };
-        });
-        setPlayers(playersWithPrices);
-      } catch (error) {
-        console.error('Failed to load players:', error);
-      } finally {
-        setLoadingPlayers(false);
-      }
-    };
+        return { ...p, price: priceNum, change: changeNum };
+      });
+      setPlayers(playersWithPrices);
+    } catch (error) {
+      console.error('Failed to load players:', error);
+    } finally {
+      setLoadingPlayers(false);
+    }
+  };
+
+  useEffect(() => {
     fetchPlayers();
   }, []);
 
@@ -331,78 +333,32 @@ const HomeDesktop = () => {
   };
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', height: '100vh', width: '100%', display: 'flex' }}>
+    <div className={styles.container}>
 
-      {/* Sidebar Left */}
-      <aside style={{
-        width: '250px',
-        backgroundColor: 'rgba(28,28,28,0.7)',
-        borderRight: '1px solid rgba(255,255,255,0.05)',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '2rem 1.5rem',
-        position: 'fixed',
-        height: '100vh',
-        top: 0,
-        left: 0
-      }}>
-        <div style={{ marginBottom: '3rem', paddingLeft: '0.5rem' }}>
-          <img src={fsLogo} alt="Futstocks Logo" style={{ height: '32px' }} />
-        </div>
-
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-          <Link to="/home" className="sidebar-link active" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '12px 16px', borderRadius: '8px', color: 'var(--text-main)', textDecoration: 'none', backgroundColor: 'rgba(57,255,20,0.1)', borderLeft: '3px solid var(--accent-neon)' }}>
-            <span style={{ fontWeight: '600' }}>Inicio</span>
-          </Link>
-          <Link to="/portfolio" className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '12px 16px', borderRadius: '8px', color: 'var(--text-muted)', textDecoration: 'none', transition: 'all 0.2s' }}>
-            <span style={{ fontWeight: '500' }}>Portfolio</span>
-          </Link>
-          <Link to="/market" className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '12px 16px', borderRadius: '8px', color: 'var(--text-muted)', textDecoration: 'none', transition: 'all 0.2s' }}>
-            <span style={{ fontWeight: '500' }}>Mercado</span>
-          </Link>
-          <Link to="/leaderboard" className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '12px 16px', borderRadius: '8px', color: 'var(--text-muted)', textDecoration: 'none', transition: 'all 0.2s' }}>
-            <span style={{ fontWeight: '500' }}>Leaderboard</span>
-          </Link>
-        </nav>
-
-        <div
-          onClick={() => navigate('/profile')}
-          style={{ marginTop: 'auto', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--surface-lighter)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>
-              {user?.username?.charAt(0).toUpperCase() || 'U'}
-            </div>
-            <div>
-              <p style={{ fontSize: '0.9rem', fontWeight: '600', margin: 0 }}>{user?.username || 'Usuario'}</p>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>Ver perfil</p>
-            </div>
-          </div>
-        </div>
-      </aside>
+      <Navbar />
 
       {/* Main Content Area */}
-      <main style={{ marginLeft: '250px', flex: 1, padding: '2rem 3rem', overflowY: 'auto', height: '100vh' }}>
+      <main className={styles.mainContent}>
 
         {/* Cartera Chart Section */}
-        <div style={{ marginBottom: '3rem' }}>
-          <div style={{ marginBottom: '2.5rem' }}>
-            <h2 style={{ fontSize: '1.3rem', color: 'var(--accent-neon)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>Cartera</h2>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}>
-                <span style={{ fontSize: '3rem', fontWeight: '900', letterSpacing: '-1px' }}>
+        <div className={styles.sectionHeader}>
+          <div className={styles.portfolioHeader}>
+            <h2 className={styles.sectionTitle}>Cartera</h2>
+            <div className={styles.portfolioValueContainer}>
+              <div className={styles.portfolioValueWrapper}>
+                <span className={styles.portfolioValue}>
                   {loadingPortfolio ? '---' : formatCompactNumber(displayValue)}
                 </span>
-                <span style={{ color: variation24h.amount >= 0 ? 'var(--accent-neon)' : 'var(--error-red)', fontWeight: '600', fontSize: '1.1rem' }}>
+                <span className={`${styles.portfolioVariation} ${variation24h.amount >= 0 ? styles.variationUp : styles.variationDown}`}>
                   {variation24h.amount >= 0 ? '+' : '-'} {Math.abs(variation24h.amount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € ({variation24h.percent.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%)
                 </span>
               </div>
 
-              <div style={{ display: 'flex', gap: '4px', backgroundColor: 'var(--surface-dark)', padding: '6px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div className={styles.timeframeContainer}>
                 {timeframes.map(tf => (
                   <button
                     key={tf}
-                    className={`timeframe-btn ${activeTimeframe === tf ? 'active' : ''}`}
+                    className={`${styles.timeframeBtn} ${activeTimeframe === tf ? styles.timeframeBtnActive : ''}`}
                     onClick={() => setActiveTimeframe(tf)}
                   >
                     {tf}
@@ -412,7 +368,7 @@ const HomeDesktop = () => {
             </div>
           </div>
 
-          <div style={{ height: '300px', width: '100%', marginLeft: '-15px', minWidth: 0, position: 'relative' }}>
+          <div className={styles.chartContainer}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData} onMouseMove={handleChartMouseMove} onMouseLeave={() => setHoverInfo(null)}>
                 <defs>
@@ -481,20 +437,13 @@ const HomeDesktop = () => {
                     if (active && payload && payload.length) {
                       const data = payload[0].payload;
                       return (
-                        <div style={{
-                          backgroundColor: 'rgba(20, 20, 20, 0.95)',
-                          border: '1px solid rgba(57, 255, 20, 0.4)',
-                          borderRadius: '12px',
-                          padding: '12px 16px',
-                          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
-                          backdropFilter: 'blur(8px)',
-                        }}>
-                          <div style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.75rem', fontWeight: '600', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        <div className={styles.tooltipContainer}>
+                          <div className={styles.tooltipTime}>
                             {formatHoverTime(data.timestamp)}
                           </div>
-                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                            <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.9rem', fontWeight: '400' }}>VALOR:</span>
-                              <span style={{ color: 'var(--accent-neon)', fontWeight: '900', fontSize: '1.4rem', textShadow: '0 0 10px rgba(57, 255, 20, 0.3)' }}>
+                          <div className={styles.tooltipRow}>
+                            <span className={styles.tooltipLabel}>VALOR:</span>
+                              <span className={styles.tooltipValue}>
                                 {Number(data.value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                               </span>
                           </div>
@@ -523,55 +472,42 @@ const HomeDesktop = () => {
 
         {/* Players List Section */}
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-            <h2 style={{ fontSize: '1.3rem', fontWeight: '800', color: 'var(--accent-neon)', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>Top Jugadores</h2>
-            <Link to="/market" style={{ color: 'var(--accent-neon)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '600' }}>Ver todos</Link>
+          <div className={styles.playersHeader}>
+            <h2 className={styles.sectionTitle}>Top Jugadores</h2>
+            <Link to="/market" className={styles.viewAllLink}>Ver todos</Link>
           </div>
 
           {loadingPlayers ? (
-            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>Cargando jugadores...</div>
+            <div className={styles.loading}>Cargando jugadores...</div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
+            <div className={styles.playersGrid}>
               {players.slice(0, 10).map((player, idx) => (
                 <div 
                   key={player.id} 
                   onClick={() => navigate(`/market/player/${player.id}`)}
-                  style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'space-between', 
-                    padding: '1.25rem', 
-                    backgroundColor: 'rgba(255,255,255,0.03)', 
-                    borderRadius: '16px',
-                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                    cursor: 'pointer',
-                    border: player.id === updatedPlayerId ? '1px solid var(--accent-neon)' : '1px solid rgba(255,255,255,0.05)',
-                    boxShadow: player.id === updatedPlayerId ? '0 0 15px rgba(57, 255, 20, 0.2)' : 'none',
-                    transform: player.id === updatedPlayerId ? 'scale(1.02)' : 'scale(1)'
-                  }}
-                  className="player-card-hover"
+                  className={`${styles.playerCard} ${player.id === updatedPlayerId ? styles.playerCardUpdated : ''}`}
                 >
-                  <div style={{ position: 'absolute', left: 0, top: 0, padding: '4px 8px', backgroundColor: 'rgba(57,255,20,0.1)', color: 'var(--accent-neon)', fontSize: '0.65rem', fontWeight: '900', borderBottomRightRadius: '8px' }}>
+                  <div className={styles.playerRank}>
                     #{idx + 1}
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                    <div style={{ width: '50px', height: '50px', borderRadius: '12px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.05)', backgroundColor: 'var(--surface-lighter)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <div className={styles.playerInfo}>
+                    <div className={styles.playerAvatar}>
                       <img 
-                        src={`${import.meta.env.VITE_API_URL}/v1/players/${player.id}/image`}
+                        src={getPlayerImageUrl(player.id)}
                         alt={player.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        className={styles.playerAvatarImg}
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
-                      <span style={{ fontSize: '1.5rem', position: 'absolute' }}>👤</span>
+                      <span className={styles.playerAvatarPlaceholder}>👤</span>
                     </div>
                     <div>
-                      <p style={{ fontWeight: '800', margin: 0, fontSize: '1rem', color: '#fff' }}>{player.name}</p>
-                      <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', margin: 0, fontWeight: '500' }}>{player.team}</p>
+                      <p className={styles.playerName}>{player.name}</p>
+                      <p className={styles.playerTeam}>{player.team}</p>
                     </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <p style={{ fontWeight: '900', margin: 0, fontSize: '1.15rem', color: 'var(--text-main)' }}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                    <p style={{ color: player.change >= 0 ? 'var(--accent-neon)' : 'var(--error-red)', margin: 0, fontSize: '0.85rem', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px' }}>
+                  <div className={styles.playerStats}>
+                    <p className={styles.playerPrice}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                    <p className={`${styles.playerChange} ${player.change >= 0 ? styles.playerChangeUp : styles.playerChangeDown}`}>
                       {player.change >= 0 ? '▲' : '▼'} {Math.abs(player.change)}%
                     </p>
                   </div>

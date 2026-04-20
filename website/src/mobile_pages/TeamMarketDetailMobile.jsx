@@ -4,7 +4,7 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import { toast } from 'react-toastify';
-import { getPortfolio, getTeamById, getTeamHistory, teamMarketBuy, teamMarketSell } from '../services/api';
+import { getPortfolio, getTeamById, getTeamHistory, teamMarketBuy, teamMarketSell, getTradeConfig } from '../services/api';
 import { useSocket } from '../context/SocketContext';
 
 const formatEU = (val, decimals = 2) => {
@@ -79,9 +79,7 @@ export default function TeamMarketDetailMobile() {
         fetchData();
         const fetchConfig = async () => {
             try {
-                const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001';
-                const res = await fetch(`${API_BASE}/v1/trades/config`, { credentials: 'include' });
-                const config = await res.json();
+                const config = await getTradeConfig();
                 if (config.PRICE_IMPACT_FACTOR) setKFactor(config.PRICE_IMPACT_FACTOR);
             } catch (err) { console.error(err); }
         };

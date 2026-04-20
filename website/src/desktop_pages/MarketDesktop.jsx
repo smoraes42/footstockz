@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
-import { getPlayers, getLeagues } from '../services/api';
-import fsLogo from '../assets/fs-logo.png';
+import { getPlayers, getLeagues, getPlayerImageUrl } from '../services/api';
+import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
 import TeamsMarketDesktop from './TeamsMarketDesktop';
+import styles from '../styles/MarketDesktop.module.css';
 
 
 const MarketDesktop = () => {
@@ -191,140 +192,51 @@ const MarketDesktop = () => {
     let filteredPlayers = players;
 
     return (
-        <div style={{ backgroundColor: 'var(--bg-main)', height: '100vh', width: '100%', display: 'flex' }}>
+        <div className={styles.container}>
 
-            {/* Sidebar (Similar to Home) */}
-            <aside style={{
-                width: '250px',
-                backgroundColor: 'rgba(28,28,28,0.7)',
-                borderRight: '1px solid rgba(255,255,255,0.05)',
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '2rem 1.5rem',
-                position: 'fixed',
-                height: '100vh',
-                top: 0,
-                left: 0
-            }}>
-                <div style={{ marginBottom: '3rem', paddingLeft: '0.5rem' }}>
-                    <img src={fsLogo} alt="Futstocks Logo" style={{ height: '32px' }} />
-                </div>
+            <Navbar />
 
-                <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-                    <Link to="/home" className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '12px 16px', borderRadius: '8px', color: 'var(--text-muted)', textDecoration: 'none', transition: 'all 0.2s' }}>
-                        <span style={{ fontWeight: '500' }}>Inicio</span>
-                    </Link>
-                    <Link to="/portfolio" className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '12px 16px', borderRadius: '8px', color: 'var(--text-muted)', textDecoration: 'none', transition: 'all 0.2s' }}>
-                        <span style={{ fontWeight: '500' }}>Portfolio</span>
-                    </Link>
-                    <Link to="/market" className="sidebar-link active" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '12px 16px', borderRadius: '8px', color: 'var(--text-main)', textDecoration: 'none', backgroundColor: 'rgba(57,255,20,0.1)', borderLeft: '3px solid var(--accent-neon)' }}>
-                        <span style={{ fontWeight: '600' }}>Mercado</span>
-                    </Link>
-                    <Link to="/leaderboard" className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '12px 16px', borderRadius: '8px', color: 'var(--text-muted)', textDecoration: 'none', transition: 'all 0.2s' }}>
-                        <span style={{ fontWeight: '500' }}>Leaderboard</span>
-                    </Link>
-                </nav>
-
-                <div
-                    onClick={() => navigate('/profile')}
-                    style={{ marginTop: 'auto', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}
-                >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem' }}>
-                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--surface-lighter)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>
-                            {user?.username?.charAt(0).toUpperCase() || 'U'}
-                        </div>
-                        <div>
-                            <p style={{ fontSize: '0.9rem', fontWeight: '600', margin: 0 }}>{user?.username || 'Usuario'}</p>
-                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>Ver perfil</p>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
-            <main style={{ marginLeft: '250px', marginRight: '250px', flex: 1, padding: '2rem 3rem', overflowY: 'auto', height: '100vh', position: 'relative' }}>
-                <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+            <main className={styles.mainContent}>
+                <header className={styles.header}>
+                    <div className={styles.headerLeft}>
                         <h1 
                             onClick={() => setMarketType('players')}
-                            style={{ 
-                                fontSize: '1.3rem', 
-                                fontWeight: '800', 
-                                color: marketType === 'players' ? 'var(--accent-neon)' : 'rgba(255,255,255,0.3)', 
-                                textTransform: 'uppercase', 
-                                letterSpacing: '1px', 
-                                margin: 0,
-                                cursor: 'pointer'
-                            }}
+                            className={`${styles.marketTypeTitle} ${marketType === 'players' ? styles.marketTypeTitleActive : ''}`}
                         >
                             Jugadores
                         </h1>
                         <h1 
                             onClick={() => setMarketType('teams')}
-                            style={{ 
-                                fontSize: '1.3rem', 
-                                fontWeight: '800', 
-                                color: marketType === 'teams' ? 'var(--accent-neon)' : 'rgba(255,255,255,0.3)', 
-                                textTransform: 'uppercase', 
-                                letterSpacing: '1px', 
-                                margin: 0,
-                                cursor: 'pointer'
-                            }}
+                            className={`${styles.marketTypeTitle} ${marketType === 'teams' ? styles.marketTypeTitleActive : ''}`}
                         >
                             Equipos
                         </h1>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <div className={styles.headerRight}>
                         {/* View Mode Toggle */}
-                        <div style={{ display: 'flex', backgroundColor: 'var(--surface-dark)', padding: '4px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <div className={styles.viewModeContainer}>
                             <button
                                 onClick={() => setViewMode('list')}
-                                style={{
-                                    padding: '6px 12px',
-                                    border: 'none',
-                                    background: viewMode === 'list' ? 'var(--bg-main)' : 'transparent',
-                                    color: viewMode === 'list' ? 'var(--text-main)' : 'var(--text-muted)',
-                                    borderRadius: '6px',
-                                    cursor: 'pointer',
-                                    fontWeight: 'bold',
-                                    transition: 'all 0.2s'
-                                }}
+                                className={`${styles.viewModeBtn} ${viewMode === 'list' ? styles.viewModeBtnActive : ''}`}
                             >
                                 ≡ Lista
                             </button>
                             <button
                                 onClick={() => setViewMode('grid')}
-                                style={{
-                                    padding: '6px 12px',
-                                    border: 'none',
-                                    background: viewMode === 'grid' ? 'var(--bg-main)' : 'transparent',
-                                    color: viewMode === 'grid' ? 'var(--text-main)' : 'var(--text-muted)',
-                                    borderRadius: '6px',
-                                    cursor: 'pointer',
-                                    fontWeight: 'bold',
-                                    transition: 'all 0.2s'
-                                }}
+                                className={`${styles.viewModeBtn} ${viewMode === 'grid' ? styles.viewModeBtnActive : ''}`}
                             >
                                 ⊞ Grid
                             </button>
                         </div>
 
-                        <div style={{ position: 'relative', width: '300px' }}>
+                        <div className={styles.searchContainer}>
                             <input
                                 type="text"
                                 placeholder="Buscar jugador..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                style={{
-                                    width: '100%',
-                                    padding: '12px 20px',
-                                    backgroundColor: 'var(--surface-dark)',
-                                    border: '1px solid rgba(255,255,255,0.1)',
-                                    borderRadius: '12px',
-                                    color: 'white',
-                                    outline: 'none',
-                                    fontSize: '0.9rem'
-                                }}
+                                className={styles.searchInput}
                             />
                         </div>
                     </div>
@@ -333,78 +245,72 @@ const MarketDesktop = () => {
                 {marketType === 'teams' ? (
                     <TeamsMarketDesktop searchTerm={searchTerm} selectedLeague={selectedLeague} />
                 ) : (
-                    <div className={viewMode === 'list' ? "glass-panel" : ""} style={{ borderRadius: '16px', overflow: 'hidden', minHeight: '400px' }}>
+                    <div className={`${viewMode === 'list' ? "glass-panel" : ""} ${styles.tablePanel}`}>
 
                     {loadingPlayers ? (
-                        <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-muted)' }}>Cargando jugadores del mercado...</div>
+                        <div className={styles.loading}>Cargando jugadores del mercado...</div>
                     ) : (
                         viewMode === 'list' ? (
-                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                            <table className={styles.table}>
                                 <thead>
-                                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', backgroundColor: 'rgba(255,255,255,0.02)' }}>
+                                    <tr className={styles.tableHeadRow}>
                                         <th
-                                            style={{ padding: '1.5rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase', cursor: 'pointer', userSelect: 'none' }}
+                                            className={styles.tableHeaderCell}
                                             onClick={() => handleSortToggle('name')}
                                         >
                                             Jugador {sortConfig.key === 'name' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                         </th>
                                         <th
-                                            style={{ padding: '1.5rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase', cursor: 'pointer', userSelect: 'none' }}
+                                            className={styles.tableHeaderCell}
                                             onClick={() => handleSortToggle('price')}
                                         >
                                             Precio {sortConfig.key === 'price' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                         </th>
                                         <th
-                                            style={{ padding: '1.5rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase', cursor: 'pointer', userSelect: 'none' }}
+                                            className={styles.tableHeaderCell}
                                             onClick={() => handleSortToggle('change')}
                                         >
                                             24h % {sortConfig.key === 'change' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                         </th>
-                                        <th style={{ padding: '1.5rem', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Evolución</th>
+                                        <th className={styles.tableHeaderCell}>Evolución</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {filteredPlayers.map(player => (
                                         <tr
                                             key={player.id}
-                                            style={{ 
-                                                borderBottom: '1px solid rgba(255,255,255,0.05)', 
-                                                transition: 'background 0.3s ease', 
-                                                cursor: 'pointer',
-                                                backgroundColor: updatedPlayerId === player.id ? 'rgba(57,255,20,0.15)' : 'transparent'
-                                            }}
-                                            className="market-row"
+                                            className={`${styles.tableRow} ${updatedPlayerId === player.id ? styles.tableRowUpdated : ''}`}
                                             onClick={() => navigate(`/market/player/${player.id}`)}
                                         >
-                                            <td style={{ padding: '1.2rem 1.5rem' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                            <td className={styles.tableCell}>
+                                                <div className={styles.playerCellContent}>
                                                     {/* Using the image endpoint wrapper directly for UI display */}
                                                     <img
-                                                        src={`${import.meta.env.VITE_API_URL}/v1/players/${player.id}/image`}
+                                                        src={getPlayerImageUrl(player.id)}
                                                         alt={player.name}
                                                         onError={(e) => {
                                                             e.target.style.display = 'none';
                                                             e.target.nextSibling.style.display = 'flex';
                                                         }}
-                                                        style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }}
+                                                        className={styles.playerAvatarImg}
                                                     />
-                                                    <div style={{ width: '40px', height: '40px', borderRadius: '8px', backgroundColor: 'var(--surface-lighter)', display: 'none', justifyContent: 'center', alignItems: 'center', fontSize: '1.2rem' }}>
+                                                    <div className={styles.playerAvatarPlaceholder}>
                                                         👤
                                                     </div>
                                                     <div>
-                                                        <p style={{ fontWeight: '700', fontSize: '1rem', margin: 0 }}>{player.name}</p>
-                                                        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>{player.team}</p>
+                                                        <p className={styles.playerName}>{player.name}</p>
+                                                        <p className={styles.playerTeam}>{player.team}</p>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td style={{ padding: '1.2rem 1.5rem', fontWeight: '800', fontSize: '1.1rem' }}>
+                                            <td className={`${styles.tableCell} ${styles.priceCell}`}>
                                                 {Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                                             </td>
-                                            <td style={{ padding: '1.2rem 1.5rem', fontWeight: '700', color: player.change >= 0 ? 'var(--accent-neon)' : 'var(--error-red)' }}>
+                                            <td className={`${styles.tableCell} ${styles.changeCell} ${player.change >= 0 ? styles.changePositive : styles.changeNegative}`}>
                                                 {player.change >= 0 ? '+' : ''}{Number(player.change).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
                                             </td>
-                                            <td style={{ padding: '1.2rem 1.5rem', width: '120px' }}>
-                                                <div style={{ height: '40px', width: '100%' }}>
+                                            <td className={`${styles.tableCell} ${styles.sparklineCell}`}>
+                                                <div className={styles.sparklineWrapper}>
                                                     <ResponsiveContainer width="100%" height="100%">
                                                         <LineChart data={player.sparkline.map((v, i) => ({ v, i }))}>
                                                             <Line
@@ -423,76 +329,63 @@ const MarketDesktop = () => {
                                 </tbody>
                             </table>
                         ) : (
-                            <div>
-                                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginBottom: '1.5rem' }}>
+                            <div className={styles.gridContainer}>
+                                <div className={styles.gridSortHeader}>
                                     <button
                                         onClick={() => handleSortToggle('name')}
-                                        style={{ background: 'var(--surface-dark)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-main)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                                        className={styles.gridSortBtn}
                                     >
-                                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase' }}>Ordenar: </span>
+                                        <span className={styles.gridSortLabel}>Ordenar: </span>
                                         Nombre {sortConfig.key === 'name' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                     </button>
                                     <button
                                         onClick={() => handleSortToggle('price')}
-                                        style={{ background: 'var(--surface-dark)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-main)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                                        className={styles.gridSortBtn}
                                     >
-                                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase' }}>Ordenar:</span>
+                                        <span className={styles.gridSortLabel}>Ordenar:</span>
                                         Precio {sortConfig.key === 'price' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                     </button>
                                     <button
                                         onClick={() => handleSortToggle('change')}
-                                        style={{ background: 'var(--surface-dark)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-main)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                                        className={styles.gridSortBtn}
                                     >
-                                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase' }}>Ordenar:</span>
+                                        <span className={styles.gridSortLabel}>Ordenar:</span>
                                         24h % {sortConfig.key === 'change' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                     </button>
                                 </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                                <div className={styles.playerGrid}>
                                     {filteredPlayers.map(player => (
                                         <div
                                             key={player.id}
-                                            className="glass-panel"
-                                            style={{
-                                                borderRadius: '16px',
-                                                padding: '1.5rem',
-                                                cursor: 'pointer',
-                                                transition: 'transform 0.2s, background-color 0.3s ease',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                backgroundColor: updatedPlayerId === player.id ? 'rgba(57,255,20,0.15)' : 'var(--surface-dark)',
-                                                border: updatedPlayerId === player.id ? '1px solid var(--accent-neon)' : '1px solid rgba(255,255,255,0.1)'
-                                            }}
+                                            className={`glass-panel ${styles.playerCard} ${updatedPlayerId === player.id ? styles.playerCardUpdated : ''}`}
                                             onClick={() => navigate(`/market/player/${player.id}`)}
-                                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; if(updatedPlayerId !== player.id) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'; }}
-                                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; if(updatedPlayerId !== player.id) e.currentTarget.style.backgroundColor = 'var(--surface-dark)'; }}
                                         >
-                                            <div style={{ position: 'relative', width: '100px', height: '100px', marginBottom: '1rem' }}>
+                                            <div className={styles.playerCardAvatarContainer}>
                                                 <img
-                                                    src={`${import.meta.env.VITE_API_URL}/v1/players/${player.id}/image`}
+                                                    src={getPlayerImageUrl(player.id)}
                                                     alt={player.name}
                                                     onError={(e) => {
                                                         e.target.style.display = 'none';
                                                         e.target.nextSibling.style.display = 'flex';
                                                     }}
-                                                    style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--surface-lighter)' }}
+                                                    className={styles.playerCardAvatar}
                                                 />
-                                                <div style={{ width: '100%', height: '100%', borderRadius: '50%', backgroundColor: 'var(--surface-lighter)', display: 'none', justifyContent: 'center', alignItems: 'center', fontSize: '3rem', border: '3px solid var(--surface-light)' }}>
+                                                <div className={styles.playerCardAvatarPlaceholder}>
                                                     👤
                                                 </div>
                                             </div>
 
-                                            <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.2rem', fontWeight: '800', textAlign: 'center' }}>{player.name}</h3>
-                                            <p style={{ margin: '0 0 1rem 0', color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center' }}>{player.team}</p>
+                                            <h3 className={styles.playerCardName}>{player.name}</h3>
+                                            <p className={styles.playerCardTeam}>{player.team}</p>
 
-                                            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '12px' }}>
+                                            <div className={styles.playerCardStats}>
                                                 <div>
-                                                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>Precio</p>
-                                                    <p style={{ margin: 0, fontSize: '1.3rem', fontWeight: '900' }}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                                                    <p className={styles.playerCardStatLabel}>Precio</p>
+                                                    <p className={`${styles.playerCardStatValue} ${styles.playerCardPrice}`}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
                                                 </div>
-                                                <div style={{ textAlign: 'right' }}>
-                                                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>24h</p>
-                                                    <p style={{ margin: 0, fontSize: '1rem', fontWeight: '800', color: player.change >= 0 ? 'var(--accent-neon)' : 'var(--error-red)' }}>
+                                                <div className={styles.playerCardChangeContainer}>
+                                                    <p className={styles.playerCardStatLabel}>24h</p>
+                                                    <p className={`${styles.playerCardStatValue} ${player.change >= 0 ? styles.changePositive : styles.changeNegative}`}>
                                                         {player.change >= 0 ? '+' : ''}{Number(player.change).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
                                                     </p>
                                                 </div>
@@ -505,39 +398,21 @@ const MarketDesktop = () => {
                     )}
 
                     {!loadingPlayers && totalPages > 1 && (
-                        <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }}>
+                        <div className={styles.paginationContainer}>
                             <button
                                 onClick={handlePrevPage}
                                 disabled={currentPage === 1}
-                                style={{
-                                    padding: '10px 24px',
-                                    backgroundColor: currentPage === 1 ? 'rgba(255,255,255,0.05)' : 'rgba(57,255,20,0.1)',
-                                    color: currentPage === 1 ? 'var(--text-muted)' : 'var(--accent-neon)',
-                                    border: `1px solid ${currentPage === 1 ? 'rgba(255,255,255,0.1)' : 'rgba(57,255,20,0.3)'}`,
-                                    borderRadius: '8px',
-                                    cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                                    fontWeight: 'bold',
-                                    transition: 'all 0.2s'
-                                }}
+                                className={`${styles.paginationBtn} ${currentPage === 1 ? styles.paginationBtnDisabled : ''}`}
                             >
                                 ← Anterior
                             </button>
-                            <span style={{ color: 'var(--text-muted)', fontWeight: 'bold' }}>
+                            <span className={styles.paginationInfo}>
                                 Pág. {currentPage} de {totalPages}
                             </span>
                             <button
                                 onClick={handleNextPage}
                                 disabled={currentPage === totalPages}
-                                style={{
-                                    padding: '10px 24px',
-                                    backgroundColor: currentPage === totalPages ? 'rgba(255,255,255,0.05)' : 'rgba(57,255,20,0.1)',
-                                    color: currentPage === totalPages ? 'var(--text-muted)' : 'var(--accent-neon)',
-                                    border: `1px solid ${currentPage === totalPages ? 'rgba(255,255,255,0.1)' : 'rgba(57,255,20,0.3)'}`,
-                                    borderRadius: '8px',
-                                    cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-                                    fontWeight: 'bold',
-                                    transition: 'all 0.2s'
-                                }}
+                                className={`${styles.paginationBtn} ${currentPage === totalPages ? styles.paginationBtnDisabled : ''}`}
                             >
                                 Siguiente →
                             </button>
@@ -549,79 +424,29 @@ const MarketDesktop = () => {
             </main>
 
             {/* Right Sidebar (Leagues and Teams Menu) */}
-            <aside style={{
-                width: '250px',
-                backgroundColor: 'rgba(28,28,28,0.7)',
-                borderLeft: '1px solid rgba(255,255,255,0.05)',
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '2rem 1.5rem',
-                position: 'fixed',
-                height: '100vh',
-                top: 0,
-                right: 0,
-                overflowY: 'auto'
-            }}>
-                <div style={{ marginBottom: '2rem' }}>
-                    <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: '700', color: 'var(--text-main)' }}>Filtros</h3>
+            <aside className={styles.rightSidebar}>
+                <div className={styles.filterHeader}>
+                    <h3 className={styles.filterTitle}>Filtros</h3>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div className={styles.filterGroupContainer}>
 
                     {/* League Selector */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', position: 'relative' }}>
-                        <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '600' }}>Competición</label>
+                    <div className={styles.filterGroup}>
+                        <label className={styles.filterLabel}>Competición</label>
                         <button
                             onClick={() => setIsLeagueDropdownOpen(!isLeagueDropdownOpen)}
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                padding: '12px 16px',
-                                backgroundColor: 'var(--surface-dark)',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                borderRadius: '8px',
-                                color: 'white',
-                                cursor: 'pointer',
-                                fontSize: '0.95rem',
-                                transition: 'all 0.2s'
-                            }}
+                            className={styles.dropdownBtn}
                         >
                             <span>{selectedLeague ? selectedLeague.name : 'Todas las competiciones'}</span>
-                            <span style={{ fontSize: '0.8rem', transform: isLeagueDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>▼</span>
+                            <span className={`${styles.dropdownArrow} ${isLeagueDropdownOpen ? styles.dropdownArrowOpen : ''}`}>▼</span>
                         </button>
 
                         {isLeagueDropdownOpen && (
-                            <div style={{
-                                position: 'absolute',
-                                top: '100%',
-                                left: 0,
-                                right: 0,
-                                marginTop: '4px',
-                                backgroundColor: 'var(--surface-dark)',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                borderRadius: '8px',
-                                zIndex: 10,
-                                maxHeight: '200px',
-                                overflowY: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                padding: '0.5rem'
-                            }}>
+                            <div className={styles.dropdownMenu}>
                                 <button
                                     onClick={() => handleSelectLeague(null)}
-                                    style={{
-                                        textAlign: 'left',
-                                        padding: '8px 12px',
-                                        backgroundColor: !selectedLeague ? 'rgba(57,255,20,0.1)' : 'transparent',
-                                        border: 'none',
-                                        color: !selectedLeague ? 'var(--accent-neon)' : 'white',
-                                        cursor: 'pointer',
-                                        borderRadius: '6px',
-                                        fontSize: '0.9rem',
-                                        transition: 'all 0.2s'
-                                    }}
-                                    className="dropdown-item"
+                                    className={`${styles.dropdownItem} ${!selectedLeague ? styles.dropdownItemActive : ''}`}
                                 >
                                     Todas las competiciones
                                 </button>
@@ -629,18 +454,7 @@ const MarketDesktop = () => {
                                     <button
                                         key={league.id}
                                         onClick={() => handleSelectLeague(league)}
-                                        style={{
-                                            textAlign: 'left',
-                                            padding: '8px 12px',
-                                            backgroundColor: selectedLeague?.id === league.id ? 'rgba(57,255,20,0.1)' : 'transparent',
-                                            border: 'none',
-                                            color: selectedLeague?.id === league.id ? 'var(--accent-neon)' : 'white',
-                                            cursor: 'pointer',
-                                            borderRadius: '6px',
-                                            fontSize: '0.9rem',
-                                            transition: 'all 0.2s'
-                                        }}
-                                        className="dropdown-item"
+                                        className={`${styles.dropdownItem} ${selectedLeague?.id === league.id ? styles.dropdownItemActive : ''}`}
                                     >
                                         {league.name}
                                     </button>
@@ -650,66 +464,27 @@ const MarketDesktop = () => {
                     </div>
 
                     {/* Team Selector */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', position: 'relative' }}>
-                        <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '600' }}>Equipo</label>
+                    <div className={styles.filterGroup}>
+                        <label className={styles.filterLabel}>Equipo</label>
                         <button
                             onClick={() => selectedLeague && setIsTeamDropdownOpen(!isTeamDropdownOpen)}
                             disabled={!selectedLeague}
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                padding: '12px 16px',
-                                backgroundColor: selectedLeague ? 'var(--surface-dark)' : 'rgba(255,255,255,0.02)',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                borderRadius: '8px',
-                                color: selectedLeague ? 'white' : 'var(--text-muted)',
-                                cursor: selectedLeague ? 'pointer' : 'not-allowed',
-                                fontSize: '0.95rem',
-                                transition: 'all 0.2s',
-                                opacity: selectedLeague ? 1 : 0.5
-                            }}
+                            className={`${styles.dropdownBtn} ${!selectedLeague ? styles.dropdownBtnDisabled : ''}`}
                         >
                             <span>
                                 {!selectedLeague
                                     ? 'Selecciona competición'
                                     : (selectedTeam ? selectedTeam.name : 'Todos los equipos')}
                             </span>
-                            <span style={{ fontSize: '0.8rem', transform: isTeamDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>▼</span>
+                            <span className={`${styles.dropdownArrow} ${isTeamDropdownOpen ? styles.dropdownArrowOpen : ''}`}>▼</span>
                         </button>
 
                         {/* Team Options Dropdown */}
                         {isTeamDropdownOpen && selectedLeague && (
-                            <div style={{
-                                position: 'absolute',
-                                top: '100%',
-                                left: 0,
-                                right: 0,
-                                marginTop: '4px',
-                                backgroundColor: 'var(--surface-dark)',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                borderRadius: '8px',
-                                zIndex: 10,
-                                maxHeight: '200px',
-                                overflowY: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                padding: '0.5rem'
-                            }}>
+                            <div className={styles.dropdownMenu}>
                                 <button
                                     onClick={() => handleSelectTeam(null)}
-                                    style={{
-                                        textAlign: 'left',
-                                        padding: '8px 12px',
-                                        backgroundColor: !selectedTeam ? 'rgba(57,255,20,0.1)' : 'transparent',
-                                        border: 'none',
-                                        color: !selectedTeam ? 'var(--accent-neon)' : 'white',
-                                        cursor: 'pointer',
-                                        borderRadius: '6px',
-                                        fontSize: '0.9rem',
-                                        transition: 'all 0.2s'
-                                    }}
-                                    className="dropdown-item"
+                                    className={`${styles.dropdownItem} ${!selectedTeam ? styles.dropdownItemActive : ''}`}
                                 >
                                     Todos los equipos
                                 </button>
@@ -717,18 +492,7 @@ const MarketDesktop = () => {
                                     <button
                                         key={team.id}
                                         onClick={() => handleSelectTeam(team)}
-                                        style={{
-                                            textAlign: 'left',
-                                            padding: '8px 12px',
-                                            backgroundColor: selectedTeam?.id === team.id ? 'rgba(57,255,20,0.1)' : 'transparent',
-                                            border: 'none',
-                                            color: selectedTeam?.id === team.id ? 'var(--accent-neon)' : 'white',
-                                            cursor: 'pointer',
-                                            borderRadius: '6px',
-                                            fontSize: '0.9rem',
-                                            transition: 'all 0.2s'
-                                        }}
-                                        className="dropdown-item"
+                                        className={`${styles.dropdownItem} ${selectedTeam?.id === team.id ? styles.dropdownItemActive : ''}`}
                                     >
                                         {team.name}
                                     </button>
@@ -738,15 +502,6 @@ const MarketDesktop = () => {
                     </div>
                 </div>
             </aside>
-
-            <style>{`
-        .market-row:hover {
-          background-color: rgba(255,255,255,0.03);
-        }
-        .dropdown-item:hover {
-          background-color: rgba(255,255,255,0.06) !important;
-        }
-      `}</style>
         </div>
     );
 };

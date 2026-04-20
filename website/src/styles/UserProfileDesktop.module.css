@@ -1,0 +1,210 @@
+.container {
+    background-color: var(--bg-main);
+    height: 100vh;
+    width: 100%;
+    display: flex;
+}
+
+.loading, .notFound {
+    background-color: var(--bg-main);
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-main);
+}
+
+
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.userInfo {
+    overflow: hidden;
+}
+
+.userName {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-main);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.userSubtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.mainContent {
+    margin-left: 250px;
+    flex: 1;
+    padding: 2rem 3rem;
+    overflow-y: auto;
+}
+
+.header {
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.backBtn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: color 0.2s;
+}
+
+.backBtn:hover {
+    color: var(--text-main);
+}
+
+.headerText {
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.contentGrid {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr;
+    gap: 2rem;
+}
+
+.profileCard {
+    padding: 2rem;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: fit-content;
+}
+
+.userAvatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: var(--surface-lighter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--accent-neon);
+    margin-bottom: 1.5rem;
+    border: 4px solid rgba(57, 255, 20, 0.2);
+    overflow: hidden;
+}
+
+.profileName {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.statsBox {
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: 1rem;
+    border-radius: 16px;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.statsLabel {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.statsValue {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent-neon);
+    margin: 0;
+}
+
+.joinDate {
+    color: var(--text-muted);
+    margin-top: 2rem;
+    font-size: 0.9rem;
+}
+
+.tableSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.tableTitle {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.tableContainer {
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.tableHead {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.tableHeadCell {
+    padding: 1.2rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.tableRow {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.tableRow:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.tableCell {
+    padding: 1.2rem;
+}
+
+.tableCellBold {
+    font-weight: 700;
+}
+
+.accentValue {
+    color: var(--accent-neon);
+}
+
+.emptyState {
+    padding: 3rem;
+    text-align: center;
+    color: var(--text-muted);
+}

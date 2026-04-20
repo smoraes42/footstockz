@@ -16,7 +16,7 @@ class TradeEngine {
      */
     async _recordPortfolioSnapshot(connection, userId) {
         const [walletRows] = await connection.query('SELECT value FROM wallets WHERE user_id = ?', [userId]);
-        const walletValue = walletRows[0]?.value || 0;
+        const walletValue = parseFloat(walletRows[0]?.value) || 0;
 
         const [holdingsRows] = await connection.query(`
             SELECT pp.proportion as shares, p.initial_price as p0
@@ -37,15 +37,18 @@ class TradeEngine {
         
         // Player holdings value
         holdingsRows.forEach(row => {
-            const v = (row.p0 / k) * (1 - Math.exp(-k * row.shares));
+            const p0 = parseFloat(row.p0) || 0;
+            const shares = parseFloat(row.shares) || 0;
+            const v = (p0 / k) * (1 - Math.exp(-k * shares));
             holdingsValue += v;
         });
 
         // Team holdings value
         for (const row of teamHoldingsRows) {
             const [teamPlayers] = await connection.query('SELECT initial_price FROM players WHERE team_id = ?', [row.team_id]);
-            const teamPriceSpot = teamPlayers.reduce((sum, p) => sum + p.initial_price, 0);
-            const v = (teamPriceSpot / k) * (1 - Math.exp(-k * row.shares));
+            const teamPriceSpot = teamPlayers.reduce((sum, p) => sum + (parseFloat(p.initial_price) || 0), 0);
+            const shares = parseFloat(row.shares) || 0;
+            const v = (teamPriceSpot / k) * (1 - Math.exp(-k * shares));
             holdingsValue += v;
         }
 
@@ -113,8 +116,8 @@ class TradeEngine {
             // 1. Get current price and reference price
             const [playerRows] = await connection.query('SELECT initial_price, reference_price FROM players WHERE id = ? FOR UPDATE', [playerId]);
             if (playerRows.length === 0) throw new Error('Player not found.');
-            const currentPrice = playerRows[0].initial_price;
-            const referencePrice = playerRows[0].reference_price || currentPrice;
+            const currentPrice = parseFloat(playerRows[0].initial_price);
+            const referencePrice = parseFloat(playerRows[0].reference_price) || currentPrice;
 
             // 1.1 Validate Slippage
             this._validateSlippage(currentPrice, 'buy', slippageParams);
@@ -131,7 +134,8 @@ class TradeEngine {
 
             // 3. Check wallet
             const [walletRows] = await connection.query('SELECT value FROM wallets WHERE user_id = ? FOR UPDATE', [userId]);
-            if (walletRows.length === 0 || walletRows[0].value < totalValue) {
+            const walletBalance = parseFloat(walletRows[0]?.value) || 0;
+            if (walletRows.length === 0 || walletBalance < totalValue) {
                 throw new Error('Insufficient wallet balance to complete this trade.');
             }
 
@@ -208,8 +212,8 @@ class TradeEngine {
 
             const [playerRows] = await connection.query('SELECT initial_price, reference_price FROM players WHERE id = ? FOR UPDATE', [playerId]);
             if (playerRows.length === 0) throw new Error('Player not found.');
-            const currentPrice = playerRows[0].initial_price;
-            const referencePrice = playerRows[0].reference_price || currentPrice;
+            const currentPrice = parseFloat(playerRows[0].initial_price);
+            const referencePrice = parseFloat(playerRows[0].reference_price) || currentPrice;
 
             // 1. Validate Slippage
             this._validateSlippage(currentPrice, 'buy', slippageParams);
@@ -223,7 +227,8 @@ class TradeEngine {
             const totalCost = (currentPrice / k) * (Math.exp(k * quantity) - 1);
 
             const [walletRows] = await connection.query('SELECT value FROM wallets WHERE user_id = ? FOR UPDATE', [userId]);
-            if (walletRows.length === 0 || walletRows[0].value < totalCost) {
+            const walletBalance = parseFloat(walletRows[0]?.value) || 0;
+            if (walletRows.length === 0 || walletBalance < totalCost) {
                 throw new Error('Insufficient wallet balance to complete this trade.');
             }
 
@@ -299,8 +304,8 @@ class TradeEngine {
 
             const [playerRows] = await connection.query('SELECT initial_price, reference_price FROM players WHERE id = ? FOR UPDATE', [playerId]);
             if (playerRows.length === 0) throw new Error('Player not found.');
-            const currentPrice = playerRows[0].initial_price;
-            const referencePrice = playerRows[0].reference_price || currentPrice;
+            const currentPrice = parseFloat(playerRows[0].initial_price);
+            const referencePrice = parseFloat(playerRows[0].reference_price) || currentPrice;
 
             // 1. Validate Slippage
             this._validateSlippage(currentPrice, 'sell', slippageParams);
@@ -314,8 +319,9 @@ class TradeEngine {
             const totalValueReceived = (currentPrice / k) * (1 - Math.exp(-k * quantity));
 
             const [positionRows] = await connection.query('SELECT proportion FROM player_positions WHERE user_id = ? AND player_id = ? FOR UPDATE', [userId, playerId]);
+            const currentProportion = parseFloat(positionRows[0]?.proportion) || 0;
             const epsilon = 1e-6;
-            if (positionRows.length === 0 || positionRows[0].proportion < (quantity - epsilon)) {
+            if (positionRows.length === 0 || currentProportion < (quantity - epsilon)) {
                 throw new Error('Insufficient player stock.');
             }
 
@@ -387,8 +393,8 @@ class TradeEngine {
 
             const [playerRows] = await connection.query('SELECT initial_price, reference_price FROM players WHERE id = ? FOR UPDATE', [playerId]);
             if (playerRows.length === 0) throw new Error('Player not found.');
-            const currentPrice = playerRows[0].initial_price;
-            const referencePrice = playerRows[0].reference_price || currentPrice;
+            const currentPrice = parseFloat(playerRows[0].initial_price);
+            const referencePrice = parseFloat(playerRows[0].reference_price) || currentPrice;
 
             // 1. Validate Slippage
             this._validateSlippage(currentPrice, 'sell', slippageParams);
@@ -409,8 +415,9 @@ class TradeEngine {
             this._validatePriceImpact(quantity);
 
             const [positionRows] = await connection.query('SELECT proportion FROM player_positions WHERE user_id = ? AND player_id = ? FOR UPDATE', [userId, playerId]);
+            const currentProportion = parseFloat(positionRows[0]?.proportion) || 0;
             const epsilon = 1e-6;
-            if (positionRows.length === 0 || positionRows[0].proportion < (quantity - epsilon)) {
+            if (positionRows.length === 0 || currentProportion < (quantity - epsilon)) {
                 throw new Error('Insufficient player stock.');
             }
 
@@ -488,8 +495,9 @@ class TradeEngine {
             `, [teamId]);
 
             if (players.length === 0) throw new Error('Team not found or has no players.');
-
-            const teamPriceSpot = players.reduce((sum, p) => sum + p.initial_price, 0);
+            
+            // Explicitly parse initial_price as float to avoid string concatenation in reduce
+            const teamPriceSpot = players.reduce((sum, p) => sum + (parseFloat(p.initial_price) || 0), 0);
             const k = this.PRICE_IMPACT_FACTOR;
 
             // 2. Solve for team shares N: V = (S/k) * (e^kN - 1) => N = ln(1 + Vk/S) / k
@@ -500,7 +508,8 @@ class TradeEngine {
 
             // 3. Check wallet
             const [walletRows] = await connection.query('SELECT value FROM wallets WHERE user_id = ? FOR UPDATE', [userId]);
-            if (walletRows.length === 0 || walletRows[0].value < totalValue) {
+            const walletBalance = parseFloat(walletRows[0]?.value) || 0;
+            if (walletRows.length === 0 || walletBalance < totalValue) {
                 throw new Error('Insufficient wallet balance.');
             }
 
@@ -516,8 +525,8 @@ class TradeEngine {
             }
 
             for (const player of players) {
-                const p0 = player.initial_price;
-                const pRef = player.reference_price || p0;
+                const p0 = parseFloat(player.initial_price) || 0;
+                const pRef = parseFloat(player.reference_price) || p0;
                 
                 // Individual player impact for N shares: c = (p0/k) * (e^kN - 1)
                 const playerCost = (p0 / k) * (Math.exp(k * quantity) - 1);
@@ -581,21 +590,23 @@ class TradeEngine {
 
             if (players.length === 0) throw new Error('Team not found.');
 
-            const teamPriceSpot = players.reduce((sum, p) => sum + p.initial_price, 0);
+            // Explicitly parse initial_price as float to avoid string concatenation in reduce
+            const teamPriceSpot = players.reduce((sum, p) => sum + (parseFloat(p.initial_price) || 0), 0);
             const k = this.PRICE_IMPACT_FACTOR;
             let totalValueReceived = 0;
 
             // 1. Check if user has enough of the TEAM
             const epsilon = 1e-6;
             const [teamPos] = await connection.query('SELECT id, proportion FROM team_positions WHERE user_id = ? AND team_id = ? FOR UPDATE', [userId, teamId]);
-            if (!teamPos.length || teamPos[0].proportion < (quantity - epsilon)) {
+            const currentProportion = parseFloat(teamPos[0]?.proportion) || 0;
+            if (!teamPos.length || currentProportion < (quantity - epsilon)) {
                 throw new Error('Insufficient team shares.');
             }
 
             // 2. Execute sell for each player to update prices
             for (const player of players) {
-                const p0 = player.initial_price;
-                const pRef = player.reference_price || p0;
+                const p0 = parseFloat(player.initial_price) || 0;
+                const pRef = parseFloat(player.reference_price) || p0;
                 
                 // Value received: v = (p0/k) * (1 - e^-kN)
                 const playerValue = (p0 / k) * (1 - Math.exp(-k * quantity));

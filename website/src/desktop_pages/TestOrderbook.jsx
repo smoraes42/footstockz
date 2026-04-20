@@ -2,8 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
+import { API_URL } from '../services/api';
+import styles from '../styles/TestOrderbook.module.css';
 
-const API_BASE = `${import.meta.env.VITE_API_URL}/v1`;
+const API_BASE = `${API_URL}/v1`;
 
 export default function TestOrderbook() {
     const [users, setUsers] = useState([]);
@@ -267,14 +269,14 @@ export default function TestOrderbook() {
     const currentPlayer = players.find(p => p.id === parseInt(selectedPlayer));
 
     return (
-        <div style={styles.container}>
-            <h1 style={styles.title}>Futstocks Market Engine Test</h1>
+        <div className={styles.container}>
+            <h1 className={styles.title}>Futstocks Market Engine Test</h1>
 
-            <div style={styles.controlsRow}>
-                <div style={styles.controlGroup}>
-                    <label style={styles.label}>Impersonate User:</label>
+            <div className={styles.controlsRow}>
+                <div className={styles.controlGroup}>
+                    <label className={styles.label}>Impersonate User:</label>
                     <select
-                        style={styles.select}
+                        className={styles.select}
                         value={selectedUser || ''}
                         onChange={(e) => setSelectedUser(parseInt(e.target.value))}
                     >
@@ -282,10 +284,10 @@ export default function TestOrderbook() {
                     </select>
                 </div>
 
-                <div style={styles.controlGroup}>
-                    <label style={styles.label}>Select Player:</label>
+                <div className={styles.controlGroup}>
+                    <label className={styles.label}>Select Player:</label>
                     <select
-                        style={styles.select}
+                        className={styles.select}
                         value={selectedPlayer || ''}
                         onChange={(e) => setSelectedPlayer(parseInt(e.target.value))}
                     >
@@ -294,23 +296,23 @@ export default function TestOrderbook() {
                 </div>
 
                 {portfolio && (
-                    <div style={styles.walletInfo}>
-                        <span style={styles.label}>Wallet Balance:</span>
-                        <span style={styles.walletValue}>{portfolio.walletBalance?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                    <div className={styles.walletInfo}>
+                        <span className={styles.label}>Wallet Balance:</span>
+                        <span className={styles.walletValue}>{portfolio.walletBalance?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                     </div>
                 )}
             </div>
 
-            <div style={styles.mainGrid}>
-                <div style={styles.leftCol}>
+            <div className={styles.mainGrid}>
+                <div className={styles.leftCol}>
 
                     {/* Chart */}
-                    <div style={styles.card}>
-                        <h2 style={styles.cardTitle}>
+                    <div className={styles.card}>
+                        <h2 className={styles.cardTitle}>
                             {currentPlayer?.name} Price Chart
-                            <span style={styles.currentPriceTag}>Current: {currentPlayer?.price?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                            <span className={styles.currentPriceTag}>Current: {currentPlayer?.price?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                         </h2>
-                        <div style={{ width: '100%', height: 350 }}>
+                        <div className={styles.chartWrapper}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={priceHistory}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#222" />
@@ -335,60 +337,60 @@ export default function TestOrderbook() {
                     </div>
 
                     {/* Orderbook */}
-                    <div style={styles.card}>
-                        <h2 style={styles.cardTitle}>Order Book</h2>
+                    <div className={styles.card}>
+                        <h2 className={styles.cardTitle}>Order Book</h2>
 
-                        <div style={styles.orderbookGrid}>
-                            <div style={styles.asksContainer}>
-                                <div style={styles.orderbookHeader}>
+                        <div className={styles.orderbookGrid}>
+                            <div className={styles.asksContainer}>
+                                <div className={styles.orderbookHeader}>
                                     <span>Price (€)</span>
                                     <span>Size</span>
                                 </div>
                                 {orderbook.asks.length > 0 ? (
                                     orderbook.asks.slice().reverse().map((ask, i) => (
-                                        <div key={`ask-${i}`} style={styles.askRow}>
-                                            <span style={styles.askPrice}>{ask.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                        <div key={`ask-${i}`} className={styles.askRow}>
+                                            <span className={styles.askPrice}>{ask.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                             <span>{ask.quantity.toLocaleString()}</span>
                                         </div>
                                     ))
                                 ) : (
-                                    <div style={styles.emptyBook}>No SELL orders</div>
+                                    <div className={styles.emptyBook}>No SELL orders</div>
                                 )}
                             </div>
 
-                            <div style={styles.spreadIndicator}>
+                            <div className={styles.spreadIndicator}>
                                 {orderbook.asks.length > 0 && orderbook.bids.length > 0
                                     ? `Spread: ${(orderbook.asks[0].price - orderbook.bids[0].price).toLocaleString('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} €`
                                     : 'Market Open'
                                 }
                             </div>
 
-                            <div style={styles.bidsContainer}>
+                            <div className={styles.bidsContainer}>
                                 {orderbook.bids.length > 0 ? (
                                     orderbook.bids.map((bid, i) => (
-                                        <div key={`bid-${i}`} style={styles.bidRow}>
-                                            <span style={styles.bidPrice}>{bid.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                        <div key={`bid-${i}`} className={styles.bidRow}>
+                                            <span className={styles.bidPrice}>{bid.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                             <span>{bid.quantity.toLocaleString()}</span>
                                         </div>
                                     ))
                                 ) : (
-                                    <div style={styles.emptyBook}>No BUY orders</div>
+                                    <div className={styles.emptyBook}>No BUY orders</div>
                                 )}
                             </div>
                         </div>
 
                         {/* Open Orders */}
-                        <div style={styles.openOrdersSection}>
-                            <h3 style={styles.cardTitleSmall}>Your Open Orders</h3>
+                        <div className={styles.openOrdersSection}>
+                            <h3 className={styles.cardTitleSmall}>Your Open Orders</h3>
                             {portfolio?.openOrders?.length > 0 ? (
                                 portfolio.openOrders.map(o => (
-                                    <div key={o.order_id} style={styles.openOrderRow}>
+                                    <div key={o.order_id} className={styles.openOrderRow}>
                                         <span>{o.trade_type === 'Buy' ? 'BUY' : 'SELL'}</span>
                                         <span>{o.quantity} @ {o.target_price}</span>
                                     </div>
                                 ))
                             ) : (
-                                <div style={styles.noOrders}>No active orders</div>
+                                <div className={styles.noOrders}>No active orders</div>
                             )}
                         </div>
 
@@ -397,46 +399,40 @@ export default function TestOrderbook() {
                 </div>
 
                 {/* Trade Form and User Position in Right Column */}
-                <div style={styles.rightCol}>
+                <div className={styles.rightCol}>
                     {/* User Position */}
-                    <div style={styles.card}>
-                        <h2 style={styles.cardTitle}>Your Position</h2>
+                    <div className={styles.card}>
+                        <h2 className={styles.cardTitle}>Your Position</h2>
                         {portfolio?.holdings?.find(h => h.player_id === selectedPlayer) ? (
-                            <div style={styles.positionBox}>
-                                <div style={styles.posRow}>
-                                    <span style={styles.label}>Shares Held:</span>
-                                    <span style={styles.posValue}>{portfolio.holdings.find(h => h.player_id === selectedPlayer).shares_owned}</span>
+                            <div className={styles.positionBox}>
+                                <div className={styles.posRow}>
+                                    <span className={styles.label}>Shares Held:</span>
+                                    <span className={styles.posValue}>{portfolio.holdings.find(h => h.player_id === selectedPlayer).shares_owned}</span>
                                 </div>
-                                <div style={styles.posRow}>
-                                    <span style={styles.label}>Value:</span>
-                                    <span style={styles.posValue}>{portfolio.holdings.find(h => h.player_id === selectedPlayer).position_value?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                                <div className={styles.posRow}>
+                                    <span className={styles.label}>Value:</span>
+                                    <span className={styles.posValue}>{portfolio.holdings.find(h => h.player_id === selectedPlayer).position_value?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                                 </div>
                             </div>
                         ) : (
-                            <div style={styles.noPosition}>No shares held.</div>
+                            <div className={styles.noPosition}>No shares held.</div>
                         )}
                     </div>
 
                     {/* Trade Form */}
-                    <div style={styles.card}>
-                        <h2 style={styles.cardTitle}>Trade Order</h2>
+                    <div className={styles.card}>
+                        <h2 className={styles.cardTitle}>Trade Order</h2>
 
                         {/* Tab Navigation */}
-                        <div style={styles.tabRow}>
+                        <div className={styles.tabRow}>
                             <button
-                                style={{
-                                    ...styles.tabButton,
-                                    ...(activeTab === 'buy' ? styles.activeTabBuy : {})
-                                }}
+                                className={`${styles.tabButton} ${activeTab === 'buy' ? styles.activeTabBuy : ''}`}
                                 onClick={() => setActiveTab('buy')}
                             >
                                 BUY
                             </button>
                             <button
-                                style={{
-                                    ...styles.tabButton,
-                                    ...(activeTab === 'sell' ? styles.activeTabSell : {})
-                                }}
+                                className={`${styles.tabButton} ${activeTab === 'sell' ? styles.activeTabSell : ''}`}
                                 onClick={() => setActiveTab('sell')}
                             >
                                 SELL
@@ -444,15 +440,15 @@ export default function TestOrderbook() {
                         </div>
 
                         {/* Market Orders Section */}
-                        <div style={styles.orderSection}>
+                        <div className={styles.orderSection}>
                             {activeTab === 'buy' && (
                                 <>
-                                    <div style={styles.formRow}>
-                                        <div style={{ ...styles.inputGroup, flex: 1 }}>
-                                            <label style={styles.label}>Quantity</label>
+                                    <div className={styles.formRow}>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.label}>Quantity</label>
                                             <input
                                                 type="number"
-                                                style={styles.input}
+                                                className={styles.input}
                                                 placeholder="Qty"
                                                 value={marketBuyQty}
                                                 onChange={e => {
@@ -466,14 +462,11 @@ export default function TestOrderbook() {
                                                 }}
                                             />
                                         </div>
-                                        <div style={{ ...styles.inputGroup, flex: 1 }}>
-                                            <label style={styles.label}>Value (€)</label>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.label}>Value (€)</label>
                                             <input
                                                 type="number"
-                                                style={{
-                                                    ...styles.input,
-                                                    color: portfolio && parseFloat(marketBuyTotal) > portfolio.walletBalance ? '#ff3d00' : '#fff'
-                                                }}
+                                                className={`${styles.input} ${portfolio && parseFloat(marketBuyTotal) > portfolio.walletBalance ? styles.inputError : ''}`}
                                                 placeholder="Value (€)"
                                                 value={marketBuyTotal}
                                                 onChange={e => {
@@ -488,30 +481,30 @@ export default function TestOrderbook() {
                                             />
                                         </div>
                                     </div>
-                                    <div style={styles.quickSelectRow}>
+                                    <div className={styles.quickSelectRow}>
                                         <button
-                                            style={styles.quickSelectBtn}
+                                            className={styles.quickSelectBtn}
                                             onClick={() => handleQuickBuy(0.25)}
                                         >
                                             25%
                                         </button>
                                         <button
-                                            style={styles.quickSelectBtn}
+                                            className={styles.quickSelectBtn}
                                             onClick={() => handleQuickBuy(0.50)}
                                         >
                                             50%
                                         </button>
                                         <button
-                                            style={styles.quickSelectBtn}
+                                            className={styles.quickSelectBtn}
                                             onClick={() => handleQuickBuy(1.00)}
                                         >
                                             100%
                                         </button>
                                     </div>
-                                    <div style={{ ...styles.buttonRow, marginTop: '20px' }}>
+                                    <div className={styles.buttonRow}>
                                         <button
-                                            disabled={loading}
-                                            style={{ ...styles.buyButton, width: '50%' }}
+                                            disabled={loading || (marketBuyTotal && parseEU(marketBuyTotal) > (portfolio?.walletBalance || 0))}
+                                            className={`${styles.buyButton} ${(marketBuyTotal && parseEU(marketBuyTotal) > (portfolio?.walletBalance || 0)) ? styles.buttonDisabled : ''}`}
                                             onClick={handleMarketBuy}
                                         >
                                             {loading ? '...' : 'MARKET BUY'}
@@ -522,15 +515,12 @@ export default function TestOrderbook() {
 
                             {activeTab === 'sell' && (
                                 <>
-                                    <div style={styles.formRow}>
-                                        <div style={{ ...styles.inputGroup, flex: 1 }}>
-                                            <label style={styles.label}>Quantity</label>
+                                    <div className={styles.formRow}>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.label}>Quantity</label>
                                             <input
                                                 type="number"
-                                                style={{
-                                                    ...styles.input,
-                                                    color: portfolio && portfolio.holdings?.find(h => h.player_id === selectedPlayer) && parseFloat(marketSellQty) > portfolio.holdings.find(h => h.player_id === selectedPlayer).shares_owned ? '#ff3d00' : '#fff'
-                                                }}
+                                                className={`${styles.input} ${portfolio && portfolio.holdings?.find(h => h.player_id === selectedPlayer) && parseFloat(marketSellQty) > portfolio.holdings.find(h => h.player_id === selectedPlayer).shares_owned ? styles.inputError : ''}`}
                                                 placeholder="Qty"
                                                 value={marketSellQty}
                                                 onChange={e => {
@@ -544,11 +534,11 @@ export default function TestOrderbook() {
                                                 }}
                                             />
                                         </div>
-                                        <div style={{ ...styles.inputGroup, flex: 1 }}>
-                                            <label style={styles.label}>Value (€)</label>
+                                        <div className={styles.inputGroup}>
+                                            <label className={styles.label}>Value (€)</label>
                                             <input
                                                 type="number"
-                                                style={styles.input}
+                                                className={styles.input}
                                                 placeholder="Value (€)"
                                                 value={marketSellTotal}
                                                 onChange={e => {
@@ -563,30 +553,30 @@ export default function TestOrderbook() {
                                             />
                                         </div>
                                     </div>
-                                    <div style={styles.quickSelectRow}>
+                                    <div className={styles.quickSelectRow}>
                                         <button
-                                            style={styles.quickSelectBtn}
+                                            className={styles.quickSelectBtn}
                                             onClick={() => handleQuickSell(0.25)}
                                         >
                                             25%
                                         </button>
                                         <button
-                                            style={styles.quickSelectBtn}
+                                            className={styles.quickSelectBtn}
                                             onClick={() => handleQuickSell(0.50)}
                                         >
                                             50%
                                         </button>
                                         <button
-                                            style={styles.quickSelectBtn}
+                                            className={styles.quickSelectBtn}
                                             onClick={() => handleQuickSell(1.00)}
                                         >
                                             100%
                                         </button>
                                     </div>
-                                    <div style={{ ...styles.buttonRow, marginTop: '20px' }}>
+                                    <div className={styles.buttonRow}>
                                         <button
-                                            disabled={loading}
-                                            style={{ ...styles.sellButton, width: '50%' }}
+                                            disabled={loading || (marketSellQty && parseEU(marketSellQty) > (portfolio?.holdings?.find(h => h.player_id === selectedPlayer)?.shares_owned || 0))}
+                                            className={`${styles.sellButton} ${(marketSellQty && parseEU(marketSellQty) > (portfolio?.holdings?.find(h => h.player_id === selectedPlayer)?.shares_owned || 0)) ? styles.buttonDisabled : ''}`}
                                             onClick={handleMarketSell}
                                         >
                                             {loading ? '...' : 'MARKET SELL'}
@@ -597,13 +587,13 @@ export default function TestOrderbook() {
                         </div>
 
                         {error && (
-                            <div style={{ ...styles.errorBanner, marginTop: '20px', marginBottom: '0' }}>
+                            <div className={`${styles.errorBanner} ${styles.errorBannerSpacing}`}>
                                 {error}
                             </div>
                         )}
 
                         {lastTradeResult && (
-                            <div style={styles.successMessage}>
+                            <div className={styles.successMessage}>
                                 {lastTradeResult}
                             </div>
                         )}
@@ -613,427 +603,3 @@ export default function TestOrderbook() {
         </div>
     );
 }
-
-const styles = {
-    container: {
-        padding: '30px',
-        maxWidth: '1400px',
-        margin: '0 auto',
-        color: '#fff',
-        fontFamily: '"Outfit", sans-serif',
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px'
-    },
-    title: {
-        fontSize: '2.4rem',
-        fontWeight: '800',
-        margin: 0,
-        background: 'linear-gradient(135deg, #fff 0%, #00e676 100%)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        letterSpacing: '-1px'
-    },
-    errorBanner: {
-        backgroundColor: '#ff525222',
-        color: '#ff5252',
-        padding: '12px 20px',
-        borderRadius: '8px',
-        border: '1px solid #ff525244',
-        fontSize: '0.9rem'
-    },
-    controlsRow: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '30px',
-        padding: '20px',
-        backgroundColor: '#111',
-        borderRadius: '16px',
-        border: '1px solid #222'
-    },
-    controlGroup: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-    },
-    walletInfo: {
-        marginLeft: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        gap: '4px'
-    },
-    walletValue: {
-        fontSize: '1.4rem',
-        fontWeight: '700',
-        color: '#00e676'
-    },
-    label: {
-        fontSize: '0.75rem',
-        color: '#666',
-        fontWeight: '700',
-        textTransform: 'uppercase',
-        letterSpacing: '1px'
-    },
-    select: {
-        padding: '12px 20px',
-        borderRadius: '12px',
-        backgroundColor: '#000',
-        border: '1px solid #333',
-        color: '#fff',
-        fontSize: '0.95rem',
-        outline: 'none',
-        cursor: 'pointer',
-        minWidth: '200px'
-    },
-    input: {
-        padding: '14px 18px',
-        borderRadius: '12px',
-        backgroundColor: '#000',
-        border: '1px solid #333',
-        color: '#fff',
-        fontSize: '1rem',
-        outline: 'none',
-        width: '100%',
-        boxSizing: 'border-box',
-        transition: 'border-color 0.2s',
-    },
-    tabRow: {
-        display: 'flex',
-        marginBottom: '20px',
-        gap: '10px',
-        backgroundColor: '#0a0a0a',
-        padding: '5px',
-        borderRadius: '12px',
-        border: '1px solid #222',
-    },
-    tabButton: {
-        flex: 1,
-        padding: '12px 16px',
-        borderRadius: '8px',
-        border: '1px solid transparent',
-        backgroundColor: 'transparent',
-        color: '#888',
-        fontSize: '1rem',
-        fontWeight: 'bold',
-        cursor: 'pointer',
-        transition: 'all 0.2s',
-    },
-    positionBox: {
-        backgroundColor: '#0a0a0a',
-        padding: '15px 20px',
-        borderRadius: '12px',
-        border: '1px solid #222',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-        height: '80px',
-        justifyContent: 'center',
-        boxSizing: 'border-box',
-    },
-    posRow: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    posValue: {
-        fontWeight: 'bold',
-        fontSize: '1.1rem',
-        color: '#fff',
-    },
-    noPosition: {
-        color: '#666',
-        fontStyle: 'italic',
-        backgroundColor: '#0a0a0a',
-        padding: '15px 20px',
-        borderRadius: '12px',
-        border: '1px solid #222',
-        height: '80px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxSizing: 'border-box',
-    },
-    activeTabBuy: {
-        backgroundColor: 'rgba(0, 230, 118, 0.15)',
-        color: '#00e676',
-        borderColor: '#00e676',
-    },
-    activeTabSell: {
-        backgroundColor: 'rgba(255, 61, 0, 0.15)',
-        color: '#ff3d00',
-        borderColor: '#ff3d00',
-    },
-    toggleHeader: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-    },
-    toggleBtn: {
-        background: 'none',
-        border: 'none',
-        color: '#00e676',
-        fontSize: '0.75rem',
-        cursor: 'pointer',
-        padding: 0,
-        textDecoration: 'underline',
-    },
-    mainGrid: {
-        display: 'grid',
-        gridTemplateColumns: '2.5fr 1fr',
-        gap: '24px',
-        flex: 1
-    },
-    leftCol: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '24px',
-    },
-    rightCol: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '24px',
-    },
-    card: {
-        backgroundColor: '#0a0a0a',
-        borderRadius: '24px',
-        padding: '24px',
-        border: '1px solid #1a1a1a',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-    },
-    cardTitle: {
-        fontSize: '1.3rem',
-        fontWeight: '700',
-        marginBottom: '24px',
-        color: '#fff',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    cardTitleSmall: {
-        fontSize: '1rem',
-        fontWeight: '700',
-        margin: '20px 0 12px 0',
-        color: '#444',
-        textTransform: 'uppercase',
-    },
-    currentPriceTag: {
-        fontSize: '0.9rem',
-        backgroundColor: '#00e67611',
-        color: '#00e676',
-        padding: '6px 14px',
-        borderRadius: '100px',
-        border: '1px solid #00e67622'
-    },
-    twoColumnRow: {
-        display: 'flex',
-        gap: '24px'
-    },
-    formRow: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '16px',
-        marginBottom: '20px',
-    },
-    inputGroup: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-    },
-    buttonRow: {
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    buyButton: {
-        padding: '18px',
-        border: 'none',
-        borderRadius: '14px',
-        backgroundColor: '#00c853',
-        color: '#000',
-        fontWeight: '900',
-        fontSize: '0.9rem',
-        cursor: 'pointer',
-        transition: 'transform 0.1s, opacity 0.2s',
-    },
-    sellButton: {
-        padding: '18px',
-        border: 'none',
-        borderRadius: '14px',
-        backgroundColor: '#ff5252',
-        color: '#000',
-        fontWeight: '900',
-        fontSize: '0.9rem',
-        cursor: 'pointer',
-        transition: 'transform 0.1s, opacity 0.2s',
-    },
-    orderbookGrid: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    orderbookHeader: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        paddingBottom: '12px',
-        color: '#444',
-        fontSize: '0.8rem',
-        fontWeight: '800',
-        textTransform: 'uppercase'
-    },
-    asksContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '4px',
-    },
-    bidsContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '4px',
-    },
-    askRow: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        fontSize: '0.9rem',
-        color: '#ff5252aa'
-    },
-    bidRow: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        fontSize: '0.9rem',
-        color: '#00e676aa'
-    },
-    askPrice: {
-        color: '#ff5252',
-        fontWeight: '750',
-    },
-    bidPrice: {
-        color: '#00e676',
-        fontWeight: '750',
-    },
-    spreadIndicator: {
-        textAlign: 'center',
-        padding: '20px 0',
-        color: '#333',
-        fontSize: '0.8rem',
-        fontWeight: '800',
-        textTransform: 'uppercase',
-        letterSpacing: '2px'
-    },
-    emptyBook: {
-        textAlign: 'center',
-        color: '#222',
-        padding: '10px',
-        fontSize: '0.8rem'
-    },
-    openOrdersSection: {
-        marginTop: '30px',
-        borderTop: '1px solid #1a1a1a'
-    },
-    openOrderRow: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        padding: '8px 0',
-        fontSize: '0.85rem',
-        borderBottom: '1px solid #111',
-        color: '#888'
-    },
-    noOrders: {
-        color: '#222',
-        fontSize: '0.8rem'
-    },
-    orderSection: {
-        padding: '10px 0'
-    },
-    formRowSingle: {
-        marginBottom: '20px'
-    },
-    divider: {
-        height: '1px',
-        backgroundColor: '#1a1a1a',
-        margin: '20px 0'
-    },
-    marketBuyButton: {
-        width: '100%',
-        padding: '18px',
-        border: 'none',
-        borderRadius: '14px',
-        backgroundColor: '#fff',
-        color: '#000',
-        fontWeight: '900',
-        fontSize: '0.9rem',
-        cursor: 'pointer',
-        transition: 'transform 0.1s, opacity 0.2s',
-        textTransform: 'uppercase',
-        letterSpacing: '1px'
-    },
-    marketSplit: {
-        display: 'flex',
-        gap: '12px',
-    },
-    marketHalf: {
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px'
-    },
-    inputSmall: {
-        padding: '10px 14px',
-        borderRadius: '10px',
-        backgroundColor: '#000',
-        border: '1px solid #333',
-        color: '#fff',
-        fontSize: '0.9rem',
-        outline: 'none',
-        width: '100%',
-        boxSizing: 'border-box'
-    },
-    marketBuyButtonSmall: {
-        padding: '12px',
-        border: 'none',
-        borderRadius: '10px',
-        backgroundColor: '#fff',
-        color: '#000',
-        fontWeight: '900',
-        fontSize: '0.8rem',
-        cursor: 'pointer'
-    },
-    marketSellButtonSmall: {
-        padding: '12px',
-        border: 'none',
-        borderRadius: '10px',
-        backgroundColor: '#333',
-        color: '#fff',
-        fontWeight: '900',
-        fontSize: '0.8rem',
-        cursor: 'pointer'
-    },
-    successMessage: {
-        marginTop: '20px',
-        padding: '15px',
-        borderRadius: '12px',
-        backgroundColor: '#00c85311',
-        border: '1px solid #00c85344',
-        color: '#00c853',
-        fontSize: '0.9rem',
-        fontWeight: '600',
-        textAlign: 'center'
-    },
-    quickSelectRow: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginTop: '15px',
-        gap: '10px'
-    },
-    quickSelectBtn: {
-        flex: 1,
-        padding: '8px 0',
-        backgroundColor: '#1a1a1a',
-        border: '1px solid #333',
-        borderRadius: '8px',
-        color: '#fff',
-        fontSize: '0.85rem',
-        fontWeight: '600',
-        cursor: 'pointer',
-        transition: 'all 0.2s',
-    }
-};

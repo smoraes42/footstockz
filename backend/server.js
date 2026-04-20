@@ -8,6 +8,7 @@ import { rateLimit } from 'express-rate-limit';
 import db1 from './database/db1.js';
 
 // Routes
+import AuthRoutes from "./routes/authRoutes.js";
 import UserRoutes from "./routes/userRoutes.js";
 import PlayerRoutes from "./routes/playerRoutes.js";
 import TradeRoutes from "./routes/tradeRoutes.js";
@@ -67,6 +68,7 @@ app.use("/api/v1/user/signup", authLimiter);
 app.use("/api/v1/user/verify-email", authLimiter);
 app.use("/api/v1", apiLimiter);
 
+app.use("/api/v1/user", AuthRoutes);
 app.use("/api/v1/user", UserRoutes);
 app.use("/api/v1/players", PlayerRoutes);
 app.use("/api/v1/trades", TradeRoutes);
