@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTeamMarket } from '../services/api';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Market.module.css';
 
 const TeamsMarketMobile = ({ searchTerm = '', selectedLeague = null }) => {
@@ -41,9 +42,11 @@ const TeamsMarketMobile = ({ searchTerm = '', selectedLeague = null }) => {
                                 <p className={styles['mobile-team-meta']}>{team.league} • {team.playerCount} Jugadores</p>
                             </div>
                             <div className={styles['mobile-team-value-box']}>
-                                <p className={styles['mobile-team-price']}>{team.price.toFixed(2)}€</p>
-                                <p className={`${styles['mobile-team-change']} ${team.change >= 0 ? styles['mobile-change-positive'] : styles['mobile-change-negative']}`}>
-                                    {team.change >= 0 ? '+' : ''}{team.change}%
+                                <p className={styles['mobile-team-price']}>
+                                    <PlayerPrice price={team.price} />
+                                </p>
+                                <p className={styles['mobile-team-change']}>
+                                    <PlayerChange change={team.change} indicatorType="sign" />
                                 </p>
                             </div>
                         </div>

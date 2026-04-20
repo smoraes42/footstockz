@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { getMe, getTeamMarket, teamMarketBuy } from '../services/api';
 import { useSocket } from '../context/SocketContext';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/TeamsMarket.module.css';
 
 const TeamsMarketDesktop = ({ searchTerm = '', selectedLeague = null }) => {
@@ -57,9 +58,11 @@ const TeamsMarketDesktop = ({ searchTerm = '', selectedLeague = null }) => {
                                 <p className={styles['team-meta']}>{team.league} • {team.playerCount} Jugadores</p>
                             </div>
                             <div className={styles['price-info']}>
-                                <p className={styles.price}>{team.price.toFixed(2)}€</p>
-                                <p className={`${styles.change} ${team.change >= 0 ? styles['change-positive'] : styles['change-negative']}`}>
-                                    {team.change >= 0 ? '+' : ''}{team.change}%
+                                <p className={styles.price}>
+                                    <PlayerPrice price={team.price} />
+                                </p>
+                                <p className={styles.change}>
+                                    <PlayerChange change={team.change} indicatorType="sign" />
                                 </p>
                             </div>
                         </div>

@@ -6,6 +6,7 @@ import {
 import { toast } from 'react-toastify';
 import { getPortfolio, getTeamById, getTeamHistory, teamMarketBuy, teamMarketSell, getTradeConfig } from '../services/api';
 import { useSocket } from '../context/SocketContext';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Market.module.css';
 
 const formatEU = (val, decimals = 2) => {
@@ -188,7 +189,9 @@ export default function TeamMarketDetailMobile() {
             <div className={styles['mobile-chart-card']}>
                 <div className={styles['mobile-chart-header']}>
                     <span className={styles['mobile-chart-label']}>Índice de Equipo</span>
-                    <span className={styles['mobile-chart-value']}>{formatEU(team?.price)} €</span>
+                    <span className={styles['mobile-chart-value']}>
+                        <PlayerPrice price={team?.price} />
+                    </span>
                 </div>
                 <div className={styles['mobile-chart-wrapper']}>
                     <ResponsiveContainer width="100%" height="100%">
@@ -340,8 +343,12 @@ export default function TeamMarketDetailMobile() {
                     <div key={p.id} onClick={() => navigate(`/market/player/${p.id}`)} className={styles['mobile-roster-item']}>
                         <span className={styles['mobile-roster-item-name']}>{p.name}</span>
                         <div className={styles['mobile-roster-item-value-box']}>
-                            <div className={styles['mobile-roster-item-price']}>{formatEU(p.price)} €</div>
-                            <div className={`${styles['mobile-roster-item-change']} ${p.change >= 0 ? styles['mobile-change-positive'] : styles['mobile-change-negative']}`}>{p.change >= 0 ? '+' : ''}{Number(p.change).toFixed(2)}%</div>
+                            <div className={styles['mobile-roster-item-price']}>
+                                <PlayerPrice price={p.price} />
+                            </div>
+                            <div className={styles['mobile-roster-item-change']}>
+                                <PlayerChange change={p.change} indicatorType="sign" />
+                            </div>
                         </div>
                     </div>
                 ))}

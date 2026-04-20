@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { getPortfolio, getTeamById, getTeamHistory, getMe, teamMarketBuy, teamMarketSell, getTradeConfig } from '../services/api';
 import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/TeamMarketDetail.module.css';
 
 const formatEU = (val, decimals = 2) => {
@@ -285,7 +286,9 @@ export default function TeamMarketDetailDesktop() {
                         <div className={`${styles.card} glass-panel`}>
                             <h2 className={styles['chart-title']}>
                                 {team ? `${team.name} (Índice)` : 'Cargando...'}
-                                {team && <span className={styles['chart-price']}>{formatEU(team.price)} €</span>}
+                                {team && <span className={styles['chart-price']}>
+                                    <PlayerPrice price={team.price} />
+                                </span>}
                             </h2>
                             <div className={styles['chart-container']}>
                                 <ResponsiveContainer width="100%" height="100%">
@@ -315,8 +318,12 @@ export default function TeamMarketDetailDesktop() {
                                         {team?.players?.map(p => (
                                             <tr key={p.id} className={styles['table-row']} onClick={() => navigate(`/market/player/${p.id}`)}>
                                                 <td className={`${styles['table-cell']} ${styles['player-name']}`}>{p.name}</td>
-                                                <td className={styles['table-cell']}>{formatEU(p.price)} €</td>
-                                                <td className={`${styles['table-cell']} ${p.change >= 0 ? styles['player-change-positive'] : styles['player-change-negative']}`}>{p.change >= 0 ? '+' : ''}{Number(p.change).toFixed(2)}%</td>
+                                                <td className={styles['table-cell']}>
+                                                    <PlayerPrice price={p.price} />
+                                                </td>
+                                                <td className={styles['table-cell']}>
+                                                    <PlayerChange change={p.change} indicatorType="sign" />
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
