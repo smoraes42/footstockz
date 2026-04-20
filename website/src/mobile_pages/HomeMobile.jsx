@@ -482,7 +482,7 @@ const HomeMobile = () => {
                                         </div>
                                     </div>
                                     <div className={styles['mobile-player-price-box']}>
-                                        <p className={styles['mobile-player-price']}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                                        <p className={`${styles['mobile-player-price']} ${player.id === updatedPlayerId ? styles['price-pulse'] : ''}`}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
                                         <p className={`${styles['mobile-player-change']} ${player.change >= 0 ? styles['mobile-price-up'] : styles['mobile-price-down']}`}>
                                             {player.change >= 0 ? '▲' : '▼'} {Math.abs(player.change)}%
                                         </p>

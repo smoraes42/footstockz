@@ -1,85 +1,105 @@
 import pool from '../database/db1.js';
 import tradeEngine from '../services/tradeEngine.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Configuration
-const LEAGUE_NAME = 'La Liga';
-const USER_EMAIL_PATTERN = 'user%@example.com';
-const BUY_INTERVAL_MS = 40000;  // 10 seconds
-const SELL_INTERVAL_MS = 300000; // 300 seconds - 5 minutos
-const MIN_TRADE_EUR = 10;
-const MAX_TRADE_EUR = 50;
+const INTERVAL_MS = 60000; // 1 minute
+const BUY_COUNT = 10;
+const SELL_COUNT = 5;
+const MIN_TRADE_EUR = 200;
+const MAX_TRADE_EUR = 500;
 
-/**
- * Main Simulation Function
- */
+// Load player IDs from ids.txt
+function loadPlayerIds() {
+    try {
+        const filePath = path.join(__dirname, 'ids.txt');
+        const content = fs.readFileSync(filePath, 'utf8');
+        const matches = content.match(/\((\d+)\)/g);
+        if (!matches) return [];
+        return matches.map(m => parseInt(m.replace(/[()]/g, '')));
+    } catch (error) {
+        console.error('Error loading player IDs:', error);
+        return [];
+    }
+}
+
+async function simulateRound() {
+    const startTime = Date.now();
+    console.log(`\n🤖 [${new Date().toLocaleTimeString()}] Starting high-dynamism round...`);
+
+    const playerIds = loadPlayerIds();
+    if (playerIds.length === 0) {
+        console.error('❌ No players found in ids.txt');
+        return;
+    }
+
+    try {
+        // Fetch all users
+        const [users] = await pool.query("SELECT id, username FROM users");
+        console.log(`Found ${users.length} users for simulation.`);
+
+        // Process in batches to avoid overwhelming the DB
+        const BATCH_SIZE = 5;
+        for (let i = 0; i < users.length; i += BATCH_SIZE) {
+            const batch = users.slice(i, i + BATCH_SIZE);
+            
+            await Promise.all(batch.map(async (user) => {
+                // 10 BUYS
+                for (let b = 0; b < BUY_COUNT; b++) {
+                    const randomPlayerId = playerIds[Math.floor(Math.random() * playerIds.length)];
+                    const randomAmount = Math.floor(Math.random() * (MAX_TRADE_EUR - MIN_TRADE_EUR + 1)) + MIN_TRADE_EUR;
+                    
+                    try {
+                        await tradeEngine.placeMarketBuyByValue(user.id, randomPlayerId, randomAmount);
+                    } catch (e) {
+                        // Ignore trade errors
+                    }
+                }
+
+                // 5 SELLS
+                try {
+                    const [holdings] = await pool.query(
+                        "SELECT player_id, proportion FROM player_positions WHERE user_id = ? AND proportion > 0",
+                        [user.id]
+                    );
+
+                    if (holdings.length > 0) {
+                        const shuffled = holdings.sort(() => Math.random() - 0.5);
+                        const toSell = shuffled.slice(0, SELL_COUNT);
+                        
+                        for (const pos of toSell) {
+                            const sellProp = pos.proportion * (Math.random() * 0.4 + 0.1); // 10-50%
+                            try {
+                                await tradeEngine.placeMarketSell(user.id, pos.player_id, sellProp);
+                            } catch (e) {}
+                        }
+                    }
+                } catch (e) {}
+            }));
+        }
+
+        const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+        console.log(`✅ Round finished in ${duration}s`);
+
+    } catch (error) {
+        console.error('❌ Simulation Round Error:', error);
+    }
+}
+
 async function startSimulation() {
-  try {
-    console.log('--- Starting Trading Simulation ---');
-
-    // 1. Fetch Players from the specified League
-    const [players] = await pool.query(`
-      SELECT p.id, p.full_name 
-      FROM players p
-      JOIN teams t ON p.team_id = t.id
-      JOIN leagues l ON t.league_id = l.id
-      WHERE l.name = ?
-    `, [LEAGUE_NAME]);
-
-    if (players.length === 0) throw new Error(`No players found for league: ${LEAGUE_NAME}`);
-    const playerIds = players.map(p => p.id);
-    console.log(`Found ${playerIds.length} players from ${LEAGUE_NAME}.`);
-
-    // 2. Fetch Users (user1 to user10)
-    const [users] = await pool.query("SELECT id, email FROM users WHERE email LIKE ? ORDER BY id ASC LIMIT 10", [USER_EMAIL_PATTERN]);
-    if (users.length === 0) throw new Error('Simulation users not found');
-    console.log(`Found ${users.length} simulation users.`);
-
-    // 3. Start Loops for each user
-    users.forEach(user => {
-      console.log(`Initializing simulation for user: ${user.email} (ID: ${user.id})`);
-      
-      // Buy Loop
-      setInterval(async () => {
-        try {
-          const randomPlayerId = playerIds[Math.floor(Math.random() * playerIds.length)];
-          const randomAmount = Math.floor(Math.random() * (MAX_TRADE_EUR - MIN_TRADE_EUR + 1)) + MIN_TRADE_EUR;
-          
-          process.stdout.write(`[USER ${user.id}] Buying €${randomAmount} of player ${randomPlayerId}... `);
-          const result = await tradeEngine.placeMarketBuyByValue(user.id, randomPlayerId, randomAmount);
-          console.log('SUCCESS');
-        } catch (error) {
-          console.log(`FAILED: ${error.message}`);
-        }
-      }, BUY_INTERVAL_MS + (Math.random() * 2000)); // Add jitter
-
-      // Sell Loop (Sell all holdings for the selected players)
-      setInterval(async () => {
-        try {
-          // Check holdings for this user and these players
-          const [holdings] = await pool.query(
-            "SELECT player_id, proportion FROM player_positions WHERE user_id = ? AND player_id IN (?) AND proportion > 0",
-            [user.id, playerIds]
-          );
-
-          if (holdings.length === 0) return;
-
-          for (const pos of holdings) {
-            process.stdout.write(`[USER ${user.id}] Selling all holdings (${pos.proportion.toFixed(2)} shares) for player ${pos.player_id}... `);
-            await tradeEngine.placeMarketSell(user.id, pos.player_id, pos.proportion);
-            console.log('SUCCESS');
-          }
-        } catch (error) {
-          console.log(`FAILED: ${error.message}`);
-        }
-      }, SELL_INTERVAL_MS + (Math.random() * 5000));
-    });
-
-    console.log('Simulation is running. Press Ctrl+C to stop.');
-
-  } catch (error) {
-    console.error('Fatal Simulation Error:', error);
-    process.exit(1);
-  }
+    console.log('--- High-Dynamism Standalone Simulation ---');
+    console.log(`Users will perform ${BUY_COUNT} buys and ${SELL_COUNT} sells every minute.`);
+    
+    // Initial round
+    simulateRound();
+    
+    // Set interval
+    setInterval(simulateRound, INTERVAL_MS);
 }
 
 startSimulation();

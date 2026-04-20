@@ -60,9 +60,22 @@
 }
 
 .player-card-updated {
+    animation: flash-update-card 1.5s ease-out;
     border: 1px solid var(--accent-neon);
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
-    transform: scale(1.02);
+}
+
+@keyframes flash-update-card {
+    0% { background-color: rgba(57, 255, 20, 0.2); box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); transform: scale(1.02); }
+    100% { background-color: rgba(255, 255, 255, 0.03); box-shadow: none; transform: scale(1); }
+}
+
+.price-pulse {
+    animation: price-pulse 1s ease-out;
+}
+
+@keyframes price-pulse {
+    0% { transform: scale(1.1); color: var(--accent-neon); }
+    100% { transform: scale(1); }
 }
 
 .player-rank {
@@ -300,9 +313,8 @@
 }
 
 .mobile-player-card-active {
+    animation: flash-update-card 1.5s ease-out;
     border: 1px solid var(--accent-neon);
-    transform: scale(1.02);
-    box-shadow: 0 0 10px rgba(57, 255, 20, 0.15);
 }
 
 .mobile-player-rank {

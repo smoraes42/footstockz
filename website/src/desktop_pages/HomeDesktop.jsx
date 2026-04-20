@@ -353,7 +353,7 @@ const HomeDesktop = () => {
                     </div>
                   </div>
                   <div className={styles['player-stats']}>
-                    <p className={styles['player-price']}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                    <p className={`${styles['player-price']} ${player.id === updatedPlayerId ? styles['price-pulse'] : ''}`}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
                     <p className={`${styles['player-change']} ${player.change >= 0 ? styles['player-change-up'] : styles['player-change-down']}`}>
                       {player.change >= 0 ? '▲' : '▼'} {Math.abs(player.change)}%
                     </p>

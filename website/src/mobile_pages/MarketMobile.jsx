@@ -17,6 +17,7 @@ const MarketMobile = () => {
     const [user, setUser] = useState(null);
     const [showSearch, setShowSearch] = useState(false);
     const [marketType, setMarketType] = useState('players');
+    const [updatedPlayerId, setUpdatedPlayerId] = useState(null);
 
 
     const { socket, connected } = useSocket();
@@ -93,6 +94,10 @@ const MarketMobile = () => {
         if (!socket || !connected) return;
 
         const handlePriceUpdate = (data) => {
+            // Visual feedback
+            setUpdatedPlayerId(data.playerId);
+            setTimeout(() => setUpdatedPlayerId(null), 1000);
+
             setPlayers(prev => prev.map(p => {
                 if (p.id === data.playerId) {
                     const priceNum = data.price;
@@ -240,7 +245,7 @@ const MarketMobile = () => {
                                 <Link
                                     to={`/market/player/${player.id}`}
                                     key={player.id}
-                                    className={`${styles['mobile-player-card']} glass-panel`}
+                                    className={`${styles['mobile-player-card']} glass-panel ${updatedPlayerId === player.id ? styles['mobile-player-card-updated'] : ''}`}
                                 >
                                     <div className={styles['mobile-player-info']}>
                                         <div className={styles['mobile-player-avatar-box']}>
@@ -259,7 +264,7 @@ const MarketMobile = () => {
                                     </div>
 
                                     <div className={styles['mobile-player-price-box']}>
-                                        <p className={styles['mobile-player-price']}>€{player.price.toFixed(2)}</p>
+                                        <p className={`${styles['mobile-player-price']} ${updatedPlayerId === player.id ? styles['price-pulse'] : ''}`}>€{player.price.toFixed(2)}</p>
                                         <span className={`${styles['mobile-player-change']} ${player.change >= 0 ? styles['mobile-change-positive'] : styles['mobile-change-negative']}`}>
                                             {player.change >= 0 ? '+' : ''}{player.change.toFixed(2)}%
                                         </span>

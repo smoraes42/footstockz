@@ -6,6 +6,7 @@ import {
 import { toast } from 'react-toastify';
 import { getPortfolio, getPlayerById, getMe, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell } from '../services/api';
 import fsLogo from '../assets/fs-logo.png';
+import { useSocket } from '../context/SocketContext';
 import styles from '../styles/PlayerMarket.module.css';
 
 const playSuccessSound = () => {
@@ -52,6 +53,8 @@ const PlayerMarketMobile = () => {
     const [error, setError] = useState(null);
     const [fetchError, setFetchError] = useState(null);
     const [kFactor, setKFactor] = useState(0.0001);
+    const [isUpdated, setIsUpdated] = useState(false);
+    const { socket, connected, subscribeToPlayer, unsubscribeFromPlayer } = useSocket();
 
     const calculateQuantityFromValue = (value, p0) => {
         if (!value || !p0 || p0 <= 0) return '';
@@ -156,9 +159,58 @@ const PlayerMarketMobile = () => {
         };
         fetchConfig();
         fetchData();
-        const interval = setInterval(fetchData, 3000);
-        return () => clearInterval(interval);
+        // Removed polling in favor of WebSockets
     }, [fetchData]);
+
+    // WebSocket Price Updates
+    useEffect(() => {
+        if (!socket || !connected || !playerId) return;
+
+        subscribeToPlayer(playerId);
+
+        const handlePriceUpdate = (data) => {
+            if (data.playerId === parseInt(playerId)) {
+                setCurrentPlayer(prev => {
+                    if (!prev) return null;
+                    return { ...prev, price: data.price, change: parseFloat(data.change || 0) };
+                });
+
+                setIsUpdated(true);
+                setTimeout(() => setIsUpdated(false), 1000);
+
+                // Update price history (add new point)
+                setPriceHistory(prev => {
+                    const newPoint = {
+                        timestamp: data.timestamp,
+                        price: data.price
+                    };
+                    const updated = [...prev, newPoint];
+                    return updated.slice(-100);
+                });
+            }
+        };
+
+        const handleTradeExecuted = (trade) => {
+            if (trade.playerId === parseInt(playerId)) {
+                setTradeHistory(prev => [trade, ...prev].slice(0, 50));
+            }
+        };
+
+        const handlePortfolioUpdate = () => {
+            getPortfolio().then(setPortfolio).catch(console.error);
+        };
+
+        socket.on('price_update', handlePriceUpdate);
+        socket.on('trade_executed', handleTradeExecuted);
+        socket.on('portfolio_update', handlePortfolioUpdate);
+
+        return () => {
+            unsubscribeFromPlayer(playerId);
+            socket.off('price_update', handlePriceUpdate);
+            socket.off('trade_executed', handleTradeExecuted);
+            socket.off('portfolio_update', handlePortfolioUpdate);
+        };
+    }, [socket, connected, playerId, subscribeToPlayer, unsubscribeFromPlayer]);
 
 
     const handleMarketBuy = async () => {
@@ -273,7 +325,7 @@ const PlayerMarketMobile = () => {
                                 <p className={styles['mobile-player-team']}>{currentPlayer?.team || '---'}</p>
                             </div>
                             <div className={styles['mobile-price-display']}>
-                                <p className={styles['mobile-current-price']}>€{currentPlayer?.price?.toFixed(2) || '0.00'}</p>
+                                <p className={`${styles['mobile-current-price']} ${isUpdated ? styles['mobile-price-pulse'] : ''}`}>€{currentPlayer?.price?.toFixed(2) || '0.00'}</p>
                                 <span className={`${styles['mobile-price-change']} ${(currentPlayer?.change || 0) >= 0 ? styles['mobile-price-change-positive'] : styles['mobile-price-change-negative']}`}>
                                     {(currentPlayer?.change || 0) >= 0 ? '+' : ''}{(currentPlayer?.change || 0).toFixed(2)}%
                                 </span>

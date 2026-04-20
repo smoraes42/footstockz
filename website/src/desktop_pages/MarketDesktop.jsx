@@ -303,7 +303,7 @@ const MarketDesktop = () => {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className={`${styles['table-cell']} ${styles['price-cell']}`}>
+                                            <td className={`${styles['table-cell']} ${styles['price-cell']} ${updatedPlayerId === player.id ? styles['price-pulse'] : ''}`}>
                                                 {Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                                             </td>
                                             <td className={`${styles['table-cell']} ${styles['change-cell']} ${player.change >= 0 ? styles['change-positive'] : styles['change-negative']}`}>
@@ -381,7 +381,7 @@ const MarketDesktop = () => {
                                             <div className={styles['player-card-stats']}>
                                                 <div>
                                                     <p className={styles['player-card-stat-label']}>Precio</p>
-                                                    <p className={`${styles['player-card-stat-value']} ${styles['player-card-price']}`}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                                                    <p className={`${styles['player-card-stat-value']} ${styles['player-card-price']} ${updatedPlayerId === player.id ? styles['price-pulse'] : ''}`}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
                                                 </div>
                                                 <div className={styles['player-card-change-container']}>
                                                     <p className={styles['player-card-stat-label']}>24h</p>

@@ -86,6 +86,7 @@ export default function PlayerMarketDesktop() {
     const [marketSellTotal, setMarketSellTotal] = useState('');
     const [activeTab, setActiveTab] = useState('buy');
     const [kFactor, setKFactor] = useState(0.0001);
+    const [isUpdated, setIsUpdated] = useState(false);
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -140,6 +141,10 @@ export default function PlayerMarketDesktop() {
                     if (!prev) return null;
                     return { ...prev, price: data.price, change: parseFloat(data.change || 0) };
                 });
+
+                // Visual highlight
+                setIsUpdated(true);
+                setTimeout(() => setIsUpdated(null), 1000);
 
                 // Update price history (add new point)
                 setPriceHistory(prev => {
@@ -373,7 +378,7 @@ export default function PlayerMarketDesktop() {
                         <div className={styles.card}>
                             <h2 className={styles['card-title']}>
                                 {currentPlayer ? `${currentPlayer.name} Chart` : 'Loading Chart...'}
-                                <span className={styles['current-price-tag']}>Current: {currentPlayer?.price?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0,00'} €</span>
+                                <span className={`${styles['current-price-tag']} ${isUpdated ? styles['price-pulse'] : ''}`}>Current: {currentPlayer?.price?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0,00'} €</span>
                             </h2>
                             <div className={styles['chart-container']}>
                                 <ResponsiveContainer width="100%" height="100%">

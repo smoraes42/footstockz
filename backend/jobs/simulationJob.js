@@ -23,7 +23,8 @@ function loadPlayerIds() {
 }
 
 async function simulateTrade() {
-    console.log('🤖 Simulation: Starting a new round of trades...');
+    const startTime = Date.now();
+    console.log('🤖 Simulation: Starting a high-dynamism round of trades...');
     
     const playerIds = loadPlayerIds();
     if (playerIds.length === 0) {
@@ -32,56 +33,56 @@ async function simulateTrade() {
     }
 
     try {
-        // Get all mock users (we can assume users with id > some threshold or just all for now)
-        // Let's just get all users for the demo
         const [users] = await db.query('SELECT id, username FROM users');
         
-        for (const user of users) {
-            // 50% chance of doing something in this round to make it less predictable
-            if (Math.random() > 0.5) continue;
+        // Shuffle users to avoid bias
+        const shuffledUsers = users.sort(() => Math.random() - 0.5);
 
-            const action = Math.random() > 0.5 ? 'buy' : 'sell';
-
-            if (action === 'buy') {
-                const playerId = playerIds[Math.floor(Math.random() * playerIds.length)];
-                const amount = Math.floor(Math.random() * (500 - 200 + 1)) + 200; // Between 200 and 500
-                
-                try {
-                    await tradeEngine.placeMarketBuyByValue(user.id, playerId, amount);
-                    console.log(`✅ [Sim] ${user.username} bought player ${playerId} for ${amount}€`);
-                } catch (error) {
-                    // Silently fail if insufficient funds or other trade issues
-                    // console.error(`❌ [Sim] Buy error for ${user.username}:`, error.message);
-                }
-            } else {
-                // Sell something from holdings
-                const [holdings] = await db.query('SELECT player_id, proportion FROM player_positions WHERE user_id = ? AND proportion > 0', [user.id]);
-                
-                if (holdings.length > 0) {
-                    const holding = holdings[Math.floor(Math.random() * holdings.length)];
-                    // Randomly sell between 20% and 100% of the holding
-                    const sellProportion = holding.proportion * (Math.random() * 0.8 + 0.2);
-                    
+        // Process users in small batches to stay within DB connection limits (connectionLimit: 10)
+        const BATCH_SIZE = 5; 
+        for (let i = 0; i < shuffledUsers.length; i += BATCH_SIZE) {
+            const batch = shuffledUsers.slice(i, i + BATCH_SIZE);
+            
+            await Promise.all(batch.map(async (user) => {
+                // 10 Buys per minute
+                for (let b = 0; b < 10; b++) {
+                    const playerId = playerIds[Math.floor(Math.random() * playerIds.length)];
+                    const amount = Math.floor(Math.random() * (500 - 200 + 1)) + 200;
                     try {
-                        await tradeEngine.placeMarketSell(user.id, holding.player_id, sellProportion);
-                        console.log(`✅ [Sim] ${user.username} sold ${sellProportion.toFixed(4)} shares of player ${holding.player_id}`);
-                    } catch (error) {
-                        // console.error(`❌ [Sim] Sell error for ${user.username}:`, error.message);
+                        await tradeEngine.placeMarketBuyByValue(user.id, playerId, amount);
+                    } catch (e) {
+                        // Ignore errors like insufficient funds
                     }
                 }
-            }
+
+                // 5 Sells per minute
+                try {
+                    const [holdings] = await db.query('SELECT player_id, proportion FROM player_positions WHERE user_id = ? AND proportion > 0', [user.id]);
+                    if (holdings.length > 0) {
+                        const shuffledHoldings = holdings.sort(() => Math.random() - 0.5);
+                        const toSell = shuffledHoldings.slice(0, 5);
+                        for (const h of toSell) {
+                            const sellProp = h.proportion * (Math.random() * 0.4 + 0.1); // Sell 10-50%
+                            try {
+                                await tradeEngine.placeMarketSell(user.id, h.player_id, sellProp);
+                            } catch (e) {}
+                        }
+                    }
+                } catch (e) {}
+            }));
         }
+        console.log(`✅ Simulation: Round finished in ${((Date.now() - startTime) / 1000).toFixed(2)}s`);
     } catch (error) {
         console.error('❌ Error in simulation job:', error);
     }
 }
 
 export function startSimulation() {
-    console.log('🚀 Trading Simulation Service Started (Action every 10 minutes)');
+    console.log('🚀 High-Dynamism Trading Simulation Service Started (Action every 1 minute)');
     
     // Run once on startup after a small delay
-    setTimeout(simulateTrade, 10000);
+    setTimeout(simulateTrade, 5000);
 
-    // Then every 10 minutes
-    setInterval(simulateTrade, 10 * 60 * 1000);
+    // Then every 1 minute
+    setInterval(simulateTrade, 60 * 1000);
 }
