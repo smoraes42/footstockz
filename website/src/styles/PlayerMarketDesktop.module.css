@@ -21,7 +21,7 @@
 }
 
 .backBtn {
-    backgroundColor: var(--accent-neon);
+    background-color: var(--accent-neon);
     border: none;
     color: #000000;
     font-size: 0.9rem;
@@ -56,7 +56,7 @@
 
 .walletValue {
     font-size: 1.4rem;
-    fontWeight: 700;
+    font-weight: 700;
     color: var(--accent-neon);
 }
 
@@ -108,7 +108,7 @@
 
 .chartContainer {
     width: 100%;
-    height: 350;
+    height: 350px;
     min-width: 0;
 }
 

@@ -49,7 +49,7 @@ const PlayerMarketMobile = () => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [kFactor, setKFactor] = useState(0.0001); 
+    const [kFactor, setKFactor] = useState(0.0001);
 
     const calculateQuantityFromValue = (value, p0) => {
         if (!value || !p0 || p0 <= 0) return '';
@@ -280,11 +280,11 @@ const PlayerMarketMobile = () => {
                     )}
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={priceHistory} onMouseMove={handleChartMouseMove} onMouseLeave={() => setHoverInfo(null)}>
-                            <XAxis 
-                                dataKey="timestamp" 
+                            <XAxis
+                                dataKey="timestamp"
                                 type="number"
                                 domain={['dataMin', 'dataMax']}
-                                hide 
+                                hide
                             />
                             <YAxis domain={['dataMin - 0.5', 'dataMax + 0.5']} hide />
                             <Tooltip
@@ -307,15 +307,15 @@ const PlayerMarketMobile = () => {
                 {/* Trade Tabs */}
                 <div className="glass-panel" style={{ padding: '1.25rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
                     <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', backgroundColor: '#000', padding: '4px', borderRadius: '12px' }}>
-                        <button 
+                        <button
                             onClick={() => setActiveTab('buy')}
                             style={{ flex: 1, padding: '12px', borderRadius: '10px', border: 'none', backgroundColor: activeTab === 'buy' ? 'rgba(57,255,20,0.15)' : 'transparent', color: activeTab === 'buy' ? 'var(--accent-neon)' : '#666', fontWeight: '800', fontSize: '0.85rem', transition: 'all 0.2s' }}
                         >
                             COMPRAR
                         </button>
-                        <button 
-                             onClick={() => setActiveTab('sell')}
-                             style={{ flex: 1, padding: '12px', borderRadius: '10px', border: 'none', backgroundColor: activeTab === 'sell' ? 'rgba(255,77,77,0.15)' : 'transparent', color: activeTab === 'sell' ? 'var(--error-red)' : '#666', fontWeight: '800', fontSize: '0.85rem', transition: 'all 0.2s' }}
+                        <button
+                            onClick={() => setActiveTab('sell')}
+                            style={{ flex: 1, padding: '12px', borderRadius: '10px', border: 'none', backgroundColor: activeTab === 'sell' ? 'rgba(255,77,77,0.15)' : 'transparent', color: activeTab === 'sell' ? 'var(--error-red)' : '#666', fontWeight: '800', fontSize: '0.85rem', transition: 'all 0.2s' }}
                         >
                             VENDER
                         </button>
@@ -326,44 +326,44 @@ const PlayerMarketMobile = () => {
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                     <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>CANTIDAD</label>
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         placeholder="0.00"
                                         value={marketBuyQty}
                                         onChange={e => {
-                                        const val = e.target.value;
-                                        setMarketBuyQty(val);
-                                        if (val && currentPlayer?.price) {
-                                            setMarketBuyTotal(calculateValueFromQuantity(val, currentPlayer.price));
-                                        } else {
-                                            setMarketBuyTotal('');
-                                        }
-                                    }}
+                                            const val = e.target.value;
+                                            setMarketBuyQty(val);
+                                            if (val && currentPlayer?.price) {
+                                                setMarketBuyTotal(calculateValueFromQuantity(val, currentPlayer.price));
+                                            } else {
+                                                setMarketBuyTotal('');
+                                            }
+                                        }}
                                         style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #222', color: '#fff', fontSize: '0.95rem', boxSizing: 'border-box' }}
                                     />
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                     <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>TOTAL (€)</label>
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         placeholder="0.00"
                                         value={marketBuyTotal}
                                         onChange={e => {
-                                        const val = e.target.value;
-                                        setMarketBuyTotal(val);
-                                        if (val && currentPlayer?.price) {
-                                            setMarketBuyQty(calculateQuantityFromValue(val, currentPlayer.price));
-                                        } else {
-                                            setMarketBuyQty('');
-                                        }
-                                    }}
+                                            const val = e.target.value;
+                                            setMarketBuyTotal(val);
+                                            if (val && currentPlayer?.price) {
+                                                setMarketBuyQty(calculateQuantityFromValue(val, currentPlayer.price));
+                                            } else {
+                                                setMarketBuyQty('');
+                                            }
+                                        }}
                                         style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #222', color: '#fff', fontSize: '0.95rem', boxSizing: 'border-box' }}
                                     />
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 {[0.25, 0.5, 1].map(p => (
-                                    <button key={p} onClick={() => handleQuickBuy(p)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #222', backgroundColor: 'transparent', color: '#fff', fontSize: '0.75rem', fontWeight: '700' }}>{p*100}%</button>
+                                    <button key={p} onClick={() => handleQuickBuy(p)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #222', backgroundColor: 'transparent', color: '#fff', fontSize: '0.75rem', fontWeight: '700' }}>{p * 100}%</button>
                                 ))}
                             </div>
 
@@ -372,7 +372,7 @@ const PlayerMarketMobile = () => {
                                 <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>SLIPPAGE (%)</label>
                                 <div style={{ display: 'flex', gap: '6px', marginTop: '4px' }}>
                                     {['0.1', '0.5', '1.0'].map(val => (
-                                        <button 
+                                        <button
                                             key={val}
                                             onClick={() => setMaxSlippage(val)}
                                             style={{
@@ -390,7 +390,7 @@ const PlayerMarketMobile = () => {
                                             {val}%
                                         </button>
                                     ))}
-                                    <input 
+                                    <input
                                         type="number"
                                         value={maxSlippage}
                                         onChange={e => setMaxSlippage(e.target.value)}
@@ -400,7 +400,7 @@ const PlayerMarketMobile = () => {
                             </div>
 
                             {error && <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--error-red)', fontWeight: '600' }}>{error}</p>}
-                            <button 
+                            <button
                                 onClick={handleMarketBuy}
                                 disabled={loading || !marketBuyQty}
                                 style={{ width: '100%', padding: '16px', borderRadius: '14px', border: 'none', backgroundColor: '#00c853', color: '#000', fontWeight: '900', fontSize: '1rem', marginTop: '0.5rem', opacity: loading ? 0.7 : 1 }}
@@ -413,44 +413,44 @@ const PlayerMarketMobile = () => {
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                     <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>CANTIDAD</label>
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         placeholder="0.00"
                                         value={marketSellQty}
                                         onChange={e => {
-                                        const val = e.target.value;
-                                        setMarketSellQty(val);
-                                        if (val && currentPlayer?.price) {
-                                            setMarketSellTotal(calculateValueFromSellQuantity(val, currentPlayer.price));
-                                        } else {
-                                            setMarketSellTotal('');
-                                        }
-                                    }}
+                                            const val = e.target.value;
+                                            setMarketSellQty(val);
+                                            if (val && currentPlayer?.price) {
+                                                setMarketSellTotal(calculateValueFromSellQuantity(val, currentPlayer.price));
+                                            } else {
+                                                setMarketSellTotal('');
+                                            }
+                                        }}
                                         style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #222', color: '#fff', fontSize: '0.95rem', boxSizing: 'border-box' }}
                                     />
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                     <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>TOTAL (€)</label>
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         placeholder="0.00"
                                         value={marketSellTotal}
                                         onChange={e => {
-                                        const val = e.target.value;
-                                        setMarketSellTotal(val);
-                                        if (val && currentPlayer?.price) {
-                                            setMarketSellQty(calculateQuantityFromSellValue(val, currentPlayer.price));
-                                        } else {
-                                            setMarketSellQty('');
-                                        }
-                                    }}
+                                            const val = e.target.value;
+                                            setMarketSellTotal(val);
+                                            if (val && currentPlayer?.price) {
+                                                setMarketSellQty(calculateQuantityFromSellValue(val, currentPlayer.price));
+                                            } else {
+                                                setMarketSellQty('');
+                                            }
+                                        }}
                                         style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #222', color: '#fff', fontSize: '0.95rem', boxSizing: 'border-box' }}
                                     />
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 {[0.25, 0.5, 1].map(p => (
-                                    <button key={p} onClick={() => handleQuickSell(p)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #222', backgroundColor: 'transparent', color: '#fff', fontSize: '0.75rem', fontWeight: '700' }}>{p*100}%</button>
+                                    <button key={p} onClick={() => handleQuickSell(p)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #222', backgroundColor: 'transparent', color: '#fff', fontSize: '0.75rem', fontWeight: '700' }}>{p * 100}%</button>
                                 ))}
                             </div>
 
@@ -459,7 +459,7 @@ const PlayerMarketMobile = () => {
                                 <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>SLIPPAGE (%)</label>
                                 <div style={{ display: 'flex', gap: '6px', marginTop: '4px' }}>
                                     {['0.1', '0.5', '1.0'].map(val => (
-                                        <button 
+                                        <button
                                             key={val}
                                             onClick={() => setMaxSlippage(val)}
                                             style={{
@@ -477,7 +477,7 @@ const PlayerMarketMobile = () => {
                                             {val}%
                                         </button>
                                     ))}
-                                    <input 
+                                    <input
                                         type="number"
                                         value={maxSlippage}
                                         onChange={e => setMaxSlippage(e.target.value)}
@@ -487,7 +487,7 @@ const PlayerMarketMobile = () => {
                             </div>
 
                             {error && <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--error-red)', fontWeight: '600' }}>{error}</p>}
-                            <button 
+                            <button
                                 onClick={handleMarketSell}
                                 disabled={loading || !marketSellQty}
                                 style={{ width: '100%', padding: '16px', borderRadius: '14px', border: 'none', backgroundColor: '#ff5252', color: '#000', fontWeight: '900', fontSize: '1rem', marginTop: '0.5rem', opacity: loading ? 0.7 : 1 }}
@@ -526,7 +526,7 @@ const PlayerMarketMobile = () => {
                     <div style={{ width: '20px', height: '2px', backgroundColor: 'var(--accent-neon)', borderRadius: '2px', position: 'absolute', top: 0 }}></div>
                     <span style={{ fontSize: '0.75rem', fontWeight: '600' }}>Mercado</span>
                 </Link>
-                <div 
+                <div
                     onClick={() => window.location.href = '/profile'}
                     style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '12px 0', color: 'var(--text-muted)' }}
                 >

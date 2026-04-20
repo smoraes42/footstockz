@@ -140,7 +140,7 @@ export default function PlayerMarketDesktop() {
                     if (!prev) return null;
                     return { ...prev, price: data.price, change: parseFloat(data.change || 0) };
                 });
-                
+
                 // Update price history (add new point)
                 setPriceHistory(prev => {
                     const newPoint = {

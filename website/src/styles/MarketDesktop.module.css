@@ -83,7 +83,7 @@
     padding: 12px 20px;
     background-color: var(--surface-dark);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    borderRadius: 12px;
+    border-radius: 12px;
     color: white;
     outline: none;
     font-size: 0.9rem;
@@ -441,12 +441,12 @@
     top: 100%;
     left: 0;
     right: 0;
-    marginTop: 4px;
+    margin-top: 4px;
     background-color: var(--surface-dark);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     z-index: 10;
-    maxHeight: 200px;
+    max-height: 200px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -454,14 +454,14 @@
 }
 
 .dropdownItem {
-    textAlign: left;
+    text-align: left;
     padding: 8px 12px;
     background-color: transparent;
     border: none;
     color: white;
     cursor: pointer;
-    borderRadius: 6px;
-    fontSize: 0.9rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
     transition: all 0.2s;
 }
 
@@ -476,6 +476,6 @@
 
 .loading {
     padding: 4rem;
-    textAlign: center;
+    text-align: center;
     color: var(--text-muted);
 }
