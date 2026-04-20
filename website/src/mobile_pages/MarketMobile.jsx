@@ -137,25 +137,25 @@ const MarketMobile = () => {
     };
 
     return (
-        <div className={styles.mobileContainer}>
+        <div className={styles['mobile-container']}>
 
             {/* Top Header Mobile */}
-            <header className={styles.mobileHeader}>
-                <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileLogo} />
-                <div className={styles.mobileNavSpacer} />
+            <header className={styles['mobile-header']}>
+                <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-logo']} />
+                <div className={styles['mobile-nav-spacer']} />
             </header>
 
-            <main className={styles.mobileMain}>
-                <div className={styles.mobileMarketTabs}>
+            <main className={styles['mobile-main']}>
+                <div className={styles['mobile-market-tabs']}>
                     <h2 
                         onClick={() => setMarketType('players')}
-                        className={`${styles.mobileMarketTab} ${marketType === 'players' ? styles.mobileMarketTabActive : styles.mobileMarketTabInactive}`}
+                        className={`${styles['mobile-market-tab']} ${marketType === 'players' ? styles['mobile-market-tab-active'] : styles['mobile-market-tab-inactive']}`}
                     >
                         Jugadores
                     </h2>
                     <h2 
                         onClick={() => setMarketType('teams')}
-                        className={`${styles.mobileMarketTab} ${marketType === 'teams' ? styles.mobileMarketTabActive : styles.mobileMarketTabInactive}`}
+                        className={`${styles['mobile-market-tab']} ${marketType === 'teams' ? styles['mobile-market-tab-active'] : styles['mobile-market-tab-inactive']}`}
                     >
                         Equipos
                     </h2>
@@ -166,35 +166,35 @@ const MarketMobile = () => {
                 ) : (
                     <>
                 {/* Sort & Filter Bar */}
-                <div className={styles.mobileFilterBar}>
+                <div className={styles['mobile-filter-bar']}>
 
                     {/* Horizontal Scroll Sort Buttons */}
-                    <div className={styles.mobileHorizontalScroll}>
+                    <div className={styles['mobile-horizontal-scroll']}>
                         <button
                             onClick={() => handleSortToggle('price')}
-                            className={`${styles.mobileSortBtn} ${sortConfig.key === 'price' ? styles.mobileSortBtnActive : ''}`}
+                            className={`${styles['mobile-sort-btn']} ${sortConfig.key === 'price' ? styles['mobile-sort-btn-active'] : ''}`}
                         >
                             Precio {sortConfig.key === 'price' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '') : '↕'}
                         </button>
                         <button
                             onClick={() => handleSortToggle('change')}
-                            className={`${styles.mobileSortBtn} ${sortConfig.key === 'change' ? styles.mobileSortBtnActive : ''}`}
+                            className={`${styles['mobile-sort-btn']} ${sortConfig.key === 'change' ? styles['mobile-sort-btn-active'] : ''}`}
                         >
                             Cambio 24h {sortConfig.key === 'change' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '') : '↕'}
                         </button>
                         <button
                             onClick={() => handleSortToggle('name')}
-                            className={`${styles.mobileSortBtn} ${sortConfig.key === 'name' ? styles.mobileSortBtnActive : ''}`}
+                            className={`${styles['mobile-sort-btn']} ${sortConfig.key === 'name' ? styles['mobile-sort-btn-active'] : ''}`}
                         >
                             Nombre {sortConfig.key === 'name' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '') : '↕'}
                         </button>
                     </div>
 
                     {/* League Filter (Horizontal Scroll) */}
-                    <div className={`${styles.mobileHorizontalScroll} ${styles.mobileLeagueFilterRow}`}>
+                    <div className={`${styles['mobile-horizontal-scroll']} ${styles['mobile-league-filter-row']}`}>
                         <button
                             onClick={() => { setSelectedLeague(null); setSelectedTeam(null); }}
-                            className={`${styles.mobileFilterBtn} ${!selectedLeague ? styles.mobileFilterBtnActive : ''}`}
+                            className={`${styles['mobile-filter-btn']} ${!selectedLeague ? styles['mobile-filter-btn-active'] : ''}`}
                         >
                             TODAS LAS LIGAS
                         </button>
@@ -202,7 +202,7 @@ const MarketMobile = () => {
                             <button
                                 key={league.id}
                                 onClick={() => { setSelectedLeague(league); setSelectedTeam(null); }}
-                                className={`${styles.mobileFilterBtn} ${selectedLeague?.id === league.id ? styles.mobileFilterBtnActive : ''}`}
+                                className={`${styles['mobile-filter-btn']} ${selectedLeague?.id === league.id ? styles['mobile-filter-btn-active'] : ''}`}
                             >
                                 {league.name.toUpperCase()}
                             </button>
@@ -211,10 +211,10 @@ const MarketMobile = () => {
 
                     {/* Team Filter (Horizontal Scroll) */}
                     {selectedLeague && (
-                        <div className={styles.mobileHorizontalScroll}>
+                        <div className={styles['mobile-horizontal-scroll']}>
                             <button
                                 onClick={() => setSelectedTeam(null)}
-                                className={`${styles.mobileFilterBtn} ${!selectedTeam ? styles.mobileFilterBtnActive : ''}`}
+                                className={`${styles['mobile-filter-btn']} ${!selectedTeam ? styles['mobile-filter-btn-active'] : ''}`}
                             >
                                 TODOS
                             </button>
@@ -222,7 +222,7 @@ const MarketMobile = () => {
                                 <button
                                     key={team.id}
                                     onClick={() => setSelectedTeam(team)}
-                                    className={`${styles.mobileFilterBtn} ${selectedTeam?.id === team.id ? styles.mobileFilterBtnActive : ''}`}
+                                    className={`${styles['mobile-filter-btn']} ${selectedTeam?.id === team.id ? styles['mobile-filter-btn-active'] : ''}`}
                                 >
                                     {team.name.toUpperCase()}
                                 </button>
@@ -231,7 +231,7 @@ const MarketMobile = () => {
                     )}
                 </div>
 
-                    <div className={styles.mobilePlayerList}>
+                    <div className={styles['mobile-player-list']}>
 
                         {loadingPlayers ? (
                             <div className={styles.loading}>Cargando mercado...</div>
@@ -240,27 +240,27 @@ const MarketMobile = () => {
                                 <Link
                                     to={`/market/player/${player.id}`}
                                     key={player.id}
-                                    className={`${styles.mobilePlayerCard} glass-panel`}
+                                    className={`${styles['mobile-player-card']} glass-panel`}
                                 >
-                                    <div className={styles.mobilePlayerInfo}>
-                                        <div className={styles.mobilePlayerAvatarBox}>
+                                    <div className={styles['mobile-player-info']}>
+                                        <div className={styles['mobile-player-avatar-box']}>
                                             <img
                                                 src={`${API_URL}/v1/players/${player.id}/image`}
                                                 alt={player.name}
-                                                className={styles.mobilePlayerAvatarImg}
+                                                className={styles['mobile-player-avatar-img']}
                                                 onError={(e) => { e.target.style.display = 'none'; }}
                                             />
-                                            <span className={styles.mobilePlayerAvatarPlaceholder}>👤</span>
+                                            <span className={styles['mobile-player-avatar-placeholder']}>👤</span>
                                         </div>
                                         <div>
-                                            <p className={styles.mobilePlayerName}>{player.name}</p>
-                                            <p className={styles.mobilePlayerTeam}>{player.team}</p>
+                                            <p className={styles['mobile-player-name']}>{player.name}</p>
+                                            <p className={styles['mobile-player-team']}>{player.team}</p>
                                         </div>
                                     </div>
 
-                                    <div className={styles.mobilePlayerPriceBox}>
-                                        <p className={styles.mobilePlayerPrice}>€{player.price.toFixed(2)}</p>
-                                        <span className={`${styles.mobilePlayerChange} ${player.change >= 0 ? styles.mobileChangePositive : styles.mobileChangeNegative}`}>
+                                    <div className={styles['mobile-player-price-box']}>
+                                        <p className={styles['mobile-player-price']}>€{player.price.toFixed(2)}</p>
+                                        <span className={`${styles['mobile-player-change']} ${player.change >= 0 ? styles['mobile-change-positive'] : styles['mobile-change-negative']}`}>
                                             {player.change >= 0 ? '+' : ''}{player.change.toFixed(2)}%
                                         </span>
                                     </div>
@@ -275,11 +275,11 @@ const MarketMobile = () => {
                         )}
 
                         {!loadingPlayers && currentPage < totalPages && (
-                            <div className={styles.mobileLoadMoreContainer}>
+                            <div className={styles['mobile-load-more-container']}>
                                 <button
                                     onClick={handleLoadMore}
                                     disabled={fetchingMore}
-                                    className={`${styles.mobileLoadMoreBtn} ${fetchingMore ? styles.mobileLoadMoreBtnLoading : ''}`}
+                                    className={`${styles['mobile-load-more-btn']} ${fetchingMore ? styles['mobile-load-more-btn-loading'] : ''}`}
                                 >
                                     {fetchingMore ? 'Cargando...' : 'Cargar más jugadores'}
                                 </button>
@@ -292,19 +292,19 @@ const MarketMobile = () => {
             </main>
 
             {/* Bottom Navigation Mobile */}
-            <nav className={styles.mobileBottomNav}>
-                <Link to="/home" className={styles.mobileNavLink}>
-                    <span className={styles.mobileNavText}>Inicio</span>
+            <nav className={styles['mobile-bottom-nav']}>
+                <Link to="/home" className={styles['mobile-nav-link']}>
+                    <span className={styles['mobile-nav-text']}>Inicio</span>
                 </Link>
-                <Link to="/portfolio" className={styles.mobileNavLink}>
-                    <span className={styles.mobileNavText}>Portfolio</span>
+                <Link to="/portfolio" className={styles['mobile-nav-link']}>
+                    <span className={styles['mobile-nav-text']}>Portfolio</span>
                 </Link>
-                <Link to="/market" className={`${styles.mobileNavLink} ${styles.mobileNavLinkActive}`}>
-                    <div className={styles.mobileNavLinkActiveBar}></div>
-                    <span className={`${styles.mobileNavText} ${styles.mobileNavTextActive}`}>Mercado</span>
+                <Link to="/market" className={`${styles['mobile-nav-link']} ${styles['mobile-nav-link-active']}`}>
+                    <div className={styles['mobile-nav-link-active-bar']}></div>
+                    <span className={`${styles['mobile-nav-text']} ${styles['mobile-nav-text-active']}`}>Mercado</span>
                 </Link>
-                <Link to="/profile" className={styles.mobileNavLink}>
-                    <div className={styles.mobileNavAvatar}>
+                <Link to="/profile" className={styles['mobile-nav-link']}>
+                    <div className={styles['mobile-nav-avatar']}>
                         {user?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
                 </Link>
@@ -314,39 +314,39 @@ const MarketMobile = () => {
             {!showSearch && (
                 <button
                     onClick={() => setShowSearch(true)}
-                    className={`${styles.mobileFab} glass-panel`}
+                    className={`${styles['mobile-fab']} glass-panel`}
                 >
-                    <span className={styles.mobileFabIcon}>🔍</span>
+                    <span className={styles['mobile-fab-icon']}>🔍</span>
                 </button>
             )}
 
             {/* Search Overlay */}
             {showSearch && (
-                <div className={styles.mobileSearchOverlay}>
-                    <div className={styles.mobileSearchInputBox}>
-                        <div className={styles.mobileSearchIconBox}>
+                <div className={styles['mobile-search-overlay']}>
+                    <div className={styles['mobile-search-input-box']}>
+                        <div className={styles['mobile-search-icon-box']}>
                             <input
                                 autoFocus
                                 type="text"
                                 placeholder="Nombre del jugador..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className={styles.mobileSearchInput}
+                                className={styles['mobile-search-input']}
                             />
                         </div>
                         <button
                             onClick={() => { setShowSearch(false); if (searchTerm) fetchPlayers(1); }}
-                            className={styles.mobileSearchCloseBtn}
+                            className={styles['mobile-search-close-btn']}
                         >
                             LISTO
                         </button>
                     </div>
-                    <p className={styles.mobileSearchSubtext}>
+                    <p className={styles['mobile-search-subtext']}>
                         Presiona "LISTO" o toca fuera para cerrar.
                     </p>
                     <div
                         onClick={() => setShowSearch(false)}
-                        className={styles.mobileSearchOverlayBackdrop}
+                        className={styles['mobile-search-overlay-backdrop']}
                     />
                 </div>
             )}

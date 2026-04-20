@@ -94,65 +94,65 @@ const RegisterDesktop = () => {
     };
 
     const fieldHint = (field) =>
-        fieldErrors[field] ? <p className={styles.fieldHint}>{fieldErrors[field]}</p> : null;
+        fieldErrors[field] ? <p className={styles['field-hint']}>{fieldErrors[field]}</p> : null;
 
     return (
         <div className={styles.container}>
             <Navbar type="top" />
             <main className={styles.main}>
-                <div className={styles.glowEffect}></div>
-                <div className={`glass-panel fade-in-up ${styles.glassPanel}`}>
+                <div className={styles['glow-effect']}></div>
+                <div className={`glass-panel fade-in-up ${styles['glass-panel']}`}>
                     <h1 className={styles.title}>Crear Cuenta</h1>
 
                     {error && (
-                        <div className={styles.errorAlert}>
+                        <div className={styles['error-alert']}>
                             {error}
                         </div>
                     )}
 
                     <form className={styles.form} onSubmit={(e) => { e.preventDefault(); handleRegister(); }}>
-                        <div className={styles.fieldGroup}>
+                        <div className={styles['field-group']}>
                             <label className={styles.label}>Username</label>
-                            <input type="text" value={username} onChange={(e) => handleChange('username', e.target.value)} onBlur={() => setFieldErrors(prev => ({ ...prev, username: validators.username(username) }))} className={`${styles.input} ${fieldErrors.username ? styles.inputError : ''}`} placeholder="Tu username" />
+                            <input type="text" value={username} onChange={(e) => handleChange('username', e.target.value)} onBlur={() => setFieldErrors(prev => ({ ...prev, username: validators.username(username) }))} className={`${styles.input} ${fieldErrors.username ? styles['input-error'] : ''}`} placeholder="Tu username" />
                             {fieldHint('username')}
                         </div>
-                        <div className={styles.fieldGroup}>
+                        <div className={styles['field-group']}>
                             <label className={styles.label}>Email</label>
-                            <input type="email" value={email} onChange={(e) => handleChange('email', e.target.value)} onBlur={() => setFieldErrors(prev => ({ ...prev, email: validators.email(email) }))} className={`${styles.input} ${fieldErrors.email ? styles.inputError : ''}`} placeholder="tu@email.com" />
+                            <input type="email" value={email} onChange={(e) => handleChange('email', e.target.value)} onBlur={() => setFieldErrors(prev => ({ ...prev, email: validators.email(email) }))} className={`${styles.input} ${fieldErrors.email ? styles['input-error'] : ''}`} placeholder="tu@email.com" />
                             {fieldHint('email')}
                         </div>
-                        <div className={styles.fieldGroup}>
+                        <div className={styles['field-group']}>
                             <label className={styles.label}>Contraseña</label>
-                            <input type="password" value={password} onChange={(e) => handleChange('password', e.target.value)} onBlur={() => setFieldErrors(prev => ({ ...prev, password: validators.password(password) }))} className={`${styles.input} ${fieldErrors.password ? styles.inputError : ''}`} placeholder="••••••••" />
+                            <input type="password" value={password} onChange={(e) => handleChange('password', e.target.value)} onBlur={() => setFieldErrors(prev => ({ ...prev, password: validators.password(password) }))} className={`${styles.input} ${fieldErrors.password ? styles['input-error'] : ''}`} placeholder="••••••••" />
                             {fieldHint('password')}
                         </div>
-                        <div className={styles.fieldGroup}>
+                        <div className={styles['field-group']}>
                             <label className={styles.label}>Repetir Contraseña</label>
-                            <input type="password" value={confirmPassword} onChange={(e) => handleChange('confirmPassword', e.target.value)} onBlur={() => setFieldErrors(prev => ({ ...prev, confirmPassword: validators.confirmPassword(confirmPassword) }))} className={`${styles.input} ${fieldErrors.confirmPassword ? styles.inputError : ''}`} placeholder="••••••••" />
+                            <input type="password" value={confirmPassword} onChange={(e) => handleChange('confirmPassword', e.target.value)} onBlur={() => setFieldErrors(prev => ({ ...prev, confirmPassword: validators.confirmPassword(confirmPassword) }))} className={`${styles.input} ${fieldErrors.confirmPassword ? styles['input-error'] : ''}`} placeholder="••••••••" />
                             {fieldHint('confirmPassword')}
                         </div>
                         <button
                             type="submit"
-                            className={`neon-button ${styles.submitBtn} ${loading ? styles.loadingBtn : ''}`}
+                            className={`neon-button ${styles['submit-btn']} ${loading ? styles['loading-btn'] : ''}`}
                             disabled={loading}
                         >
-                            {loading ? 'Creando cuenta...' : <><span>Unirse a</span> <img src={fsLogoBlack} alt="Futstocks" className={styles.submitBtnLogo} /></>}
+                            {loading ? 'Creando cuenta...' : <><span>Unirse a</span> <img src={fsLogoBlack} alt="Futstocks" className={styles['submit-btn-logo']} /></>}
                         </button>
 
                         <div className={styles.divider}>
-                            <div className={styles.dividerLine}></div>
-                            <span className={styles.dividerText}>O</span>
-                            <div className={styles.dividerLine}></div>
+                            <div className={styles['divider-line']}></div>
+                            <span className={styles['divider-text']}>O</span>
+                            <div className={styles['divider-line']}></div>
                         </div>
 
-                        <button type="button" className={`outline-button ${styles.googleBtn}`} onClick={handleGoogleClick}>
-                            <img src="https://authjs.dev/img/providers/google.svg" alt="Google" className={styles.googleIcon} />
+                        <button type="button" className={`outline-button ${styles['google-btn']}`} onClick={handleGoogleClick}>
+                            <img src="https://authjs.dev/img/providers/google.svg" alt="Google" className={styles['google-icon']} />
                             Continuar con Google
                         </button>
                     </form>
                     <div className={styles.footer}>
-                        <span className={styles.footerText}>¿Ya tienes cuenta? </span>
-                        <Link to="/login" className={styles.footerLink}>Inicia sesión</Link>
+                        <span className={styles['footer-text']}>¿Ya tienes cuenta? </span>
+                        <Link to="/login" className={styles['footer-link']}>Inicia sesión</Link>
                     </div>
                 </div>
             </main>

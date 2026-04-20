@@ -5,7 +5,7 @@
     display: flex;
 }
 
-.mainContent {
+.main-content {
     margin-left: 250px;
     flex: 1;
     padding: 2rem 3rem;
@@ -30,7 +30,7 @@
     color: var(--text-muted);
 }
 
-.tableContainer {
+.table-container {
     border-radius: 16px;
     overflow: hidden;
     min-height: 400px;
@@ -42,12 +42,12 @@
     text-align: left;
 }
 
-.tableHeadRow {
+.table-head-row {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background-color: rgba(255, 255, 255, 0.02);
 }
 
-.tableHeaderCell {
+.table-header-cell {
     padding: 1.5rem;
     color: var(--text-muted);
     font-weight: 600;
@@ -55,35 +55,35 @@
     text-transform: uppercase;
 }
 
-.tableRow {
+.table-row {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transition: background 0.2s;
     cursor: pointer;
 }
 
-.tableRow:hover {
+.table-row:hover {
     background-color: rgba(255, 255, 255, 0.03);
 }
 
-.tableCell {
+.table-cell {
     padding: 1.2rem 1.5rem;
 }
 
-.rankCell {
+.rank-cell {
     font-weight: 800;
 }
 
-.rankTop {
+.rank-top {
     color: var(--accent-neon);
 }
 
-.userCellContent {
+.user-cell-content {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.userAvatar {
+.user-avatar {
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -94,31 +94,31 @@
     font-weight: bold;
 }
 
-.userName {
+.user-name {
     font-weight: 700;
     font-size: 1rem;
     margin: 0;
 }
 
-.valueCell {
+.value-cell {
     font-weight: 800;
     font-size: 1.1rem;
 }
 
-.changeCell {
+.change-cell {
     font-weight: 800;
     font-size: 1rem;
 }
 
-.changePositive {
+.change-positive {
     color: var(--accent-neon);
 }
 
-.changeNegative {
+.change-negative {
     color: var(--error-red);
 }
 
-.noData {
+.no-data {
     padding: 2rem;
     text-align: center;
     color: var(--text-muted);
@@ -138,7 +138,7 @@
 }
 
 /* Mobile Styles */
-.mobileContainer {
+.mobile-container {
     background-color: var(--bg-main);
     height: 100dvh;
     overflow: hidden;
@@ -147,7 +147,7 @@
     flex-direction: column;
 }
 
-.mobileHeader {
+.mobile-header {
     padding: 0 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background-color: rgba(16, 16, 16, 0.9);
@@ -161,22 +161,22 @@
     box-sizing: border-box;
 }
 
-.mobileLogo {
+.mobile-logo {
     height: 22px;
 }
 
-.mobileMain {
+.mobile-main {
     flex: 1;
     padding: 1.5rem;
     padding-bottom: 80px;
     overflow-y: auto;
 }
 
-.mobileSectionHeader {
-    marginBottom: 2rem;
+.mobile-section-header {
+    margin-bottom: 2rem;
 }
 
-.mobileSectionTitle {
+.mobile-section-title {
     font-size: 0.95rem;
     font-weight: 800;
     color: var(--accent-neon);
@@ -186,19 +186,19 @@
     text-align: left;
 }
 
-.mobileSectionSubtitle {
+.mobile-section-subtitle {
     color: var(--text-muted);
     font-size: 0.85rem;
     margin: 0;
 }
 
-.mobileUserList {
+.mobile-user-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.mobileUserCard {
+.mobile-user-card {
     padding: 1rem;
     border-radius: 14px;
     display: flex;
@@ -209,32 +209,32 @@
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.mobileUserCardActive {
+.mobile-user-card-active {
     border: 1px solid var(--accent-neon) !important;
 }
 
-.mobileUserInfo {
+.mobile-user-info {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.mobileUserRank {
+.mobile-user-rank {
     font-size: 1.1rem;
     font-weight: 900;
     min-width: 35px;
-    textAlign: center;
+    text-align: center;
 }
 
-.mobileRankTop {
+.mobile-rank-top {
     color: var(--accent-neon);
 }
 
-.mobileRankNormal {
+.mobile-rank-normal {
     color: #444;
 }
 
-.mobileUserAvatar {
+.mobile-user-avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -242,41 +242,41 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    fontWeight: bold;
+    font-weight: bold;
 }
 
-.mobileUserName {
+.mobile-user-name {
     font-weight: 700;
     font-size: 1rem;
     margin: 0;
 }
 
-.mobileUserChange {
+.mobile-user-change {
     font-size: 0.75rem;
     font-weight: 700;
     margin: 0;
 }
 
-.mobileChangePositive {
+.mobile-change-positive {
     color: var(--accent-neon);
 }
 
-.mobileChangeNegative {
+.mobile-change-negative {
     color: var(--error-red);
 }
 
-.mobileUserValueBox {
+.mobile-user-value-box {
     text-align: right;
 }
 
-.mobileUserValue {
+.mobile-user-value {
     font-weight: 800;
     font-size: 1rem;
     margin: 0;
     color: var(--accent-neon);
 }
 
-.mobileBottomNav {
+.mobile-bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -291,7 +291,7 @@
     padding-bottom: env(safe-area-inset-bottom);
 }
 
-.mobileNavLink {
+.mobile-nav-link {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -301,12 +301,12 @@
     color: var(--text-muted);
 }
 
-.mobileNavLinkActive {
+.mobile-nav-link-active {
     color: var(--accent-neon);
     position: relative;
 }
 
-.mobileNavLinkActiveBar {
+.mobile-nav-link-active-bar {
     width: 20px;
     height: 2px;
     background-color: var(--accent-neon);
@@ -315,12 +315,12 @@
     top: 0;
 }
 
-.mobileNavText {
+.mobile-nav-text {
     font-size: 0.75rem;
     font-weight: 500;
 }
 
-.mobileNavAvatar {
+.mobile-nav-avatar {
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -332,6 +332,6 @@
     font-size: 0.7rem;
 }
 
-.mobileNavSpacer {
+.mobile-nav-spacer {
     width: 22px;
 }

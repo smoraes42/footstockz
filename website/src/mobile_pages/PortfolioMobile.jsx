@@ -77,59 +77,59 @@ const PortfolioMobile = () => {
     });
 
     return (
-        <div className={styles.mobileContainer}>
+        <div className={styles['mobile-container']}>
             
             {/* Top Header */}
-            <header className={styles.mobileHeader}>
-                <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileLogo} />
-                <div className={styles.mobileNavSpacer} />
+            <header className={styles['mobile-header']}>
+                <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-logo']} />
+                <div className={styles['mobile-nav-spacer']} />
             </header>
 
-            <main className={styles.mobileMain}>
-                <h2 className={styles.mobileSectionTitle}>Tu Portfolio</h2>
+            <main className={styles['mobile-main']}>
+                <h2 className={styles['mobile-section-title']}>Tu Portfolio</h2>
 
                 {/* Equity Header */}
-                <div className={styles.mobileEquityHeader}>
-                    <span className={styles.mobileEquityLabel}>Capital Total</span>
-                    <span className={styles.mobileEquityValue}>
+                <div className={styles['mobile-equity-header']}>
+                    <span className={styles['mobile-equity-label']}>Capital Total</span>
+                    <span className={styles['mobile-equity-value']}>
                         €{loading ? '---' : formatCompactNumber(totalEquity)}
                     </span>
                 </div>
 
                 {/* Wallet Breakdown Cards */}
-                <div className={styles.mobileBreakdownGrid}>
-                    <div className={`${styles.mobileBreakdownCard} glass-panel`}>
-                        <p className={styles.mobileBreakdownLabel}>Cash</p>
-                        <p className={styles.mobileBreakdownValue}>€{loading ? '---' : formatCompactNumber(walletBalance)}</p>
+                <div className={styles['mobile-breakdown-grid']}>
+                    <div className={`${styles['mobile-breakdown-card']} glass-panel`}>
+                        <p className={styles['mobile-breakdown-label']}>Cash</p>
+                        <p className={styles['mobile-breakdown-value']}>€{loading ? '---' : formatCompactNumber(walletBalance)}</p>
                     </div>
-                    <div className={`${styles.mobileBreakdownCard} glass-panel`}>
-                        <p className={styles.mobileBreakdownLabel}>Invertido</p>
-                        <p className={styles.mobileBreakdownValue}>€{loading ? '---' : formatCompactNumber(holdingsValue)}</p>
+                    <div className={`${styles['mobile-breakdown-card']} glass-panel`}>
+                        <p className={styles['mobile-breakdown-label']}>Invertido</p>
+                        <p className={styles['mobile-breakdown-value']}>€{loading ? '---' : formatCompactNumber(holdingsValue)}</p>
                     </div>
                 </div>
                 {/* Tab Selection Toggle */}
-                <div className={styles.mobileTabSwitcher}>
+                <div className={styles['mobile-tab-switcher']}>
                     <button
                         onClick={() => setActiveTab('players')}
-                        className={`${styles.mobileTabBtn} ${activeTab === 'players' ? styles.mobileTabBtnActive : ''}`}
+                        className={`${styles['mobile-tab-btn']} ${activeTab === 'players' ? styles['mobile-tab-btn-active'] : ''}`}
                     >Jugadores</button>
                     <button
                         onClick={() => setActiveTab('teams')}
-                        className={`${styles.mobileTabBtn} ${activeTab === 'teams' ? styles.mobileTabBtnActive : ''}`}
+                        className={`${styles['mobile-tab-btn']} ${activeTab === 'teams' ? styles['mobile-tab-btn-active'] : ''}`}
                     >Índices</button>
                 </div>
 
                 {/* Holdings List */}
                 <div>
-                    <div className={styles.mobileHoldingsHeader}>
-                        <h3 className={styles.mobileHoldingsTitle}>
+                    <div className={styles['mobile-holdings-header']}>
+                        <h3 className={styles['mobile-holdings-title']}>
                             {activeTab === 'teams' ? 'Mis Índices' : 'Mis Jugadores'}
                         </h3>
                     </div>
                     
                     {/* Sorting Chips */}
                     {!loading && rawHoldings.length > 1 && (
-                        <div className={styles.mobileSortChips}>
+                        <div className={styles['mobile-sort-chips']}>
                             {[
                                 { key: 'player_name', label: 'Nombre' },
                                 { key: 'shares_owned', label: 'Acciones' },
@@ -139,7 +139,7 @@ const PortfolioMobile = () => {
                                 <button
                                     key={chip.key}
                                     onClick={() => requestSort(chip.key)}
-                                    className={`${styles.mobileSortChip} ${sortConfig.key === chip.key ? styles.mobileSortChipActive : ''}`}
+                                    className={`${styles['mobile-sort-chip']} ${sortConfig.key === chip.key ? styles['mobile-sort-chip-active'] : ''}`}
                                 >
                                     {chip.label}{getSortIndicator(chip.key)}
                                 </button>
@@ -158,40 +158,40 @@ const PortfolioMobile = () => {
 
                         if (displayData.length === 0) {
                             return (
-                                <div className={styles.mobileNoData}>
-                                    <p className={styles.mobileNoDataText}>
+                                <div className={styles['mobile-no-data']}>
+                                    <p className={styles['mobile-no-data-text']}>
                                         No tienes inversiones en este mercado.
                                     </p>
-                                    <Link to="/market" className={styles.mobileGoToMarket}>Ir al Mercado</Link>
+                                    <Link to="/market" className={styles['mobile-go-to-market']}>Ir al Mercado</Link>
                                 </div>
                             );
                         }
 
                         return (
-                            <div className={styles.mobileAssetList}>
+                            <div className={styles['mobile-asset-list']}>
                                 {displayData.map(item => (
                                     <Link 
                                         to={item.type === 'team' ? `/market/team/${item.team_id}` : `/market/player/${item.player_id}`}
                                         key={item.type === 'team' ? `team-${item.team_id}` : `player-${item.player_id}`} 
-                                        className={`${styles.mobileAssetCard} glass-panel`}
+                                        className={`${styles['mobile-asset-card']} glass-panel`}
                                     >
-                                        <div className={styles.mobileAssetInfo}>
-                                            <div className={styles.mobileAssetIconBox}>
+                                        <div className={styles['mobile-asset-info']}>
+                                            <div className={styles['mobile-asset-icon-box']}>
                                                 {item.type === 'team' ? '🏟️' : '👤'}
                                             </div>
                                             <div>
-                                                <p className={styles.mobileAssetName}>
+                                                <p className={styles['mobile-asset-name']}>
                                                     {item.player_name}
                                                 </p>
-                                                <p className={styles.mobileAssetShares}>
+                                                <p className={styles['mobile-asset-shares']}>
                                                     {item.type === 'team' ? parseFloat(item.shares_owned).toFixed(4) : parseFloat(item.shares_owned).toFixed(2)} acciones
                                                 </p>
                                             </div>
                                         </div>
 
-                                        <div className={styles.mobileAssetValueBox}>
-                                            <p className={styles.mobileAssetPrice}>€{item.position_value.toFixed(2)}</p>
-                                            <p className={styles.mobileAssetPriceSub}>€{item.current_price.toFixed(2)}/u</p>
+                                        <div className={styles['mobile-asset-value-box']}>
+                                            <p className={styles['mobile-asset-price']}>€{item.position_value.toFixed(2)}</p>
+                                            <p className={styles['mobile-asset-price-sub']}>€{item.current_price.toFixed(2)}/u</p>
                                         </div>
                                     </Link>
                                 ))}
@@ -201,45 +201,45 @@ const PortfolioMobile = () => {
                 </div>
 
                 {/* Recent Activity Section */}
-                <div className={styles.mobileActivityContainer}>
-                    <div className={styles.mobileActivityHeader}>
-                        <h3 className={styles.mobileActivityTitle}>
+                <div className={styles['mobile-activity-container']}>
+                    <div className={styles['mobile-activity-header']}>
+                        <h3 className={styles['mobile-activity-title']}>
                             Actividad Reciente
                         </h3>
                         <button 
                             onClick={() => setShowActivity(!showActivity)}
-                            className={styles.mobileActivityToggle}
+                            className={styles['mobile-activity-toggle']}
                         >
                             {showActivity ? 'Ocultar' : 'Ver'}
-                            <span className={`${styles.mobileActivityArrow} ${showActivity ? styles.mobileActivityArrowOpen : ''}`}>▼</span>
+                            <span className={`${styles['mobile-activity-arrow']} ${showActivity ? styles['mobile-activity-arrow-open'] : ''}`}>▼</span>
                         </button>
                     </div>
                     
                     {showActivity && (
                         loadingTrades ? (
-                            <div className={styles.mobileLoadingActivity}>Cargando actividad...</div>
+                            <div className={styles['mobile-loading-activity']}>Cargando actividad...</div>
                         ) : tradeHistory.length === 0 ? (
-                            <div className={styles.mobileNoData}>
-                                <p className={styles.mobileNoDataText}>No hay actividad reciente.</p>
+                            <div className={styles['mobile-no-data']}>
+                                <p className={styles['mobile-no-data-text']}>No hay actividad reciente.</p>
                             </div>
                         ) : (
-                            <div className={styles.mobileActivityList}>
+                            <div className={styles['mobile-activity-list']}>
                                 {tradeHistory.slice(0, 10).map((trade, idx) => (
-                                    <div key={idx} className={`${styles.mobileActivityCard} glass-panel`}>
-                                        <div className={styles.mobileAssetInfo}>
-                                            <div className={`${styles.mobileActivityIconBox} ${trade.side === 'buy' ? styles.mobileActivityBuy : styles.mobileActivitySell}`}>
+                                    <div key={idx} className={`${styles['mobile-activity-card']} glass-panel`}>
+                                        <div className={styles['mobile-asset-info']}>
+                                            <div className={`${styles['mobile-activity-icon-box']} ${trade.side === 'buy' ? styles['mobile-activity-buy'] : styles['mobile-activity-sell']}`}>
                                                 {trade.side === 'buy' ? '↙' : '↗'}
                                             </div>
                                             <div>
-                                                <p className={styles.mobileActivityName}>{trade.player_name || 'Desconocido'}</p>
-                                                <p className={styles.mobileActivityMeta}>
+                                                <p className={styles['mobile-activity-name']}>{trade.player_name || 'Desconocido'}</p>
+                                                <p className={styles['mobile-activity-meta']}>
                                                     {new Date(trade.created_at).toLocaleDateString()} • {trade.side === 'buy' ? 'Compra' : 'Venta'}
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className={styles.mobileAssetValueBox}>
-                                            <p className={styles.mobileActivityValue}>{parseFloat(trade.total_value).toFixed(2)} €</p>
-                                            <p className={styles.mobileActivityShares}>{parseFloat(trade.quantity).toFixed(4)} Acc.</p>
+                                        <div className={styles['mobile-asset-value-box']}>
+                                            <p className={styles['mobile-activity-value']}>{parseFloat(trade.total_value).toFixed(2)} €</p>
+                                            <p className={styles['mobile-activity-shares']}>{parseFloat(trade.quantity).toFixed(4)} Acc.</p>
                                         </div>
                                     </div>
                                 ))}
@@ -250,22 +250,22 @@ const PortfolioMobile = () => {
             </main>
 
             {/* Bottom Navigation */}
-            <nav className={styles.mobileBottomNav}>
-                <Link to="/home" className={styles.mobileNavLink}>
-                    <span className={styles.mobileNavText}>Inicio</span>
+            <nav className={styles['mobile-bottom-nav']}>
+                <Link to="/home" className={styles['mobile-nav-link']}>
+                    <span className={styles['mobile-nav-text']}>Inicio</span>
                 </Link>
-                <Link to="/portfolio" className={`${styles.mobileNavLink} ${styles.mobileNavLinkActive}`}>
-                    <div className={styles.mobileNavLinkActiveBar}></div>
-                    <span className={`${styles.mobileNavText} ${styles.mobileNavTextActive}`}>Portfolio</span>
+                <Link to="/portfolio" className={`${styles['mobile-nav-link']} ${styles['mobile-nav-link-active']}`}>
+                    <div className={styles['mobile-nav-link-active-bar']}></div>
+                    <span className={`${styles['mobile-nav-text']} ${styles['mobile-nav-text-active']}`}>Portfolio</span>
                 </Link>
-                <Link to="/market" className={styles.mobileNavLink}>
-                    <span className={styles.mobileNavText}>Mercado</span>
+                <Link to="/market" className={styles['mobile-nav-link']}>
+                    <span className={styles['mobile-nav-text']}>Mercado</span>
                 </Link>
                 <div 
                     onClick={() => window.location.href = '/profile'}
-                    className={styles.mobileNavLink}
+                    className={styles['mobile-nav-link']}
                 >
-                    <div className={styles.mobileNavAvatar}>
+                    <div className={styles['mobile-nav-avatar']}>
                         {user?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
                 </div>

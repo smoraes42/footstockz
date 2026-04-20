@@ -5,7 +5,7 @@
     display: flex;
 }
 
-.loading, .notFound {
+.loading, .not-found {
     background-color: var(--bg-main);
     height: 100vh;
     width: 100%;
@@ -16,17 +16,17 @@
 }
 
 
-.avatarImg {
+.avatar-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.userInfo {
+.user-info {
     overflow: hidden;
 }
 
-.userName {
+.user-name {
     font-size: 0.9rem;
     font-weight: 600;
     margin: 0;
@@ -35,13 +35,13 @@
     text-overflow: ellipsis;
 }
 
-.userSubtitle {
+.user-subtitle {
     font-size: 0.8rem;
     color: var(--text-muted);
     margin: 0;
 }
 
-.mainContent {
+.main-content {
     margin-left: 250px;
     flex: 1;
     padding: 2rem 3rem;
@@ -55,7 +55,7 @@
     gap: 1rem;
 }
 
-.backBtn {
+.back-btn {
     background: none;
     border: none;
     color: var(--text-muted);
@@ -64,11 +64,11 @@
     transition: color 0.2s;
 }
 
-.backBtn:hover {
+.back-btn:hover {
     color: var(--text-main);
 }
 
-.headerText {
+.header-text {
 }
 
 .title {
@@ -82,13 +82,13 @@
     font-size: 1.1rem;
 }
 
-.contentGrid {
+.content-grid {
     display: grid;
     grid-template-columns: 1fr 2.5fr;
     gap: 2rem;
 }
 
-.profileCard {
+.profile-card {
     padding: 2rem;
     border-radius: 24px;
     display: flex;
@@ -98,7 +98,7 @@
     height: fit-content;
 }
 
-.userAvatar {
+.user-avatar {
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -114,13 +114,13 @@
     overflow: hidden;
 }
 
-.profileName {
+.profile-name {
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
 }
 
-.statsBox {
+.stats-box {
     background-color: rgba(255, 255, 255, 0.03);
     padding: 1rem;
     border-radius: 16px;
@@ -128,38 +128,38 @@
     margin-top: 1rem;
 }
 
-.statsLabel {
+.stats-label {
     color: var(--text-muted);
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
 }
 
-.statsValue {
+.stats-value {
     font-size: 2rem;
     font-weight: 800;
     color: var(--accent-neon);
     margin: 0;
 }
 
-.joinDate {
+.join-date {
     color: var(--text-muted);
     margin-top: 2rem;
     font-size: 0.9rem;
 }
 
-.tableSection {
+.table-section {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.tableTitle {
+.table-title {
     font-size: 1.4rem;
     font-weight: 700;
     margin: 0;
 }
 
-.tableContainer {
+.table-container {
     border-radius: 20px;
     overflow: hidden;
 }
@@ -170,40 +170,40 @@
     text-align: left;
 }
 
-.tableHead {
+.table-head {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background-color: rgba(255, 255, 255, 0.02);
 }
 
-.tableHeadCell {
+.table-head-cell {
     padding: 1.2rem;
     color: var(--text-muted);
     font-weight: 600;
 }
 
-.tableRow {
+.table-row {
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.tableRow:hover {
+.table-row:hover {
     background-color: rgba(255, 255, 255, 0.02);
 }
 
-.tableCell {
+.table-cell {
     padding: 1.2rem;
 }
 
-.tableCellBold {
+.table-cell-bold {
     font-weight: 700;
 }
 
-.accentValue {
+.accent-value {
     color: var(--accent-neon);
 }
 
-.emptyState {
+.empty-state {
     padding: 3rem;
     text-align: center;
     color: var(--text-muted);

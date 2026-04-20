@@ -60,13 +60,13 @@ export default function LeaderboardDesktop() {
         <div className={styles.container}>
             <Navbar />
 
-            <main className={styles.mainContent}>
+            <main className={styles['main-content']}>
                 <header className={styles.header}>
                     <h1 className={styles.title}>Leaderboard</h1>
                     <p className={styles.subtitle}>Top usuarios por valor de portafolio</p>
                 </header>
 
-                <div className={`glass-panel ${styles.tableContainer}`}>
+                <div className={`glass-panel ${styles['table-container']}`}>
                     {loading ? (
                         <div className={styles.loading}>Cargando leaderboard...</div>
                     ) : error ? (
@@ -74,11 +74,11 @@ export default function LeaderboardDesktop() {
                     ) : (
                         <table className={styles.table}>
                             <thead>
-                                <tr className={styles.tableHeadRow}>
-                                    <th className={styles.tableHeaderCell}>Rango</th>
-                                    <th className={styles.tableHeaderCell}>Usuario</th>
-                                    <th className={styles.tableHeaderCell}>Portfolio Value</th>
-                                    <th className={styles.tableHeaderCell}>24h Change</th>
+                                <tr className={styles['table-head-row']}>
+                                    <th className={styles['table-header-cell']}>Rango</th>
+                                    <th className={styles['table-header-cell']}>Usuario</th>
+                                    <th className={styles['table-header-cell']}>Portfolio Value</th>
+                                    <th className={styles['table-header-cell']}>24h Change</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,30 +86,30 @@ export default function LeaderboardDesktop() {
                                     <tr
                                         key={user.id}
                                         onClick={() => navigate(`/profile/${user.id}`)}
-                                        className={styles.tableRow}
+                                        className={styles['table-row']}
                                     >
-                                        <td className={`${styles.tableCell} ${styles.rankCell} ${index < 3 ? styles.rankTop : ''}`}>
+                                        <td className={`${styles['table-cell']} ${styles['rank-cell']} ${index < 3 ? styles['rank-top'] : ''}`}>
                                             #{index + 1}
                                         </td>
-                                        <td className={styles.tableCell}>
-                                            <div className={styles.userCellContent}>
-                                                <div className={styles.userAvatar}>
+                                        <td className={styles['table-cell']}>
+                                            <div className={styles['user-cell-content']}>
+                                                <div className={styles['user-avatar']}>
                                                     {user.username.charAt(0).toUpperCase()}
                                                 </div>
-                                                <p className={styles.userName}>{user.username}</p>
+                                                <p className={styles['user-name']}>{user.username}</p>
                                             </div>
                                         </td>
-                                        <td className={`${styles.tableCell} ${styles.valueCell}`}>
+                                        <td className={`${styles['table-cell']} ${styles['value-cell']}`}>
                                             {Number(user.portfolio_value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                                         </td>
-                                        <td className={`${styles.tableCell} ${styles.changeCell} ${user.change24h >= 0 ? styles.changePositive : styles.changeNegative}`}>
+                                        <td className={`${styles['table-cell']} ${styles['change-cell']} ${user.change24h >= 0 ? styles['change-positive'] : styles['change-negative']}`}>
                                             {user.change24h > 0 ? '+' : ''}{Number(user.change24h).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
                                         </td>
                                     </tr>
                                 ))}
                                 {users.length === 0 && (
                                     <tr>
-                                        <td colSpan="4" className={styles.noData}>
+                                        <td colSpan="4" className={styles['no-data']}>
                                             No se encontraron usuarios
                                         </td>
                                     </tr>

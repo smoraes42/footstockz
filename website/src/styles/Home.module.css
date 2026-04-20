@@ -5,7 +5,7 @@
     display: flex;
 }
 
-.mainContent {
+.main-content {
     margin-left: 250px;
     flex: 1;
     padding: 2rem 3rem;
@@ -14,14 +14,14 @@
 }
 
 
-.playersHeader {
+.players-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2.5rem;
 }
 
-.viewAllLink {
+.view-all-link {
     color: var(--accent-neon);
     text-decoration: none;
     font-size: 0.9rem;
@@ -34,13 +34,13 @@
     color: var(--text-muted);
 }
 
-.playersGrid {
+.players-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
-.playerCard {
+.player-card {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -53,19 +53,19 @@
     position: relative;
 }
 
-.playerCard:hover {
+.player-card:hover {
     background-color: rgba(255, 255, 255, 0.06);
     border-color: rgba(57, 255, 20, 0.3);
     transform: translateY(-2px);
 }
 
-.playerCardUpdated {
+.player-card-updated {
     border: 1px solid var(--accent-neon);
     box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
     transform: scale(1.02);
 }
 
-.playerRank {
+.player-rank {
     position: absolute;
     left: 0;
     top: 0;
@@ -77,13 +77,13 @@
     border-bottom-right-radius: 8px;
 }
 
-.playerInfo {
+.player-info {
     display: flex;
     align-items: center;
     gap: 1.25rem;
 }
 
-.playerAvatar {
+.player-avatar {
     width: 50px;
     height: 50px;
     border-radius: 12px;
@@ -96,42 +96,42 @@
     position: relative;
 }
 
-.playerAvatarImg {
+.player-avatar-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.playerAvatarPlaceholder {
+.player-avatar-placeholder {
     font-size: 1.5rem;
 }
 
-.playerName {
+.player-name {
     font-weight: 800;
     margin: 0;
     font-size: 1rem;
     color: #fff;
 }
 
-.playerTeam {
+.player-team {
     color: var(--text-muted);
     font-size: 0.8rem;
     margin: 0;
     font-weight: 500;
 }
 
-.playerStats {
+.player-stats {
     text-align: right;
 }
 
-.playerPrice {
+.player-price {
     font-weight: 900;
     margin: 0;
     font-size: 1.15rem;
     color: var(--text-main);
 }
 
-.playerChange {
+.player-change {
     margin: 0;
     font-size: 0.85rem;
     font-weight: 700;
@@ -141,16 +141,16 @@
     gap: 4px;
 }
 
-.playerChangeUp {
+.player-change-up {
     color: var(--accent-neon);
 }
 
-.playerChangeDown {
+.player-change-down {
     color: var(--error-red);
 }
 
 /* Mobile Styles */
-.mobileContainer {
+.mobile-container {
     background-color: var(--bg-main);
     height: 100dvh;
     overflow: hidden;
@@ -159,7 +159,7 @@
     flex-direction: column;
 }
 
-.mobileHeader {
+.mobile-header {
     padding: 0 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background-color: rgba(16, 16, 16, 0.9);
@@ -173,18 +173,18 @@
     box-sizing: border-box;
 }
 
-.mobileLogo {
+.mobile-logo {
     height: 22px;
 }
 
-.mobileMain {
+.mobile-main {
     flex: 1;
     padding: 1.5rem;
     padding-bottom: 80px;
     overflow-y: auto;
 }
 
-.mobileSectionTitle {
+.mobile-section-title {
     font-size: 0.95rem;
     font-weight: 800;
     color: var(--accent-neon);
@@ -192,10 +192,10 @@
     letter-spacing: 1px;
     margin-bottom: 1.5rem;
     margin-top: 0;
-    textAlign: left;
+    text-align: left;
 }
 
-.mobilePortfolioValue {
+.mobile-portfolio-value {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -204,7 +204,7 @@
     font-weight: 900;
 }
 
-.mobilePortfolioVariation {
+.mobile-portfolio-variation {
     font-weight: 600;
     font-size: 1rem;
     margin-top: 0.5rem;
@@ -212,17 +212,17 @@
     border-radius: 20px;
 }
 
-.mobileVariationPositive {
+.mobile-variation-positive {
     color: var(--accent-neon);
     background-color: rgba(57, 255, 20, 0.1);
 }
 
-.mobileVariationNegative {
+.mobile-variation-negative {
     color: var(--error-red);
     background-color: rgba(255, 77, 77, 0.1);
 }
 
-.mobileTimeframeContainer {
+.mobile-timeframe-container {
     display: flex;
     gap: 0.5rem;
     overflow-x: auto;
@@ -232,11 +232,11 @@
     scrollbar-width: none;
 }
 
-.mobileTimeframeContainer::-webkit-scrollbar {
+.mobile-timeframe-container::-webkit-scrollbar {
     display: none;
 }
 
-.mobileTimeframeList {
+.mobile-timeframe-list {
     display: flex;
     gap: 4px;
     background-color: var(--surface-dark);
@@ -246,7 +246,7 @@
     min-width: max-content;
 }
 
-.mobileChartContainer {
+.mobile-chart-container {
     height: 220px;
     width: 100%;
     margin-bottom: 2rem;
@@ -255,14 +255,14 @@
     position: relative;
 }
 
-.mobileTopPlayersHeader {
+.mobile-top-players-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
 }
 
-.mobileTopPlayersTitle {
+.mobile-top-players-title {
     font-size: 0.90rem;
     font-weight: 800;
     color: var(--accent-neon);
@@ -273,20 +273,20 @@
     text-align: left;
 }
 
-.mobileViewAll {
+.mobile-view-all {
     color: var(--accent-neon);
     text-decoration: none;
     font-size: 0.85rem;
     font-weight: 600;
 }
 
-.mobilePlayerList {
+.mobile-player-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.mobilePlayerCard {
+.mobile-player-card {
     padding: 1rem;
     border-radius: 16px;
     display: flex;
@@ -299,13 +299,13 @@
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.mobilePlayerCardActive {
+.mobile-player-card-active {
     border: 1px solid var(--accent-neon);
     transform: scale(1.02);
     box-shadow: 0 0 10px rgba(57, 255, 20, 0.15);
 }
 
-.mobilePlayerRank {
+.mobile-player-rank {
     position: absolute;
     left: 0;
     top: 0;
@@ -317,13 +317,13 @@
     border-bottom-right-radius: 8px;
 }
 
-.mobilePlayerInfo {
+.mobile-player-info {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.mobilePlayerAvatarBox {
+.mobile-player-avatar-box {
     width: 42px;
     height: 42px;
     border-radius: 10px;
@@ -335,43 +335,43 @@
     align-items: center;
 }
 
-.mobilePlayerAvatarImg {
+.mobile-player-avatar-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.mobilePlayerAvatarPlaceholder {
+.mobile-player-avatar-placeholder {
     font-size: 1.25rem;
     position: absolute;
 }
 
-.mobilePlayerName {
+.mobile-player-name {
     font-weight: 800;
     margin: 0;
     font-size: 0.9rem;
     color: #fff;
 }
 
-.mobilePlayerTeam {
+.mobile-player-team {
     color: var(--text-muted);
     font-size: 0.75rem;
     margin: 0;
     font-weight: 500;
 }
 
-.mobilePlayerPriceBox {
+.mobile-player-price-box {
     text-align: right;
 }
 
-.mobilePlayerPrice {
+.mobile-player-price {
     font-weight: 900;
     margin: 0;
     font-size: 1rem;
     color: var(--text-main);
 }
 
-.mobilePlayerChange {
+.mobile-player-change {
     margin: 0;
     font-size: 0.75rem;
     font-weight: 700;
@@ -381,7 +381,7 @@
     gap: 3px;
 }
 
-.mobileBottomNav {
+.mobile-bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -396,7 +396,7 @@
     padding-bottom: env(safe-area-inset-bottom);
 }
 
-.mobileNavLink {
+.mobile-nav-link {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -406,12 +406,12 @@
     color: var(--text-muted);
 }
 
-.mobileNavLinkActive {
+.mobile-nav-link-active {
     color: var(--accent-neon);
     position: relative;
 }
 
-.mobileNavLinkActiveBar {
+.mobile-nav-link-active-bar {
     width: 20px;
     height: 2px;
     background-color: var(--accent-neon);
@@ -420,16 +420,16 @@
     top: 0;
 }
 
-.mobileNavText {
+.mobile-nav-text {
     font-size: 0.75rem;
     font-weight: 500;
 }
 
-.mobileNavTextActive {
+.mobile-nav-text-active {
     font-weight: 600;
 }
 
-.mobileNavAvatar {
+.mobile-nav-avatar {
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -441,7 +441,7 @@
     font-size: 0.7rem;
 }
 
-.mobileTooltip {
+.mobile-tooltip {
     background-color: rgba(20, 20, 20, 0.95);
     border: 1px solid rgba(57, 255, 20, 0.4);
     border-radius: 8px;
@@ -450,26 +450,26 @@
     backdrop-filter: blur(8px);
 }
 
-.mobileTooltipTime {
+.mobile-tooltip-time {
     color: rgba(255, 255, 255, 0.5);
     font-size: 0.65rem;
     margin-bottom: 2px;
     text-transform: uppercase;
 }
 
-.mobilePriceUp {
+.mobile-price-up {
     color: var(--accent-neon);
 }
 
-.mobilePriceDown {
+.mobile-price-down {
     color: var(--error-red);
 }
 
-.mobileEmptyBox {
+.mobile-empty-box {
     text-align: center;
     padding: 1rem;
 }
 
-.mobileNavSpacer {
+.mobile-nav-spacer {
     width: 22px;
 }

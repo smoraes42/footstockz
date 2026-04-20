@@ -37,10 +37,10 @@ export const signup = async (req, res) => {
     const [result] = await db1.query(insertUser, [username, email, passwordHash, false, verificationCode]);
     const userId = result.insertId;
 
-    await db1.query('INSERT INTO wallets (user_id, value) VALUES (?, ?)', [userId, 100]);
+    await db1.query('INSERT INTO wallets (user_id, value) VALUES (?, ?)', [userId, 20000]);
     await db1.query(
       'INSERT INTO portfolio_history (user_id, wallet_value, holdings_value, total_equity) VALUES (?, ?, ?, ?)',
-      [userId, 100, 0, 100]
+      [userId, 20000, 0, 20000]
     );
 
     await sendVerificationEmail(email, verificationCode);
@@ -227,10 +227,10 @@ export const googleAuth = async (req, res) => {
       const [result] = await db1.query(insertUser, [username, email, null, google_id, avatar_url, true]);
 
       const userId = result.insertId;
-      await db1.query('INSERT INTO wallets (user_id, value) VALUES (?, ?)', [userId, 100]);
+      await db1.query('INSERT INTO wallets (user_id, value) VALUES (?, ?)', [userId, 20000]);
       await db1.query(
         'INSERT INTO portfolio_history (user_id, wallet_value, holdings_value, total_equity) VALUES (?, ?, ?, ?)',
-        [userId, 100, 0, 100]
+        [userId, 20000, 0, 20000]
       );
 
       user = { id: userId, username, email, avatar_url };

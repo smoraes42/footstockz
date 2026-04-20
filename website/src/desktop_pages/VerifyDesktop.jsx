@@ -80,29 +80,29 @@ const VerifyDesktop = () => {
         <div className={styles.container}>
             <Navbar type="top" />
             <main className={styles.main}>
-                <div className={styles.glowEffect}></div>
-                <div className={`glass-panel fade-in-up ${styles.glassPanel}`}>
+                <div className={styles['glow-effect']}></div>
+                <div className={`glass-panel fade-in-up ${styles['glass-panel']}`}>
 
                     {success ? (
                         <div>
-                            <h1 className={styles.successTitle}>¡Email Verificado!</h1>
-                            <p className={styles.successSubtext}>Redirigiendo al inicio...</p>
+                            <h1 className={styles['success-title']}>¡Email Verificado!</h1>
+                            <p className={styles['success-subtext']}>Redirigiendo al inicio...</p>
                         </div>
                     ) : (
                         <>
                             <h1 className={styles.title}>Verifica tu Email</h1>
                             <p className={styles.subtext}>
                                 Hemos enviado un código de 6 dígitos a<br />
-                                <strong className={styles.emailText}>{email}</strong>
+                                <strong className={styles['email-text']}>{email}</strong>
                             </p>
 
                             {error && (
-                                <div className={styles.errorAlert}>
+                                <div className={styles['error-alert']}>
                                     {error}
                                 </div>
                             )}
 
-                            <div className={styles.codeContainer} onPaste={handlePaste}>
+                            <div className={styles['code-container']} onPaste={handlePaste}>
                                 {code.map((digit, idx) => (
                                     <input
                                         key={idx}
@@ -113,14 +113,14 @@ const VerifyDesktop = () => {
                                         value={digit}
                                         onChange={(e) => handleChange(idx, e.target.value)}
                                         onKeyDown={(e) => handleKeyDown(idx, e)}
-                                        className={`${styles.digitInput} ${digit ? styles.digitInputActive : ''}`}
+                                        className={`${styles['digit-input']} ${digit ? styles['digit-input-active'] : ''}`}
                                     />
                                 ))}
                             </div>
 
                             <button
                                 type="button"
-                                className={`neon-button ${styles.verifyBtn}`}
+                                className={`neon-button ${styles['verify-btn']}`}
                                 style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'wait' : 'pointer' }}
                                 onClick={handleVerify}
                                 disabled={loading}
@@ -128,8 +128,8 @@ const VerifyDesktop = () => {
                                 {loading ? 'Verificando...' : 'Verificar'}
                             </button>
 
-                            <p className={styles.resendText}>
-                                ¿No recibiste el código? <Link to="/login" className={styles.resendLink}>Volver al login</Link>
+                            <p className={styles['resend-text']}>
+                                ¿No recibiste el código? <Link to="/login" className={styles['resend-link']}>Volver al login</Link>
                             </p>
                         </>
                     )}

@@ -305,7 +305,7 @@ const HomeDesktop = () => {
       <Navbar />
 
       {/* Main Content Area */}
-      <main className={styles.mainContent}>
+      <main className={styles['main-content']}>
 
         {/* Wallet Evolution Chart Component */}
         <WalletChart 
@@ -319,42 +319,42 @@ const HomeDesktop = () => {
 
         {/* Players List Section */}
         <div>
-          <div className={styles.playersHeader}>
-            <h2 className={styles.sectionTitle}>Top Jugadores</h2>
-            <Link to="/market" className={styles.viewAllLink}>Ver todos</Link>
+          <div className={styles['players-header']}>
+            <h2 className={styles['section-title']}>Top Jugadores</h2>
+            <Link to="/market" className={styles['view-all-link']}>Ver todos</Link>
           </div>
 
           {loadingPlayers ? (
             <div className={styles.loading}>Cargando jugadores...</div>
           ) : (
-            <div className={styles.playersGrid}>
+            <div className={styles['players-grid']}>
               {players.slice(0, 10).map((player, idx) => (
                 <div 
                   key={player.id} 
                   onClick={() => navigate(`/market/player/${player.id}`)}
-                  className={`${styles.playerCard} ${player.id === updatedPlayerId ? styles.playerCardUpdated : ''}`}
+                  className={`${styles['player-card']} ${player.id === updatedPlayerId ? styles['player-card-updated'] : ''}`}
                 >
-                  <div className={styles.playerRank}>
+                  <div className={styles['player-rank']}>
                     #{idx + 1}
                   </div>
-                  <div className={styles.playerInfo}>
-                    <div className={styles.playerAvatar}>
+                  <div className={styles['player-info']}>
+                    <div className={styles['player-avatar']}>
                       <img 
                         src={getPlayerImageUrl(player.id)}
                         alt={player.name}
-                        className={styles.playerAvatarImg}
+                        className={styles['player-avatar-img']}
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
-                      <span className={styles.playerAvatarPlaceholder}>👤</span>
+                      <span className={styles['player-avatar-placeholder']}>👤</span>
                     </div>
                     <div>
-                      <p className={styles.playerName}>{player.name}</p>
-                      <p className={styles.playerTeam}>{player.team}</p>
+                      <p className={styles['player-name']}>{player.name}</p>
+                      <p className={styles['player-team']}>{player.team}</p>
                     </div>
                   </div>
-                  <div className={styles.playerStats}>
-                    <p className={styles.playerPrice}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                    <p className={`${styles.playerChange} ${player.change >= 0 ? styles.playerChangeUp : styles.playerChangeDown}`}>
+                  <div className={styles['player-stats']}>
+                    <p className={styles['player-price']}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                    <p className={`${styles['player-change']} ${player.change >= 0 ? styles['player-change-up'] : styles['player-change-down']}`}>
                       {player.change >= 0 ? '▲' : '▼'} {Math.abs(player.change)}%
                     </p>
                   </div>

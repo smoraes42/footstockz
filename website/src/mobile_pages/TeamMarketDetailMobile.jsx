@@ -179,18 +179,18 @@ export default function TeamMarketDetailMobile() {
     if (teamHolding.value === undefined) teamHolding.value = teamHolding.position_value || 0;
 
     return (
-        <div className={styles.mobileDetailContainer}>
-            <div className={styles.mobileDetailHeader}>
-                <button onClick={() => navigate(-1)} className={styles.mobileBackBtn}>← Volver</button>
-                <h1 className={styles.mobileDetailTitle}>{team?.name || 'Cargando...'}</h1>
+        <div className={styles['mobile-detail-container']}>
+            <div className={styles['mobile-detail-header']}>
+                <button onClick={() => navigate(-1)} className={styles['mobile-back-btn']}>← Volver</button>
+                <h1 className={styles['mobile-detail-title']}>{team?.name || 'Cargando...'}</h1>
             </div>
 
-            <div className={styles.mobileChartCard}>
-                <div className={styles.mobileChartHeader}>
-                    <span className={styles.mobileChartLabel}>Índice de Equipo</span>
-                    <span className={styles.mobileChartValue}>{formatEU(team?.price)} €</span>
+            <div className={styles['mobile-chart-card']}>
+                <div className={styles['mobile-chart-header']}>
+                    <span className={styles['mobile-chart-label']}>Índice de Equipo</span>
+                    <span className={styles['mobile-chart-value']}>{formatEU(team?.price)} €</span>
                 </div>
-                <div className={styles.mobileChartWrapper}>
+                <div className={styles['mobile-chart-wrapper']}>
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={priceHistory}>
                             <XAxis dataKey="time" hide />
@@ -203,48 +203,48 @@ export default function TeamMarketDetailMobile() {
             </div>
 
             {/* Tu Posición */}
-            <div className={styles.mobilePositionCard}>
-                <h2 className={styles.mobileCardTitle}>Tu Posición</h2>
+            <div className={styles['mobile-position-card']}>
+                <h2 className={styles['mobile-card-title']}>Tu Posición</h2>
                 {teamHolding.shares > 0 ? (
-                    <div className={styles.mobilePositionInfo}>
-                        <div className={styles.mobilePositionRow}>
-                            <span className={styles.mobilePositionLabel}>Acciones:</span>
-                            <span className={styles.mobilePositionValue}>{Number(teamHolding.shares).toFixed(4)}</span>
+                    <div className={styles['mobile-position-info']}>
+                        <div className={styles['mobile-position-row']}>
+                            <span className={styles['mobile-position-label']}>Acciones:</span>
+                            <span className={styles['mobile-position-value']}>{Number(teamHolding.shares).toFixed(4)}</span>
                         </div>
-                        <div className={styles.mobilePositionRow}>
-                            <span className={styles.mobilePositionLabel}>Valor Total:</span>
-                            <span className={styles.mobilePositionValueAccent}>{formatEU(teamHolding.value)} €</span>
+                        <div className={styles['mobile-position-row']}>
+                            <span className={styles['mobile-position-label']}>Valor Total:</span>
+                            <span className={styles['mobile-position-value-accent']}>{formatEU(teamHolding.value)} €</span>
                         </div>
                     </div>
                 ) : (
-                    <p className={styles.mobileNoPosition}>No tienes participaciones en este equipo.</p>
+                    <p className={styles['mobile-no-position']}>No tienes participaciones en este equipo.</p>
                 )}
             </div>
 
             {/* Trade Order */}
-            <div className={styles.mobileTradeCard}>
-                <h2 className={styles.mobileCardTitle}>Trade Order</h2>
+            <div className={styles['mobile-trade-card']}>
+                <h2 className={styles['mobile-card-title']}>Trade Order</h2>
                 
-                <div className={styles.mobileTradeTabs}>
+                <div className={styles['mobile-trade-tabs']}>
                     <button 
-                        className={`${styles.mobileTradeTab} ${activeTab === 'buy' ? styles.mobileTradeTabBuyActive : ''}`}
+                        className={`${styles['mobile-trade-tab']} ${activeTab === 'buy' ? styles['mobile-trade-tab-buy-active'] : ''}`}
                         onClick={() => setActiveTab('buy')}
                     >BUY</button>
                     <button 
-                        className={`${styles.mobileTradeTab} ${activeTab === 'sell' ? styles.mobileTradeTabSellActive : ''}`}
+                        className={`${styles['mobile-trade-tab']} ${activeTab === 'sell' ? styles['mobile-trade-tab-sell-active'] : ''}`}
                         onClick={() => setActiveTab('sell')}
                     >SELL</button>
                 </div>
 
                 {activeTab === 'buy' ? (
                     <>
-                        <div className={styles.mobileTradeInputs}>
-                            <div className={styles.mobileTradeInputGroup}>
-                                <label className={styles.mobileTradeInputLabel}>CANT. ACCIONES</label>
+                        <div className={styles['mobile-trade-inputs']}>
+                            <div className={styles['mobile-trade-input-group']}>
+                                <label className={styles['mobile-trade-input-label']}>CANT. ACCIONES</label>
                                 <input 
                                     type="text" 
                                     placeholder="0,0000" 
-                                    className={styles.mobileTradeInput}
+                                    className={styles['mobile-trade-input']}
                                     value={marketBuyQty}
                                     onChange={e => {
                                         const val = e.target.value;
@@ -255,12 +255,12 @@ export default function TeamMarketDetailMobile() {
                                     }}
                                 />
                             </div>
-                            <div className={styles.mobileTradeInputGroup}>
-                                <label className={styles.mobileTradeInputLabel}>VALOR (€)</label>
+                            <div className={styles['mobile-trade-input-group']}>
+                                <label className={styles['mobile-trade-input-label']}>VALOR (€)</label>
                                 <input 
                                     type="text" 
                                     placeholder="0,00" 
-                                    className={styles.mobileTradeInput}
+                                    className={styles['mobile-trade-input']}
                                     value={marketBuyTotal}
                                     onChange={e => {
                                         const val = e.target.value;
@@ -272,26 +272,26 @@ export default function TeamMarketDetailMobile() {
                                 />
                             </div>
                         </div>
-                        <div className={styles.mobileQuickTrade}>
-                            <button onClick={() => handleQuickBuy(0.25)} className={styles.mobileQuickBtn}>25%</button>
-                            <button onClick={() => handleQuickBuy(0.50)} className={styles.mobileQuickBtn}>50%</button>
-                            <button onClick={() => handleQuickBuy(1.00)} className={styles.mobileQuickBtn}>100%</button>
+                        <div className={styles['mobile-quick-trade']}>
+                            <button onClick={() => handleQuickBuy(0.25)} className={styles['mobile-quick-btn']}>25%</button>
+                            <button onClick={() => handleQuickBuy(0.50)} className={styles['mobile-quick-btn']}>50%</button>
+                            <button onClick={() => handleQuickBuy(1.00)} className={styles['mobile-quick-btn']}>100%</button>
                         </div>
                         <button 
                             onClick={handleMarketBuy}
                             disabled={loading || !marketBuyTotal}
-                            className={styles.mobileBuyBtn}
+                            className={styles['mobile-buy-btn']}
                         >MARKET BUY</button>
                     </>
                 ) : (
                     <>
-                        <div className={styles.mobileTradeInputs}>
-                            <div className={styles.mobileTradeInputGroup}>
-                                <label className={styles.mobileTradeInputLabel}>CANT. ACCIONES</label>
+                        <div className={styles['mobile-trade-inputs']}>
+                            <div className={styles['mobile-trade-input-group']}>
+                                <label className={styles['mobile-trade-input-label']}>CANT. ACCIONES</label>
                                 <input 
                                     type="text" 
                                     placeholder="0,0000" 
-                                    className={styles.mobileTradeInput}
+                                    className={styles['mobile-trade-input']}
                                     value={marketSellQty}
                                     onChange={e => {
                                         const val = e.target.value;
@@ -302,12 +302,12 @@ export default function TeamMarketDetailMobile() {
                                     }}
                                 />
                             </div>
-                            <div className={styles.mobileTradeInputGroup}>
-                                <label className={styles.mobileTradeInputLabel}>VALOR (€)</label>
+                            <div className={styles['mobile-trade-input-group']}>
+                                <label className={styles['mobile-trade-input-label']}>VALOR (€)</label>
                                 <input 
                                     type="text" 
                                     placeholder="0,00" 
-                                    className={styles.mobileTradeInput}
+                                    className={styles['mobile-trade-input']}
                                     value={marketSellTotal}
                                     onChange={e => {
                                         const val = e.target.value;
@@ -319,29 +319,29 @@ export default function TeamMarketDetailMobile() {
                                 />
                             </div>
                         </div>
-                        <div className={styles.mobileQuickTrade}>
-                            <button onClick={() => handleQuickSell(0.25)} className={styles.mobileQuickBtn}>25%</button>
-                            <button onClick={() => handleQuickSell(0.50)} className={styles.mobileQuickBtn}>50%</button>
-                            <button onClick={() => handleQuickSell(1.00)} className={styles.mobileQuickBtn}>100%</button>
+                        <div className={styles['mobile-quick-trade']}>
+                            <button onClick={() => handleQuickSell(0.25)} className={styles['mobile-quick-btn']}>25%</button>
+                            <button onClick={() => handleQuickSell(0.50)} className={styles['mobile-quick-btn']}>50%</button>
+                            <button onClick={() => handleQuickSell(1.00)} className={styles['mobile-quick-btn']}>100%</button>
                         </div>
                         <button 
                             onClick={handleMarketSell}
                             disabled={loading || !marketSellQty}
-                            className={styles.mobileSellBtn}
+                            className={styles['mobile-sell-btn']}
                         >MARKET SELL</button>
                     </>
                 )}
-                {error && <p className={styles.mobileTradeError}>{error}</p>}
+                {error && <p className={styles['mobile-trade-error']}>{error}</p>}
             </div>
 
-            <div className={styles.mobileRosterCard}>
-                <h2 className={styles.mobileCardTitle}>Roster</h2>
+            <div className={styles['mobile-roster-card']}>
+                <h2 className={styles['mobile-card-title']}>Roster</h2>
                 {team?.players?.map(p => (
-                    <div key={p.id} onClick={() => navigate(`/market/player/${p.id}`)} className={styles.mobileRosterItem}>
-                        <span className={styles.mobileRosterItemName}>{p.name}</span>
-                        <div className={styles.mobileRosterItemValueBox}>
-                            <div className={styles.mobileRosterItemPrice}>{formatEU(p.price)} €</div>
-                            <div className={`${styles.mobileRosterItemChange} ${p.change >= 0 ? styles.mobileChangePositive : styles.mobileChangeNegative}`}>{p.change >= 0 ? '+' : ''}{Number(p.change).toFixed(2)}%</div>
+                    <div key={p.id} onClick={() => navigate(`/market/player/${p.id}`)} className={styles['mobile-roster-item']}>
+                        <span className={styles['mobile-roster-item-name']}>{p.name}</span>
+                        <div className={styles['mobile-roster-item-value-box']}>
+                            <div className={styles['mobile-roster-item-price']}>{formatEU(p.price)} €</div>
+                            <div className={`${styles['mobile-roster-item-change']} ${p.change >= 0 ? styles['mobile-change-positive'] : styles['mobile-change-negative']}`}>{p.change >= 0 ? '+' : ''}{Number(p.change).toFixed(2)}%</div>
                         </div>
                     </div>
                 ))}

@@ -356,26 +356,26 @@ export default function PlayerMarketDesktop() {
         <div className={styles.container}>
             <Navbar />
 
-            <main className={styles.mainContent}>
-                <div className={styles.topHeader}>
-                    <button onClick={() => navigate('/market')} className={styles.backBtn}>Volver</button>
+            <main className={styles['main-content']}>
+                <div className={styles['top-header']}>
+                    <button onClick={() => navigate('/market')} className={styles['back-btn']}>Volver</button>
                     {portfolio && (
-                        <div className={styles.walletInfo}>
-                            <span className={styles.walletLabel}>Wallet Balance:</span>
-                            <span className={styles.walletValue}>{portfolio.walletBalance?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                        <div className={styles['wallet-info']}>
+                            <span className={styles['wallet-label']}>Wallet Balance:</span>
+                            <span className={styles['wallet-value']}>{portfolio.walletBalance?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                         </div>
                     )}
                 </div>
 
-                <div className={styles.mainGrid}>
-                    <div className={styles.leftCol}>
+                <div className={styles['main-grid']}>
+                    <div className={styles['left-col']}>
                         {/* Chart */}
                         <div className={styles.card}>
-                            <h2 className={styles.cardTitle}>
+                            <h2 className={styles['card-title']}>
                                 {currentPlayer ? `${currentPlayer.name} Chart` : 'Loading Chart...'}
-                                <span className={styles.currentPriceTag}>Current: {currentPlayer?.price?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0,00'} €</span>
+                                <span className={styles['current-price-tag']}>Current: {currentPlayer?.price?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0,00'} €</span>
                             </h2>
-                            <div className={styles.chartContainer}>
+                            <div className={styles['chart-container']}>
                                 <ResponsiveContainer width="100%" height="100%">
                                     <LineChart data={priceHistory}>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#222" />
@@ -401,29 +401,29 @@ export default function PlayerMarketDesktop() {
 
                         {/* Recent Trades Tape */}
                         <div className={styles.card}>
-                            <h2 className={styles.cardTitle}>Recent Trades</h2>
+                            <h2 className={styles['card-title']}>Recent Trades</h2>
                             {tradeHistory.length > 0 ? (
-                                <div className={styles.tradeTableContainer}>
-                                    <table className={styles.tradeTable}>
+                                <div className={styles['trade-table-container']}>
+                                    <table className={styles['trade-table']}>
                                         <thead>
-                                            <tr className={styles.tradeTableHeadRow}>
-                                                <th className={styles.tradeTableHeadCell}>Type</th>
-                                                <th className={styles.tradeTableHeadCell}>Price</th>
-                                                <th className={styles.tradeTableHeadCell}>Qty</th>
-                                                <th className={styles.tradeTableHeadCell}>Total (€)</th>
-                                                <th className={styles.tradeTableHeadCell}>Time</th>
+                                            <tr className={styles['trade-table-head-row']}>
+                                                <th className={styles['trade-table-head-cell']}>Type</th>
+                                                <th className={styles['trade-table-head-cell']}>Price</th>
+                                                <th className={styles['trade-table-head-cell']}>Qty</th>
+                                                <th className={styles['trade-table-head-cell']}>Total (€)</th>
+                                                <th className={styles['trade-table-head-cell']}>Time</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {tradeHistory.slice(0, 15).map((trade, idx) => (
-                                                <tr key={idx} className={styles.tradeTableRow}>
-                                                    <td className={`${styles.tradeTableCell} ${trade.side === 'buy' ? styles.tradeTypeBuy : styles.tradeTypeSell}`}>
+                                                <tr key={idx} className={styles['trade-table-row']}>
+                                                    <td className={`${styles['trade-table-cell']} ${trade.side === 'buy' ? styles['trade-type-buy'] : styles['trade-type-sell']}`}>
                                                         {trade.side === 'buy' ? 'BUY' : 'SELL'}
                                                     </td>
-                                                    <td className={`${styles.tradeTableCell} ${styles.tradeCellWhite}`}>{parseFloat(trade.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
-                                                    <td className={`${styles.tradeTableCell} ${styles.tradeCellMuted}`}>{parseFloat(trade.quantity).toLocaleString('es-ES', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}</td>
-                                                    <td className={`${styles.tradeTableCell} ${styles.tradeCellWhite}`}>{parseFloat(trade.total_value || trade.totalValue).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
-                                                    <td className={`${styles.tradeTableCell} ${styles.tradeTime}`}>
+                                                    <td className={`${styles['trade-table-cell']} ${styles['trade-cell-white']}`}>{parseFloat(trade.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
+                                                    <td className={`${styles['trade-table-cell']} ${styles['trade-cell-muted']}`}>{parseFloat(trade.quantity).toLocaleString('es-ES', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}</td>
+                                                    <td className={`${styles['trade-table-cell']} ${styles['trade-cell-white']}`}>{parseFloat(trade.total_value || trade.totalValue).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
+                                                    <td className={`${styles['trade-table-cell']} ${styles['trade-time']}`}>
                                                         {new Date(trade.timestamp || trade.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                                                     </td>
                                                 </tr>
@@ -432,56 +432,56 @@ export default function PlayerMarketDesktop() {
                                     </table>
                                 </div>
                             ) : (
-                                <div className={styles.emptyBook}>No recent trades for this player.</div>
+                                <div className={styles['empty-book']}>No recent trades for this player.</div>
                             )}
                         </div>
 
                     </div>
 
-                    <div className={styles.rightCol}>
+                    <div className={styles['right-col']}>
                         {/* Your Position */}
                         <div className={styles.card}>
-                            <h2 className={styles.cardTitle}>Tu Posición</h2>
+                            <h2 className={styles['card-title']}>Tu Posición</h2>
                             {portfolio?.holdings?.find(h => h.player_id === parseInt(playerId)) ? (
-                                <div className={styles.positionBox}>
-                                    <div className={styles.posRow}>
+                                <div className={styles['position-box']}>
+                                    <div className={styles['pos-row']}>
                                         <span className={styles.label}>Acciones:</span>
-                                        <span className={styles.posValue}>{portfolio.holdings.find(h => h.player_id === parseInt(playerId)).shares_owned.toFixed(4)}</span>
+                                        <span className={styles['pos-value']}>{portfolio.holdings.find(h => h.player_id === parseInt(playerId)).shares_owned.toFixed(4)}</span>
                                     </div>
-                                    <div className={styles.posRow}>
+                                    <div className={styles['pos-row']}>
                                         <span className={styles.label}>Valor:</span>
-                                        <span className={styles.posValue}>{portfolio.holdings.find(h => h.player_id === parseInt(playerId)).position_value?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                                        <span className={styles['pos-value']}>{portfolio.holdings.find(h => h.player_id === parseInt(playerId)).position_value?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                                     </div>
                                 </div>
                             ) : (
-                                <div className={styles.noPosition}>No tienes acciones de este jugador.</div>
+                                <div className={styles['no-position']}>No tienes acciones de este jugador.</div>
                             )}
                         </div>
 
                         {/* Trade Form */}
                         <div className={styles.card}>
-                            <h2 className={styles.cardTitle}>Trade Order</h2>
+                            <h2 className={styles['card-title']}>Trade Order</h2>
 
-                            <div className={styles.tabRow}>
+                            <div className={styles['tab-row']}>
                                 <button
-                                    className={`${styles.tabButton} ${activeTab === 'buy' ? styles.activeTabBuy : ''}`}
+                                    className={`${styles['tab-button']} ${activeTab === 'buy' ? styles['active-tab-buy'] : ''}`}
                                     onClick={() => setActiveTab('buy')}
                                 >
                                     BUY
                                 </button>
                                 <button
-                                    className={`${styles.tabButton} ${activeTab === 'sell' ? styles.activeTabSell : ''}`}
+                                    className={`${styles['tab-button']} ${activeTab === 'sell' ? styles['active-tab-sell'] : ''}`}
                                     onClick={() => setActiveTab('sell')}
                                 >
                                     SELL
                                 </button>
                             </div>
 
-                            <div className={styles.orderSection}>
+                            <div className={styles['order-section']}>
                                 {activeTab === 'buy' && (
                                     <>
-                                        <div className={styles.formRow}>
-                                            <div className={styles.inputGroup}>
+                                        <div className={styles['form-row']}>
+                                            <div className={styles['input-group']}>
                                                 <label className={styles.label}>Quantity</label>
                                                 <input
                                                     type="text"
@@ -501,11 +501,11 @@ export default function PlayerMarketDesktop() {
                                                     }}
                                                 />
                                             </div>
-                                            <div className={styles.inputGroup}>
+                                            <div className={styles['input-group']}>
                                                 <label className={styles.label}>Value (€)</label>
                                                 <input
                                                     type="text"
-                                                    className={`${styles.input} ${portfolio && parseEU(marketBuyTotal) > portfolio.walletBalance ? styles.inputError : ''}`}
+                                                    className={`${styles.input} ${portfolio && parseEU(marketBuyTotal) > portfolio.walletBalance ? styles['input-error'] : ''}`}
                                                     placeholder="0,00"
                                                     value={marketBuyTotal}
                                                     onChange={e => {
@@ -521,17 +521,17 @@ export default function PlayerMarketDesktop() {
                                                 />
                                             </div>
                                         </div>
-                                        <div className={styles.quickSelectRow}>
-                                            <button className={styles.quickSelectBtn} onClick={() => handleQuickBuy(0.25)}>25%</button>
-                                            <button className={styles.quickSelectBtn} onClick={() => handleQuickBuy(0.50)}>50%</button>
-                                            <button className={styles.quickSelectBtn} onClick={() => handleQuickBuy(1.00)}>100%</button>
+                                        <div className={styles['quick-select-row']}>
+                                            <button className={styles['quick-select-btn']} onClick={() => handleQuickBuy(0.25)}>25%</button>
+                                            <button className={styles['quick-select-btn']} onClick={() => handleQuickBuy(0.50)}>50%</button>
+                                            <button className={styles['quick-select-btn']} onClick={() => handleQuickBuy(1.00)}>100%</button>
                                         </div>
 
 
-                                        <div className={styles.buttonRow}>
+                                        <div className={styles['button-row']}>
                                             <button
                                                 disabled={loading}
-                                                className={styles.buyButton}
+                                                className={styles['buy-button']}
                                                 onClick={handleMarketBuy}
                                             >
                                                 {loading ? '...' : 'MARKET BUY'}
@@ -542,12 +542,12 @@ export default function PlayerMarketDesktop() {
 
                                 {activeTab === 'sell' && (
                                     <>
-                                        <div className={styles.formRow}>
-                                            <div className={styles.inputGroup}>
+                                        <div className={styles['form-row']}>
+                                            <div className={styles['input-group']}>
                                                 <label className={styles.label}>Quantity</label>
                                                 <input
                                                     type="text"
-                                                    className={`${styles.input} ${portfolio && portfolio.holdings?.find(h => h.player_id === parseInt(playerId)) && parseEU(marketSellQty) > portfolio.holdings.find(h => h.player_id === parseInt(playerId)).shares_owned ? styles.inputError : ''}`}
+                                                    className={`${styles.input} ${portfolio && portfolio.holdings?.find(h => h.player_id === parseInt(playerId)) && parseEU(marketSellQty) > portfolio.holdings.find(h => h.player_id === parseInt(playerId)).shares_owned ? styles['input-error'] : ''}`}
                                                     placeholder="0,0000"
                                                     value={marketSellQty}
                                                     onChange={e => {
@@ -562,7 +562,7 @@ export default function PlayerMarketDesktop() {
                                                     }}
                                                 />
                                             </div>
-                                            <div className={styles.inputGroup}>
+                                            <div className={styles['input-group']}>
                                                 <label className={styles.label}>Value (€)</label>
                                                 <input
                                                     type="text"
@@ -582,17 +582,17 @@ export default function PlayerMarketDesktop() {
                                                 />
                                             </div>
                                         </div>
-                                        <div className={styles.quickSelectRow}>
-                                            <button className={styles.quickSelectBtn} onClick={() => handleQuickSell(0.25)}>25%</button>
-                                            <button className={styles.quickSelectBtn} onClick={() => handleQuickSell(0.50)}>50%</button>
-                                            <button className={styles.quickSelectBtn} onClick={() => handleQuickSell(1.00)}>100%</button>
+                                        <div className={styles['quick-select-row']}>
+                                            <button className={styles['quick-select-btn']} onClick={() => handleQuickSell(0.25)}>25%</button>
+                                            <button className={styles['quick-select-btn']} onClick={() => handleQuickSell(0.50)}>50%</button>
+                                            <button className={styles['quick-select-btn']} onClick={() => handleQuickSell(1.00)}>100%</button>
                                         </div>
 
 
-                                        <div className={styles.buttonRow}>
+                                        <div className={styles['button-row']}>
                                             <button
                                                 disabled={loading}
-                                                className={styles.sellButton}
+                                                className={styles['sell-button']}
                                                 onClick={handleMarketSell}
                                             >
                                                 {loading ? '...' : 'MARKET SELL'}
@@ -603,7 +603,7 @@ export default function PlayerMarketDesktop() {
                             </div>
                         </div>
                         {error && (
-                            <div className={styles.errorBanner}>
+                            <div className={styles['error-banner']}>
                                 {error}
                             </div>
                         )}

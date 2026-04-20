@@ -46,24 +46,24 @@ const WalletChart = ({
   const timeframes = ['D', 'W', 'M', 'Y', 'Max'];
 
   return (
-    <div className={styles.sectionHeader}>
-      <div className={styles.portfolioHeader}>
-        <h2 className={styles.sectionTitle}>Cartera</h2>
-        <div className={styles.portfolioValueContainer}>
-          <div className={styles.portfolioValueWrapper}>
-            <span className={styles.portfolioValue}>
+    <div className={styles['section-header']}>
+      <div className={styles['portfolio-header']}>
+        <h2 className={styles['section-title']}>Cartera</h2>
+        <div className={styles['portfolio-value-container']}>
+          <div className={styles['portfolio-value-wrapper']}>
+            <span className={styles['portfolio-value']}>
               {loading ? '---' : formatCompactNumber(displayValue)}
             </span>
-            <span className={`${styles.portfolioVariation} ${variation24h.amount >= 0 ? styles.variationUp : styles.variationDown}`}>
+            <span className={`${styles['portfolio-variation']} ${variation24h.amount >= 0 ? styles['variation-up'] : styles['variation-down']}`}>
               {variation24h.amount >= 0 ? '+' : '-'} {Math.abs(variation24h.amount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € ({variation24h.percent.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%)
             </span>
           </div>
 
-          <div className={styles.timeframeContainer}>
+          <div className={styles['timeframe-container']}>
             {timeframes.map(tf => (
               <button
                 key={tf}
-                className={`${styles.timeframeBtn} ${activeTimeframe === tf ? styles.timeframeBtnActive : ''}`}
+                className={`${styles['timeframe-btn']} ${activeTimeframe === tf ? styles['timeframe-btn-active'] : ''}`}
                 onClick={() => onTimeframeChange(tf)}
               >
                 {tf}
@@ -73,7 +73,7 @@ const WalletChart = ({
         </div>
       </div>
 
-      <div className={styles.chartContainer}>
+      <div className={styles['chart-container']}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} onMouseMove={handleChartMouseMove} onMouseLeave={() => setHoverInfo(null)}>
             <defs>
@@ -139,13 +139,13 @@ const WalletChart = ({
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
-                    <div className={styles.tooltipContainer}>
-                      <div className={styles.tooltipTime}>
+                    <div className={styles['tooltip-container']}>
+                      <div className={styles['tooltip-time']}>
                         {formatHoverTime(data.timestamp)}
                       </div>
-                      <div className={styles.tooltipRow}>
-                        <span className={styles.tooltipLabel}>VALOR:</span>
-                          <span className={styles.tooltipValue}>
+                      <div className={styles['tooltip-row']}>
+                        <span className={styles['tooltip-label']}>VALOR:</span>
+                          <span className={styles['tooltip-value']}>
                             {Number(data.value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                           </span>
                       </div>

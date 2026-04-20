@@ -5,7 +5,7 @@
     display: flex;
 }
 
-.mainContent {
+.main-content {
     margin-left: 250px;
     flex: 1;
     padding: 2rem 3rem;
@@ -13,14 +13,14 @@
     height: 100vh;
 }
 
-.topHeader {
+.top-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.backBtn {
+.back-btn {
     background-color: var(--accent-neon);
     border: none;
     color: #000000;
@@ -35,18 +35,18 @@
     transition: all 0.2s;
 }
 
-.backBtn:hover {
+.back-btn:hover {
     opacity: 0.9;
 }
 
-.walletInfo {
+.wallet-info {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 4px;
 }
 
-.walletLabel {
+.wallet-label {
     font-size: 0.75rem;
     color: #666;
     font-weight: 700;
@@ -54,26 +54,26 @@
     letter-spacing: 1px;
 }
 
-.walletValue {
+.wallet-value {
     font-size: 1.4rem;
     font-weight: 700;
     color: var(--accent-neon);
 }
 
-.mainGrid {
+.main-grid {
     display: grid;
     grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
     gap: 30px;
     flex: 1;
 }
 
-.leftCol {
+.left-col {
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
-.rightCol {
+.right-col {
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -87,7 +87,7 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.cardTitle {
+.card-title {
     font-size: 1.3rem;
     font-weight: 700;
     margin-bottom: 24px;
@@ -97,7 +97,7 @@
     align-items: center;
 }
 
-.currentPriceTag {
+.current-price-tag {
     font-size: 0.9rem;
     background-color: rgba(57, 255, 20, 0.1);
     color: var(--accent-neon);
@@ -106,71 +106,71 @@
     border: 1px solid rgba(57, 255, 20, 0.2);
 }
 
-.chartContainer {
+.chart-container {
     width: 100%;
     height: 350px;
     min-width: 0;
 }
 
-.tradeTableContainer {
+.trade-table-container {
     overflow-x: auto;
     max-height: 400px;
 }
 
-.tradeTable {
+.trade-table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
     font-size: 0.9rem;
 }
 
-.tradeTableHeadRow {
+.trade-table-head-row {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     color: var(--text-muted);
 }
 
-.tradeTableHeadCell {
+.trade-table-head-cell {
     padding: 8px;
 }
 
-.tradeTableRow {
+.trade-table-row {
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-.tradeTableCell {
+.trade-table-cell {
     padding: 8px;
 }
 
-.tradeTypeBuy {
+.trade-type-buy {
     color: var(--accent-neon);
     font-weight: bold;
 }
 
-.tradeTypeSell {
+.trade-type-sell {
     color: var(--error-red);
     font-weight: bold;
 }
 
-.tradeCellWhite {
+.trade-cell-white {
     color: #fff;
 }
 
-.tradeCellMuted {
+.trade-cell-muted {
     color: #ccc;
 }
 
-.tradeTime {
+.trade-time {
     color: var(--text-muted);
 }
 
-.emptyBook {
+.empty-book {
     text-align: center;
     color: #222;
     padding: 10px;
     font-size: 0.8rem;
 }
 
-.positionBox {
+.position-box {
     background-color: #0a0a0a;
     padding: 15px 20px;
     border-radius: 12px;
@@ -183,7 +183,7 @@
     box-sizing: border-box;
 }
 
-.posRow {
+.pos-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -197,13 +197,13 @@
     letter-spacing: 1px;
 }
 
-.posValue {
+.pos-value {
     font-weight: bold;
     font-size: 1.1rem;
     color: #fff;
 }
 
-.noPosition {
+.no-position {
     color: #666;
     font-style: italic;
     background-color: #0a0a0a;
@@ -217,7 +217,7 @@
     box-sizing: border-box;
 }
 
-.tabRow {
+.tab-row {
     display: flex;
     margin-bottom: 20px;
     gap: 10px;
@@ -227,7 +227,7 @@
     border: 1px solid #222;
 }
 
-.tabButton {
+.tab-button {
     flex: 1;
     padding: 12px 16px;
     border-radius: 8px;
@@ -240,30 +240,30 @@
     transition: all 0.2s;
 }
 
-.activeTabBuy {
+.active-tab-buy {
     background-color: rgba(57, 255, 20, 0.15);
     color: var(--accent-neon);
     border-color: var(--accent-neon);
 }
 
-.activeTabSell {
+.active-tab-sell {
     background-color: rgba(255, 77, 77, 0.15);
     color: var(--error-red);
     border-color: var(--error-red);
 }
 
-.orderSection {
+.order-section {
     padding: 10px 0;
 }
 
-.formRow {
+.form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
     margin-bottom: 20px;
 }
 
-.inputGroup {
+.input-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -287,18 +287,18 @@
     border-color: var(--accent-neon);
 }
 
-.inputError {
+.input-error {
     color: #ff3d00 !important;
 }
 
-.quickSelectRow {
+.quick-select-row {
     display: flex;
     justify-content: space-between;
     margin-top: 15px;
     gap: 10px;
 }
 
-.quickSelectBtn {
+.quick-select-btn {
     flex: 1;
     padding: 10px;
     border-radius: 10px;
@@ -311,18 +311,18 @@
     transition: all 0.2s;
 }
 
-.quickSelectBtn:hover {
+.quick-select-btn:hover {
     background-color: rgba(255, 255, 255, 0.05);
     border-color: #444;
 }
 
-.buttonRow {
+.button-row {
     display: flex;
     justify-content: center;
     margin-top: 20px;
 }
 
-.buyButton {
+.buy-button {
     padding: 18px;
     border: none;
     border-radius: 14px;
@@ -335,17 +335,17 @@
     width: 50%;
 }
 
-.buyButton:hover:not(:disabled) {
+.buy-button:hover:not(:disabled) {
     opacity: 0.9;
     transform: scale(1.02);
 }
 
-.buyButton:disabled {
+.buy-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.sellButton {
+.sell-button {
     padding: 18px;
     border: none;
     border-radius: 14px;
@@ -358,17 +358,17 @@
     width: 50%;
 }
 
-.sellButton:hover:not(:disabled) {
+.sell-button:hover:not(:disabled) {
     opacity: 0.9;
     transform: scale(1.02);
 }
 
-.sellButton:disabled {
+.sell-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.errorBanner {
+.error-banner {
     background-color: #ff525222;
     color: #ff5252;
     padding: 12px 20px;
@@ -380,7 +380,7 @@
 }
 
 /* Mobile Styles */
-.mobileContainer {
+.mobile-container {
     background-color: var(--bg-main);
     height: 100dvh;
     overflow: hidden;
@@ -389,7 +389,7 @@
     flex-direction: column;
 }
 
-.mobileHeader {
+.mobile-header {
     padding: 0 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background-color: rgba(16, 16, 16, 0.9);
@@ -403,23 +403,23 @@
     box-sizing: border-box;
 }
 
-.mobileLogo {
+.mobile-logo {
     height: 22px;
 }
 
-.mobileWalletBox {
+.mobile-wallet-box {
     text-align: right;
     min-width: 60px;
 }
 
-.mobileWalletValue {
+.mobile-wallet-value {
     font-size: 0.85rem;
     color: var(--accent-neon);
     font-weight: 800;
     margin: 0;
 }
 
-.mobilePositionBar {
+.mobile-position-bar {
     padding: 4px 1.5rem;
     background-color: rgba(0, 0, 0, 0.3);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -427,60 +427,60 @@
     justify-content: space-between;
 }
 
-.mobilePosLabel {
+.mobile-pos-label {
     font-size: 0.75rem;
     color: var(--text-muted);
 }
 
-.mobilePosValue {
+.mobile-pos-value {
     color: #fff;
     font-weight: 700;
 }
 
-.mobileMain {
+.mobile-main {
     flex: 1;
     padding: 1.5rem;
     padding-bottom: 80px;
     overflow-y: auto;
 }
 
-.mobilePlayerHero {
+.mobile-player-hero {
     margin-bottom: 2rem;
 }
 
-.mobileHeroTop {
+.mobile-hero-top {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 0.5rem;
 }
 
-.mobilePlayerName {
+.mobile-player-name {
     font-size: 1.8rem;
     font-weight: 900;
     margin: 0;
     letter-spacing: -0.5px;
 }
 
-.mobilePlayerTeam {
+.mobile-player-team {
     font-size: 0.9rem;
     color: var(--text-muted);
     font-weight: 600;
     margin: 0;
 }
 
-.mobilePriceDisplay {
+.mobile-price-display {
     text-align: right;
 }
 
-.mobileCurrentPrice {
+.mobile-current-price {
     font-size: 1.8rem;
     font-weight: 900;
     color: var(--accent-neon);
     margin: 0;
 }
 
-.mobilePriceChange {
+.mobile-price-change {
     font-size: 0.8rem;
     color: var(--accent-neon);
     background-color: rgba(57, 255, 20, 0.1);
@@ -489,7 +489,7 @@
     font-weight: 700;
 }
 
-.mobileChartBox {
+.mobile-chart-box {
     padding: 1rem;
     border-radius: 20px;
     margin-bottom: 2rem;
@@ -499,7 +499,7 @@
     min-width: 0;
 }
 
-.mobileTooltip {
+.mobile-tooltip {
     position: absolute;
     top: 12px;
     left: 24px;
@@ -511,24 +511,24 @@
     pointer-events: none;
 }
 
-.mobileTooltipTime {
+.mobile-tooltip-time {
     color: var(--text-muted);
     font-size: 0.7rem;
 }
 
-.mobileTooltipPrice {
+.mobile-tooltip-price {
     color: var(--accent-neon);
     font-weight: 800;
     font-size: 1rem;
 }
 
-.mobileTradeCard {
+.mobile-trade-card {
     padding: 1.25rem;
     border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.mobileTabRow {
+.mobile-tab-row {
     display: flex;
     gap: 8px;
     margin-bottom: 1.5rem;
@@ -537,7 +537,7 @@
     border-radius: 12px;
 }
 
-.mobileTabBtn {
+.mobile-tab-btn {
     flex: 1;
     padding: 12px;
     border-radius: 10px;
@@ -549,41 +549,41 @@
     transition: all 0.2s;
 }
 
-.mobileTabBtnActiveBuy {
+.mobile-tab-btn-active-buy {
     background-color: rgba(57, 255, 20, 0.15);
     color: var(--accent-neon);
 }
 
-.mobileTabBtnActiveSell {
+.mobile-tab-btn-active-sell {
     background-color: rgba(255, 77, 77, 0.15);
     color: var(--error-red);
 }
 
-.mobileTradeForm {
+.mobile-trade-form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.mobileInputGrid {
+.mobile-input-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
 
-.mobileInputGroup {
+.mobile-input-group {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.mobileInputLabel {
+.mobile-input-label {
     font-size: 0.65rem;
     font-weight: 700;
     color: var(--text-muted);
 }
 
-.mobileInput {
+.mobile-input {
     width: 100%;
     padding: 12px;
     border-radius: 10px;
@@ -594,12 +594,12 @@
     box-sizing: border-box;
 }
 
-.mobileQuickSelectRow {
+.mobile-quick-select-row {
     display: flex;
     gap: 8px;
 }
 
-.mobileQuickSelectBtn {
+.mobile-quick-select-btn {
     flex: 1;
     padding: 8px;
     border-radius: 8px;
@@ -610,17 +610,17 @@
     font-weight: 700;
 }
 
-.mobileSlippageBox {
+.mobile-slippage-box {
     margin-top: 0.5rem;
 }
 
-.mobileSlippageRow {
+.mobile-slippage-row {
     display: flex;
     gap: 6px;
     margin-top: 4px;
 }
 
-.mobileSlippageBtn {
+.mobile-slippage-btn {
     flex: 1;
     padding: 8px;
     border-radius: 8px;
@@ -631,13 +631,13 @@
     font-weight: 800;
 }
 
-.mobileSlippageBtnActive {
+.mobile-slippage-btn-active {
     border-color: var(--accent-neon);
     background-color: rgba(57, 255, 20, 0.1);
     color: var(--accent-neon);
 }
 
-.mobileSlippageInput {
+.mobile-slippage-input {
     width: 60px;
     padding: 8px;
     border-radius: 8px;
@@ -648,14 +648,14 @@
     text-align: center;
 }
 
-.mobileErrorMsg {
+.mobile-error-msg {
     margin: 0;
     font-size: 0.75rem;
     color: var(--error-red);
     font-weight: 600;
 }
 
-.mobileExecuteBtn {
+.mobile-execute-btn {
     width: 100%;
     padding: 16px;
     border-radius: 14px;
@@ -667,19 +667,19 @@
     transition: opacity 0.2s;
 }
 
-.mobileBuyBtn {
+.mobile-buy-btn {
     background-color: #00c853;
 }
 
-.mobileSellBtn {
+.mobile-sell-btn {
     background-color: #ff5252;
 }
 
-.mobileSpacer {
+.mobile-spacer {
     padding-bottom: 40px;
 }
 
-.mobileBottomNav {
+.mobile-bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -694,7 +694,7 @@
     padding-bottom: env(safe-area-inset-bottom);
 }
 
-.mobileNavLink {
+.mobile-nav-link {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -704,12 +704,12 @@
     color: var(--text-muted);
 }
 
-.mobileNavLinkActive {
+.mobile-nav-link-active {
     color: var(--accent-neon);
     position: relative;
 }
 
-.mobileNavLinkActiveBar {
+.mobile-nav-link-active-bar {
     width: 20px;
     height: 2px;
     background-color: var(--accent-neon);
@@ -718,16 +718,16 @@
     top: 0;
 }
 
-.mobileNavText {
+.mobile-nav-text {
     font-size: 0.75rem;
     font-weight: 500;
 }
 
-.mobileNavTextActive {
+.mobile-nav-text-active {
     font-weight: 600;
 }
 
-.mobileNavProfile {
+.mobile-nav-profile {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -737,7 +737,7 @@
     cursor: pointer;
 }
 
-.mobileNavAvatar {
+.mobile-nav-avatar {
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -749,7 +749,7 @@
     font-size: 0.7rem;
 }
 
-.mobileFetchErrorCard {
+.mobile-fetch-error-card {
     padding: 2rem;
     text-align: center;
     background-color: rgba(255, 82, 82, 0.1);
@@ -757,13 +757,13 @@
     border: 1px solid rgba(255, 82, 82, 0.2);
 }
 
-.mobileFetchErrorText {
+.mobile-fetch-error-text {
     color: #ff5252;
     font-weight: 700;
     margin: 0;
 }
 
-.mobileFetchErrorBtn {
+.mobile-fetch-error-btn {
     margin-top: 1rem;
     padding: 8px 16px;
     border-radius: 8px;
@@ -772,12 +772,12 @@
     color: #fff;
 }
 
-.mobilePriceChangePositive {
+.mobile-price-change-positive {
     color: var(--accent-neon);
     background-color: rgba(57, 255, 20, 0.1);
 }
 
-.mobilePriceChangeNegative {
+.mobile-price-change-negative {
     color: var(--error-red);
     background-color: rgba(255, 82, 82, 0.1);
 }

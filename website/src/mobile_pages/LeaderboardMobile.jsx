@@ -37,21 +37,21 @@ const LeaderboardMobile = () => {
     }, []);
 
     return (
-        <div className={styles.mobileContainer}>
+        <div className={styles['mobile-container']}>
 
             {/* Top Header */}
-            <header className={styles.mobileHeader}>
-                <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileLogo} />
-                <div className={styles.mobileNavSpacer} />
+            <header className={styles['mobile-header']}>
+                <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-logo']} />
+                <div className={styles['mobile-nav-spacer']} />
             </header>
 
-            <main className={styles.mobileMain}>
-                <header className={styles.mobileSectionHeader}>
-                    <h2 className={styles.mobileSectionTitle}>Leaderboard</h2>
-                    <p className={styles.mobileSectionSubtitle}>Top usuarios por valor de portfolio</p>
+            <main className={styles['mobile-main']}>
+                <header className={styles['mobile-section-header']}>
+                    <h2 className={styles['mobile-section-title']}>Leaderboard</h2>
+                    <p className={styles['mobile-section-subtitle']}>Top usuarios por valor de portfolio</p>
                 </header>
 
-                <div className={styles.mobileUserList}>
+                <div className={styles['mobile-user-list']}>
                     {loading ? (
                         <div className={styles.loading}>Cargando ranking...</div>
                     ) : error ? (
@@ -61,25 +61,25 @@ const LeaderboardMobile = () => {
                             <Link
                                 to={`/profile/${item.id}`}
                                 key={item.id}
-                                className={`${styles.mobileUserCard} ${item.id === user?.id ? styles.mobileUserCardActive : ''} glass-panel`}
+                                className={`${styles['mobile-user-card']} ${item.id === user?.id ? styles['mobile-user-card-active'] : ''} glass-panel`}
                             >
-                                <div className={styles.mobileUserInfo}>
-                                    <div className={`${styles.mobileUserRank} ${index < 3 ? styles.mobileRankTop : styles.mobileRankNormal}`}>
+                                <div className={styles['mobile-user-info']}>
+                                    <div className={`${styles['mobile-user-rank']} ${index < 3 ? styles['mobile-rank-top'] : styles['mobile-rank-normal']}`}>
                                         #{index + 1}
                                     </div>
-                                    <div className={styles.mobileUserAvatar}>
+                                    <div className={styles['mobile-user-avatar']}>
                                         {item.username.charAt(0).toUpperCase()}
                                     </div>
                                     <div>
-                                        <p className={styles.mobileUserName}>{item.username}</p>
-                                        <p className={`${styles.mobileUserChange} ${item.change24h >= 0 ? styles.mobileChangePositive : styles.mobileChangeNegative}`}>
+                                        <p className={styles['mobile-user-name']}>{item.username}</p>
+                                        <p className={`${styles['mobile-user-change']} ${item.change24h >= 0 ? styles['mobile-change-positive'] : styles['mobile-change-negative']}`}>
                                             {item.change24h > 0 ? '+' : ''}{item.change24h}%
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className={styles.mobileUserValueBox}>
-                                    <p className={styles.mobileUserValue}>€{Number(item.portfolio_value).toFixed(2)}</p>
+                                <div className={styles['mobile-user-value-box']}>
+                                    <p className={styles['mobile-user-value']}>€{Number(item.portfolio_value).toFixed(2)}</p>
                                 </div>
                             </Link>
                         ))
@@ -88,22 +88,22 @@ const LeaderboardMobile = () => {
             </main>
 
             {/* Bottom Navigation */}
-            <nav className={styles.mobileBottomNav}>
-                <Link to="/home" className={styles.mobileNavLink}>
-                    <span className={styles.mobileNavText}>Inicio</span>
+            <nav className={styles['mobile-bottom-nav']}>
+                <Link to="/home" className={styles['mobile-nav-link']}>
+                    <span className={styles['mobile-nav-text']}>Inicio</span>
                 </Link>
-                <Link to="/portfolio" className={styles.mobileNavLink}>
-                    <span className={styles.mobileNavText}>Portfolio</span>
+                <Link to="/portfolio" className={styles['mobile-nav-link']}>
+                    <span className={styles['mobile-nav-text']}>Portfolio</span>
                 </Link>
-                <Link to="/market" className={styles.mobileNavLink}>
-                    <span className={styles.mobileNavText}>Mercado</span>
+                <Link to="/market" className={styles['mobile-nav-link']}>
+                    <span className={styles['mobile-nav-text']}>Mercado</span>
                 </Link>
                 <div
                     onClick={() => window.location.href = '/profile'}
-                    className={`${styles.mobileNavLink} ${styles.mobileNavLinkActive}`}
+                    className={`${styles['mobile-nav-link']} ${styles['mobile-nav-link-active']}`}
                 >
-                    <div className={styles.mobileNavLinkActiveBar}></div>
-                    <div className={styles.mobileNavAvatar}>
+                    <div className={styles['mobile-nav-link-active-bar']}></div>
+                    <div className={styles['mobile-nav-avatar']}>
                         {user?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
                 </div>

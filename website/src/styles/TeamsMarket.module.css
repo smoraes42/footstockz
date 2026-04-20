@@ -28,22 +28,22 @@
     margin-bottom: 1rem;
 }
 
-.teamInfo {
+.team-info {
 }
 
-.teamName {
+.team-name {
     margin: 0;
     font-size: 1.1rem;
     font-weight: 800;
 }
 
-.teamMeta {
+.team-meta {
     margin: 0;
     font-size: 0.8rem;
     color: var(--text-muted);
 }
 
-.priceInfo {
+.price-info {
     text-align: right;
 }
 
@@ -60,21 +60,21 @@
     font-weight: 700;
 }
 
-.changePositive {
+.change-positive {
     color: var(--accent-neon);
 }
 
-.changeNegative {
+.change-negative {
     color: #ff4d4d;
 }
 
-.chartContainer {
+.chart-container {
     height: 60px;
     margin-bottom: 1.5rem;
     opacity: 0.5;
 }
 
-.actionBtn {
+.action-btn {
     width: 100%;
     padding: 10px;
     border-radius: 8px;
@@ -86,6 +86,6 @@
     transition: opacity 0.2s;
 }
 
-.actionBtn:hover {
+.action-btn:hover {
     opacity: 0.9;
 }

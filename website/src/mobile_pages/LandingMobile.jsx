@@ -6,36 +6,36 @@ import styles from '../styles/Landing.module.css';
 
 const LandingMobile = () => {
     return (
-        <div className={styles.mobileContainer}>
+        <div className={styles['mobile-container']}>
 
-            <div className={styles.mobileWrapper}>
+            <div className={styles['mobile-wrapper']}>
 
                 {/* Navbar Mobile */}
-                <nav className={styles.mobileNav}>
-                    <div className={styles.mobileNavLogoBox}>
-                        <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileNavLogo} />
+                <nav className={styles['mobile-nav']}>
+                    <div className={styles['mobile-nav-logo-box']}>
+                        <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-nav-logo']} />
                     </div>
-                    <Link to="/login" className={`${styles.mobileNavBtn} neon-button`}>Entrar</Link>
+                    <Link to="/login" className={`${styles['mobile-nav-btn']} neon-button`}>Entrar</Link>
                 </nav>
 
                 {/* Hero Section Mobile */}
-                <main className={styles.mobileHero}>
+                <main className={styles['mobile-hero']}>
                     {/* Glow effect background */}
-                    <div className={styles.mobileHeroGlow}></div>
+                    <div className={styles['mobile-hero-glow']}></div>
 
-                    <div className={styles.mobileHeroContent}>
+                    <div className={styles['mobile-hero-content']}>
 
 
-                        <div className={`${styles.mobileSloganBox} fade-in-up delay-1`}>
-                            <img src={fsSlogan} alt="El Mercado de Valores del Fútbol" className={styles.mobileSloganImg} />
+                        <div className={`${styles['mobile-slogan-box']} fade-in-up delay-1`}>
+                            <img src={fsSlogan} alt="El Mercado de Valores del Fútbol" className={styles['mobile-slogan-img']} />
                         </div>
 
-                        <p className={`${styles.mobileHeroDescription} fade-in-up delay-2`}>
+                        <p className={`${styles['mobile-hero-description']} fade-in-up delay-2`}>
                             Ficha a tus jugadores favoritos y especula con su valor. El precio sube o baja según la <strong>oferta y demanda</strong> del mercado.
                         </p>
 
-                        <div className={`${styles.mobileHeroCta} fade-in-up delay-3`}>
-                            <Link to="/register" className={`${styles.mobileHeroBtn} neon-button`}>
+                        <div className={`${styles['mobile-hero-cta']} fade-in-up delay-3`}>
+                            <Link to="/register" className={`${styles['mobile-hero-btn']} neon-button`}>
                                 Empezar a Jugar
                             </Link>
                         </div>
@@ -46,15 +46,15 @@ const LandingMobile = () => {
 
 
             {/* Footer Mobile */}
-            <footer className={styles.mobileFooter}>
-                <div className={styles.mobileFooterLeft}>
-                    <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileFooterLogo} />
-                    <span className={styles.mobileCopyright}>© 2026 Futstocks.</span>
+            <footer className={styles['mobile-footer']}>
+                <div className={styles['mobile-footer-left']}>
+                    <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-footer-logo']} />
+                    <span className={styles['mobile-copyright']}>© 2026 Futstocks.</span>
                 </div>
-                <div className={styles.mobileFooterRight}>
-                    <a href="#" className={styles.mobileFooterLink}>Términos</a>
-                    <a href="#" className={styles.mobileFooterLink}>Privacidad</a>
-                    <a href="#" className={styles.mobileFooterLink}>Contacto</a>
+                <div className={styles['mobile-footer-right']}>
+                    <a href="#" className={styles['mobile-footer-link']}>Términos</a>
+                    <a href="#" className={styles['mobile-footer-link']}>Privacidad</a>
+                    <a href="#" className={styles['mobile-footer-link']}>Contacto</a>
                 </div>
             </footer>
         </div>

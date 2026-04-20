@@ -1,4 +1,4 @@
-.loadingContainer {
+.loading-container {
     background-color: var(--bg-main);
     height: 100vh;
     width: 100%;
@@ -15,7 +15,7 @@
     display: flex;
 }
 
-.mainContent {
+.main-content {
     margin-left: 250px;
     flex: 1;
     padding: 2rem 3rem;
@@ -37,7 +37,7 @@
     font-size: 1.1rem;
 }
 
-.errorBanner {
+.error-banner {
     background-color: rgba(255, 77, 77, 0.1);
     border: 1px solid rgba(255, 77, 77, 0.3);
     border-radius: 10px;
@@ -47,13 +47,13 @@
     font-size: 0.9rem;
 }
 
-.contentGrid {
+.content-grid {
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 2rem;
 }
 
-.userCard {
+.user-card {
     padding: 2rem;
     border-radius: 24px;
     display: flex;
@@ -62,7 +62,7 @@
     text-align: center;
 }
 
-.avatarContainer {
+.avatar-container {
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -78,24 +78,24 @@
     overflow: hidden;
 }
 
-.avatarImg {
+.avatar-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.userName {
+.user-name {
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
 }
 
-.userEmail {
+.user-email {
     color: var(--text-muted);
     margin-bottom: 1.5rem;
 }
 
-.levelExpGrid {
+.level-exp-grid {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -103,25 +103,25 @@
     margin-top: 1rem;
 }
 
-.statBox {
+.stat-box {
     background-color: rgba(255, 255, 255, 0.03);
     padding: 1rem;
     border-radius: 16px;
 }
 
-.statLabel {
+.stat-label {
     font-size: 0.8rem;
     color: var(--text-muted);
     margin: 0 0 0.5rem 0;
 }
 
-.statValue {
+.stat-value {
     font-size: 1.5rem;
     font-weight: 800;
     margin: 0;
 }
 
-.logoutBtn {
+.logout-btn {
     margin-top: 2rem;
     width: 100%;
     padding: 12px;
@@ -134,90 +134,90 @@
     transition: all 0.2s;
 }
 
-.logoutBtn:hover {
+.logout-btn:hover {
     background-color: rgba(255, 50, 50, 0.2);
 }
 
-.detailsCol {
+.details-col {
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
-.summaryCard {
+.summary-card {
     padding: 2rem;
     border-radius: 24px;
 }
 
-.cardTitle {
+.card-title {
     font-size: 1.2rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
 }
 
-.summaryGrid {
+.summary-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
 }
 
-.summaryItem {
+.summary-item {
 }
 
-.summaryLabel {
+.summary-label {
     color: var(--text-muted);
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
 }
 
-.summaryValue {
+.summary-value {
     font-size: 1.8rem;
     font-weight: 800;
     color: var(--text-main);
 }
 
-.summaryValueAccent {
+.summary-value-accent {
     color: var(--accent-neon);
 }
 
-.detailsCard {
+.details-card {
     padding: 2rem;
     border-radius: 24px;
 }
 
-.detailsList {
+.details-list {
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
 }
 
-.detailsItem {
+.details-item {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     padding-bottom: 0.8rem;
 }
 
-.detailsLabel {
+.details-label {
     color: var(--text-muted);
 }
 
-.detailsValue {
+.details-value {
     font-weight: 500;
 }
 
-.detailsValueAccent {
+.details-value-accent {
     color: var(--accent-neon);
     font-weight: 600;
 }
 
-.detailsValueMuted {
+.details-value-muted {
     font-family: monospace;
     color: var(--text-muted);
 }
 
 /* Mobile Styles */
-.mobileContainer {
+.mobile-container {
     background-color: var(--bg-main);
     height: 100dvh;
     overflow: hidden;
@@ -226,7 +226,7 @@
     flex-direction: column;
 }
 
-.mobileHeader {
+.mobile-header {
     padding: 0 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background-color: rgba(16, 16, 16, 0.9);
@@ -240,11 +240,11 @@
     box-sizing: border-box;
 }
 
-.mobileLogo {
+.mobile-logo {
     height: 22px;
 }
 
-.mobileBackBtn {
+.mobile-back-btn {
     background: none;
     border: none;
     color: var(--accent-neon);
@@ -252,7 +252,7 @@
     font-weight: 800;
 }
 
-.mobileHeaderTitle {
+.mobile-header-title {
     font-size: 0.95rem;
     font-weight: 800;
     margin: 0;
@@ -263,7 +263,7 @@
     transform: translateX(-50%);
 }
 
-.mobileLogoutBtn {
+.mobile-logout-btn {
     background: none;
     border: none;
     color: #ff5050;
@@ -271,21 +271,21 @@
     font-weight: 800;
 }
 
-.mobileMain {
+.mobile-main {
     flex: 1;
     padding: 1.5rem;
     padding-bottom: 80px;
     overflow-y: auto;
 }
 
-.mobileUserInfo {
+.mobile-user-info {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 2.5rem;
 }
 
-.mobileAvatar {
+.mobile-avatar {
     width: 100px;
     height: 100px;
     border-radius: 50%;
@@ -301,26 +301,26 @@
     overflow: hidden;
 }
 
-.mobileUserName {
+.mobile-user-name {
     font-size: 1.5rem;
     font-weight: 800;
     margin: 0 0 0.25rem 0;
 }
 
-.mobileUserMeta {
+.mobile-user-meta {
     font-size: 0.85rem;
     color: var(--text-muted);
     margin: 0;
 }
 
-.mobileCapitalCard {
+.mobile-capital-card {
     padding: 1.5rem;
     border-radius: 24px;
     margin-bottom: 2.5rem;
     text-align: center;
 }
 
-.mobileCapitalLabel {
+.mobile-capital-label {
     font-size: 0.7rem;
     font-weight: 700;
     color: var(--text-muted);
@@ -328,7 +328,7 @@
     letter-spacing: 1px;
 }
 
-.mobileCapitalValue {
+.mobile-capital-value {
     font-size: 2.4rem;
     font-weight: 900;
     color: var(--accent-neon);
@@ -336,7 +336,7 @@
     letter-spacing: -1px;
 }
 
-.mobileCapitalBreakdown {
+.mobile-capital-breakdown {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
@@ -344,24 +344,24 @@
     padding-top: 1rem;
 }
 
-.mobileBreakdownItemLabel {
+.mobile-breakdown-item-label {
     font-size: 0.65rem;
     color: var(--text-muted);
     font-weight: 700;
     margin: 0 0 4px 0;
 }
 
-.mobileBreakdownItemValue {
+.mobile-breakdown-item-value {
     font-size: 1rem;
     font-weight: 800;
     margin: 0;
 }
 
-.mobileHoldingsSection {
+.mobile-holdings-section {
     margin-top: 2.5rem;
 }
 
-.mobileHoldingsTitle {
+.mobile-holdings-title {
     font-size: 0.90rem;
     font-weight: 800;
     color: var(--accent-neon);
@@ -370,20 +370,20 @@
     margin-bottom: 1.25rem;
 }
 
-.mobileNoHoldings {
+.mobile-no-holdings {
     text-align: center;
     color: var(--text-muted);
     font-style: italic;
     font-size: 0.9rem;
 }
 
-.mobileHoldingsList {
+.mobile-holdings-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.mobileHoldingCard {
+.mobile-holding-card {
     padding: 1rem;
     border-radius: 16px;
     display: flex;
@@ -393,26 +393,26 @@
     color: inherit;
 }
 
-.mobileHoldingName {
+.mobile-holding-name {
     font-weight: 700;
     font-size: 0.95rem;
     margin: 0;
 }
 
-.mobileHoldingShares {
+.mobile-holding-shares {
     font-size: 0.75rem;
     color: var(--text-muted);
     margin: 0;
 }
 
-.mobileHoldingValue {
+.mobile-holding-value {
     font-weight: 800;
     font-size: 0.95rem;
     margin: 0;
     color: var(--accent-neon);
 }
 
-.mobileBottomNav {
+.mobile-bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -427,7 +427,7 @@
     padding-bottom: env(safe-area-inset-bottom);
 }
 
-.mobileNavLink {
+.mobile-nav-link {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -437,12 +437,12 @@
     color: var(--text-muted);
 }
 
-.mobileNavLinkActive {
+.mobile-nav-link-active {
     color: var(--accent-neon);
     position: relative;
 }
 
-.mobileNavLinkActiveBar {
+.mobile-nav-link-active-bar {
     width: 20px;
     height: 2px;
     background-color: var(--accent-neon);
@@ -451,12 +451,12 @@
     top: 0;
 }
 
-.mobileNavText {
+.mobile-nav-text {
     font-size: 0.75rem;
     font-weight: 500;
 }
 
-.mobileNavAvatar {
+.mobile-nav-avatar {
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -468,10 +468,10 @@
     font-size: 0.7rem;
 }
 
-.mobileHeaderSpacer {
+.mobile-header-spacer {
     width: 60px;
 }
 
-.mobileHoldingValueBox {
+.mobile-holding-value-box {
     text-align: right;
 }

@@ -245,36 +245,36 @@ const PlayerMarketMobile = () => {
     };
 
     return (
-        <div className={styles.mobileContainer}>
+        <div className={styles['mobile-container']}>
             {/* Header */}
-            <header className={styles.mobileHeader}>
-                <img src={fsLogo} alt="Logo" className={styles.mobileLogo} />
-                <div className={styles.mobileWalletBox}>
-                    <p className={styles.mobileWalletValue}>€{portfolio?.walletBalance?.toFixed(2) || '0.00'}</p>
+            <header className={styles['mobile-header']}>
+                <img src={fsLogo} alt="Logo" className={styles['mobile-logo']} />
+                <div className={styles['mobile-wallet-box']}>
+                    <p className={styles['mobile-wallet-value']}>€{portfolio?.walletBalance?.toFixed(2) || '0.00'}</p>
                 </div>
             </header>
 
-            <div className={styles.mobilePositionBar}>
-                <span className={styles.mobilePosLabel}>Posición: <span className={styles.mobilePosValue}>{portfolio?.holdings?.find(h => h.player_id === parseInt(playerId))?.shares_owned?.toFixed(4) || '0.0000'}</span></span>
+            <div className={styles['mobile-position-bar']}>
+                <span className={styles['mobile-pos-label']}>Posición: <span className={styles['mobile-pos-value']}>{portfolio?.holdings?.find(h => h.player_id === parseInt(playerId))?.shares_owned?.toFixed(4) || '0.0000'}</span></span>
             </div>
 
-            <main className={styles.mobileMain}>
+            <main className={styles['mobile-main']}>
                 {/* Player Hero */}
-                <div className={styles.mobilePlayerHero}>
+                <div className={styles['mobile-player-hero']}>
                     {fetchError ? (
-                        <div className={styles.mobileFetchErrorCard}>
-                            <p className={styles.mobileFetchErrorText}>{fetchError}</p>
-                            <button onClick={() => navigate('/market')} className={styles.mobileFetchErrorBtn}>Volver</button>
+                        <div className={styles['mobile-fetch-error-card']}>
+                            <p className={styles['mobile-fetch-error-text']}>{fetchError}</p>
+                            <button onClick={() => navigate('/market')} className={styles['mobile-fetch-error-btn']}>Volver</button>
                         </div>
                     ) : (
-                        <div className={styles.mobileHeroTop}>
+                        <div className={styles['mobile-hero-top']}>
                             <div>
-                                <h2 className={styles.mobilePlayerName}>{currentPlayer?.name || 'Cargando...'}</h2>
-                                <p className={styles.mobilePlayerTeam}>{currentPlayer?.team || '---'}</p>
+                                <h2 className={styles['mobile-player-name']}>{currentPlayer?.name || 'Cargando...'}</h2>
+                                <p className={styles['mobile-player-team']}>{currentPlayer?.team || '---'}</p>
                             </div>
-                            <div className={styles.mobilePriceDisplay}>
-                                <p className={styles.mobileCurrentPrice}>€{currentPlayer?.price?.toFixed(2) || '0.00'}</p>
-                                <span className={`${styles.mobilePriceChange} ${(currentPlayer?.change || 0) >= 0 ? styles.mobilePriceChangePositive : styles.mobilePriceChangeNegative}`}>
+                            <div className={styles['mobile-price-display']}>
+                                <p className={styles['mobile-current-price']}>€{currentPlayer?.price?.toFixed(2) || '0.00'}</p>
+                                <span className={`${styles['mobile-price-change']} ${(currentPlayer?.change || 0) >= 0 ? styles['mobile-price-change-positive'] : styles['mobile-price-change-negative']}`}>
                                     {(currentPlayer?.change || 0) >= 0 ? '+' : ''}{(currentPlayer?.change || 0).toFixed(2)}%
                                 </span>
                             </div>
@@ -283,13 +283,13 @@ const PlayerMarketMobile = () => {
                 </div>
 
                 {/* Chart Section */}
-                <div className={`${styles.mobileChartBox} glass-panel`}>
+                <div className={`${styles['mobile-chart-box']} glass-panel`}>
                     {hoverInfo && (
-                        <div className={styles.mobileTooltip}>
-                            <div className={styles.mobileTooltipTime}>
+                        <div className={styles['mobile-tooltip']}>
+                            <div className={styles['mobile-tooltip-time']}>
                                 {new Date(hoverInfo.timestamp).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false })}
                             </div>
-                            <div className={styles.mobileTooltipPrice}>€{Number(hoverInfo.price).toFixed(2)}</div>
+                            <div className={styles['mobile-tooltip-price']}>€{Number(hoverInfo.price).toFixed(2)}</div>
                         </div>
                     )}
                     <ResponsiveContainer width="100%" height="100%">
@@ -319,27 +319,27 @@ const PlayerMarketMobile = () => {
                 </div>
 
                 {/* Trade Tabs */}
-                <div className={`${styles.mobileTradeCard} glass-panel`}>
-                    <div className={styles.mobileTabRow}>
+                <div className={`${styles['mobile-trade-card']} glass-panel`}>
+                    <div className={styles['mobile-tab-row']}>
                         <button
                             onClick={() => setActiveTab('buy')}
-                            className={`${styles.mobileTabBtn} ${activeTab === 'buy' ? styles.mobileTabBtnActiveBuy : ''}`}
+                            className={`${styles['mobile-tab-btn']} ${activeTab === 'buy' ? styles['mobile-tab-btn-active-buy'] : ''}`}
                         >
                             COMPRAR
                         </button>
                         <button
                             onClick={() => setActiveTab('sell')}
-                            className={`${styles.mobileTabBtn} ${activeTab === 'sell' ? styles.mobileTabBtnActiveSell : ''}`}
+                            className={`${styles['mobile-tab-btn']} ${activeTab === 'sell' ? styles['mobile-tab-btn-active-sell'] : ''}`}
                         >
                             VENDER
                         </button>
                     </div>
 
                     {activeTab === 'buy' ? (
-                        <div className={styles.mobileTradeForm}>
-                            <div className={styles.mobileInputGrid}>
-                                <div className={styles.mobileInputGroup}>
-                                    <label className={styles.mobileInputLabel}>CANTIDAD</label>
+                        <div className={styles['mobile-trade-form']}>
+                            <div className={styles['mobile-input-grid']}>
+                                <div className={styles['mobile-input-group']}>
+                                    <label className={styles['mobile-input-label']}>CANTIDAD</label>
                                     <input
                                         type="number"
                                         placeholder="0.00"
@@ -353,11 +353,11 @@ const PlayerMarketMobile = () => {
                                                 setMarketBuyTotal('');
                                             }
                                         }}
-                                        className={styles.mobileInput}
+                                        className={styles['mobile-input']}
                                     />
                                 </div>
-                                <div className={styles.mobileInputGroup}>
-                                    <label className={styles.mobileInputLabel}>TOTAL (€)</label>
+                                <div className={styles['mobile-input-group']}>
+                                    <label className={styles['mobile-input-label']}>TOTAL (€)</label>
                                     <input
                                         type="number"
                                         placeholder="0.00"
@@ -371,25 +371,25 @@ const PlayerMarketMobile = () => {
                                                 setMarketBuyQty('');
                                             }
                                         }}
-                                        className={styles.mobileInput}
+                                        className={styles['mobile-input']}
                                     />
                                 </div>
                             </div>
-                            <div className={styles.mobileQuickSelectRow}>
+                            <div className={styles['mobile-quick-select-row']}>
                                 {[0.25, 0.5, 1].map(p => (
-                                    <button key={p} onClick={() => handleQuickBuy(p)} className={styles.mobileQuickSelectBtn}>{p * 100}%</button>
+                                    <button key={p} onClick={() => handleQuickBuy(p)} className={styles['mobile-quick-select-btn']}>{p * 100}%</button>
                                 ))}
                             </div>
 
                             {/* Slippage Settings */}
-                            <div className={styles.mobileSlippageBox}>
-                                <label className={styles.mobileInputLabel}>SLIPPAGE (%)</label>
-                                <div className={styles.mobileSlippageRow}>
+                            <div className={styles['mobile-slippage-box']}>
+                                <label className={styles['mobile-input-label']}>SLIPPAGE (%)</label>
+                                <div className={styles['mobile-slippage-row']}>
                                     {['0.1', '0.5', '1.0'].map(val => (
                                         <button
                                             key={val}
                                             onClick={() => setMaxSlippage(val)}
-                                            className={`${styles.mobileSlippageBtn} ${maxSlippage === val ? styles.mobileSlippageBtnActive : ''}`}
+                                            className={`${styles['mobile-slippage-btn']} ${maxSlippage === val ? styles['mobile-slippage-btn-active'] : ''}`}
                                         >
                                             {val}%
                                         </button>
@@ -398,26 +398,26 @@ const PlayerMarketMobile = () => {
                                         type="number"
                                         value={maxSlippage}
                                         onChange={e => setMaxSlippage(e.target.value)}
-                                        className={styles.mobileSlippageInput}
+                                        className={styles['mobile-slippage-input']}
                                     />
                                 </div>
                             </div>
 
-                            {error && <p className={styles.mobileErrorMsg}>{error}</p>}
+                            {error && <p className={styles['mobile-error-msg']}>{error}</p>}
                             <button
                                 onClick={handleMarketBuy}
                                 disabled={loading || !marketBuyQty}
-                                className={`${styles.mobileExecuteBtn} ${styles.mobileBuyBtn}`}
+                                className={`${styles['mobile-execute-btn']} ${styles['mobile-buy-btn']}`}
                                 style={{ opacity: loading ? 0.7 : 1 }}
                             >
                                 {loading ? 'PROCESANDO...' : 'EJECUTAR COMPRA'}
                             </button>
                         </div>
                     ) : (
-                        <div className={styles.mobileTradeForm}>
-                            <div className={styles.mobileInputGrid}>
-                                <div className={styles.mobileInputGroup}>
-                                    <label className={styles.mobileInputLabel}>CANTIDAD</label>
+                        <div className={styles['mobile-trade-form']}>
+                            <div className={styles['mobile-input-grid']}>
+                                <div className={styles['mobile-input-group']}>
+                                    <label className={styles['mobile-input-label']}>CANTIDAD</label>
                                     <input
                                         type="number"
                                         placeholder="0.00"
@@ -431,11 +431,11 @@ const PlayerMarketMobile = () => {
                                                 setMarketSellTotal('');
                                             }
                                         }}
-                                        className={styles.mobileInput}
+                                        className={styles['mobile-input']}
                                     />
                                 </div>
-                                <div className={styles.mobileInputGroup}>
-                                    <label className={styles.mobileInputLabel}>TOTAL (€)</label>
+                                <div className={styles['mobile-input-group']}>
+                                    <label className={styles['mobile-input-label']}>TOTAL (€)</label>
                                     <input
                                         type="number"
                                         placeholder="0.00"
@@ -449,25 +449,25 @@ const PlayerMarketMobile = () => {
                                                 setMarketSellQty('');
                                             }
                                         }}
-                                        className={styles.mobileInput}
+                                        className={styles['mobile-input']}
                                     />
                                 </div>
                             </div>
-                            <div className={styles.mobileQuickSelectRow}>
+                            <div className={styles['mobile-quick-select-row']}>
                                 {[0.25, 0.5, 1].map(p => (
-                                    <button key={p} onClick={() => handleQuickSell(p)} className={styles.mobileQuickSelectBtn}>{p * 100}%</button>
+                                    <button key={p} onClick={() => handleQuickSell(p)} className={styles['mobile-quick-select-btn']}>{p * 100}%</button>
                                 ))}
                             </div>
 
                             {/* Slippage Settings */}
-                            <div className={styles.mobileSlippageBox}>
-                                <label className={styles.mobileInputLabel}>SLIPPAGE (%)</label>
-                                <div className={styles.mobileSlippageRow}>
+                            <div className={styles['mobile-slippage-box']}>
+                                <label className={styles['mobile-input-label']}>SLIPPAGE (%)</label>
+                                <div className={styles['mobile-slippage-row']}>
                                     {['0.1', '0.5', '1.0'].map(val => (
                                         <button
                                             key={val}
                                             onClick={() => setMaxSlippage(val)}
-                                            className={`${styles.mobileSlippageBtn} ${maxSlippage === val ? styles.mobileSlippageBtnActive : ''}`}
+                                            className={`${styles['mobile-slippage-btn']} ${maxSlippage === val ? styles['mobile-slippage-btn-active'] : ''}`}
                                         >
                                             {val}%
                                         </button>
@@ -476,16 +476,16 @@ const PlayerMarketMobile = () => {
                                         type="number"
                                         value={maxSlippage}
                                         onChange={e => setMaxSlippage(e.target.value)}
-                                        className={styles.mobileSlippageInput}
+                                        className={styles['mobile-slippage-input']}
                                     />
                                 </div>
                             </div>
 
-                            {error && <p className={styles.mobileErrorMsg}>{error}</p>}
+                            {error && <p className={styles['mobile-error-msg']}>{error}</p>}
                             <button
                                 onClick={handleMarketSell}
                                 disabled={loading || !marketSellQty}
-                                className={`${styles.mobileExecuteBtn} ${styles.mobileSellBtn}`}
+                                className={`${styles['mobile-execute-btn']} ${styles['mobile-sell-btn']}`}
                                 style={{ opacity: loading ? 0.7 : 1 }}
                             >
                                 {loading ? 'PROCESANDO...' : 'EJECUTAR VENTA'}
@@ -494,26 +494,26 @@ const PlayerMarketMobile = () => {
                     )}
                 </div>
 
-                <div className={styles.mobileSpacer} />
+                <div className={styles['mobile-spacer']} />
             </main>
 
             {/* Bottom Navigation Mobile */}
-            <nav className={styles.mobileBottomNav}>
-                <Link to="/home" className={styles.mobileNavLink}>
-                    <span className={styles.mobileNavText}>Inicio</span>
+            <nav className={styles['mobile-bottom-nav']}>
+                <Link to="/home" className={styles['mobile-nav-link']}>
+                    <span className={styles['mobile-nav-text']}>Inicio</span>
                 </Link>
-                <Link to="/portfolio" className={styles.mobileNavLink}>
-                    <span className={styles.mobileNavText}>Portfolio</span>
+                <Link to="/portfolio" className={styles['mobile-nav-link']}>
+                    <span className={styles['mobile-nav-text']}>Portfolio</span>
                 </Link>
-                <Link to="/market" className={`${styles.mobileNavLink} ${styles.mobileNavLinkActive}`}>
-                    <div className={styles.mobileNavLinkActiveBar}></div>
-                    <span className={`${styles.mobileNavText} ${styles.mobileNavTextActive}`}>Mercado</span>
+                <Link to="/market" className={`${styles['mobile-nav-link']} ${styles['mobile-nav-link-active']}`}>
+                    <div className={styles['mobile-nav-link-active-bar']}></div>
+                    <span className={`${styles['mobile-nav-text']} ${styles['mobile-nav-text-active']}`}>Mercado</span>
                 </Link>
                 <div
                     onClick={() => window.location.href = '/profile'}
-                    className={styles.mobileNavProfile}
+                    className={styles['mobile-nav-profile']}
                 >
-                    <div className={styles.mobileNavAvatar}>
+                    <div className={styles['mobile-nav-avatar']}>
                         {user?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
                 </div>

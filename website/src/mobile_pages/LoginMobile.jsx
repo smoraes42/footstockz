@@ -60,70 +60,70 @@ const LoginMobile = () => {
     };
 
     return (
-        <div className={styles.mobileContainer}>
-            <nav className={styles.mobileNav}>
+        <div className={styles['mobile-container']}>
+            <nav className={styles['mobile-nav']}>
                 <Link to="/">
-                    <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileLogo} />
+                    <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-logo']} />
                 </Link>
             </nav>
-            <main className={styles.mobileMain}>
-                <div className={styles.mobileGlow}></div>
-                <div className={`${styles.mobileGlassPanel} glass-panel fade-in-up`}>
-                    <h1 className={styles.mobileTitle}>Iniciar Sesión</h1>
+            <main className={styles['mobile-main']}>
+                <div className={styles['mobile-glow']}></div>
+                <div className={`${styles['mobile-glass-panel']} glass-panel fade-in-up`}>
+                    <h1 className={styles['mobile-title']}>Iniciar Sesión</h1>
 
                     {error && (
-                        <div className={styles.mobileErrorAlert}>
+                        <div className={styles['mobile-error-alert']}>
                             {error}
                         </div>
                     )}
 
-                    <form className={styles.mobileForm} onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
+                    <form className={styles['mobile-form']} onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
                         <div>
-                            <label className={styles.mobileLabel}>Email</label>
+                            <label className={styles['mobile-label']}>Email</label>
                             <input 
                                 type="email" 
                                 value={email} 
                                 onChange={(e) => setEmail(e.target.value)} 
-                                className={styles.mobileInput} 
+                                className={styles['mobile-input']} 
                                 placeholder="tu@email.com" 
                             />
                         </div>
                         <div>
-                            <label className={styles.mobileLabel}>Contraseña</label>
+                            <label className={styles['mobile-label']}>Contraseña</label>
                             <input 
                                 type="password" 
                                 value={password} 
                                 onChange={(e) => setPassword(e.target.value)} 
-                                className={styles.mobileInput} 
+                                className={styles['mobile-input']} 
                                 placeholder="••••••••" 
                             />
                         </div>
                         <button 
                             type="submit" 
-                            className={`${styles.mobileSubmitBtn} ${loading ? styles.mobileLoadingBtn : ''} neon-button`} 
+                            className={`${styles['mobile-submit-btn']} ${loading ? styles['mobile-loading-btn'] : ''} neon-button`} 
                             disabled={loading}
                         >
                             {loading ? 'Entrando...' : 'Entrar'}
                         </button>
 
-                        <div className={styles.mobileDivider}>
-                            <div className={styles.mobileDividerLine}></div>
-                            <span className={styles.mobileDividerText}>O</span>
-                            <div className={styles.mobileDividerLine}></div>
+                        <div className={styles['mobile-divider']}>
+                            <div className={styles['mobile-divider-line']}></div>
+                            <span className={styles['mobile-divider-text']}>O</span>
+                            <div className={styles['mobile-divider-line']}></div>
                         </div>
 
                         <button 
                             type="button" 
-                            className={`${styles.mobileGoogleBtn} outline-button`} 
+                            className={`${styles['mobile-google-btn']} outline-button`} 
                             onClick={handleGoogleClick} 
                         >
-                            <img src="https://authjs.dev/img/providers/google.svg" alt="Google" className={styles.mobileGoogleIcon} />
+                            <img src="https://authjs.dev/img/providers/google.svg" alt="Google" className={styles['mobile-google-icon']} />
                             Continuar con Google
                         </button>
                     </form>
-                    <div className={styles.mobileFooter}>
-                        <span className={styles.mobileFooterText}>¿No tienes cuenta? </span>
-                        <Link to="/register" className={styles.mobileFooterLink}>Regístrate aquí</Link>
+                    <div className={styles['mobile-footer']}>
+                        <span className={styles['mobile-footer-text']}>¿No tienes cuenta? </span>
+                        <Link to="/register" className={styles['mobile-footer-link']}>Regístrate aquí</Link>
                     </div>
                 </div>
             </main>

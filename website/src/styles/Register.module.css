@@ -16,7 +16,7 @@
     position: relative;
 }
 
-.glowEffect {
+.glow-effect {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -28,7 +28,7 @@
     pointer-events: none;
 }
 
-.glassPanel {
+.glass-panel {
     width: 100%;
     max-width: 400px;
     padding: 3rem;
@@ -44,7 +44,7 @@
     text-align: center;
 }
 
-.errorAlert {
+.error-alert {
     background-color: rgba(255, 77, 77, 0.1);
     border: 1px solid rgba(255, 77, 77, 0.3);
     border-radius: 8px;
@@ -61,7 +61,7 @@
     gap: 1.25rem;
 }
 
-.fieldGroup {
+.field-group {
     /* No specific styles needed but keeping for structure */
 }
 
@@ -83,17 +83,17 @@
     transition: border-color 0.2s;
 }
 
-.inputError {
+.input-error {
     border-color: rgba(255, 77, 77, 0.6);
 }
 
-.fieldHint {
+.field-hint {
     color: #ff4d4d;
     font-size: 0.78rem;
     margin-top: 4px;
 }
 
-.submitBtn {
+.submit-btn {
     padding: 14px;
     border-radius: 8px;
     font-size: 1.05rem;
@@ -104,12 +104,12 @@
     gap: 0.5rem;
 }
 
-.loadingBtn {
+.loading-btn {
     opacity: 0.6;
     cursor: wait;
 }
 
-.submitBtnLogo {
+.submit-btn-logo {
     height: 20px;
 }
 
@@ -119,19 +119,19 @@
     margin: 1rem 0;
 }
 
-.dividerLine {
+.divider-line {
     flex: 1;
     height: 1px;
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.dividerText {
+.divider-text {
     padding: 0 1rem;
     color: var(--text-muted);
     font-size: 0.85rem;
 }
 
-.googleBtn {
+.google-btn {
     padding: 14px;
     border-radius: 8px;
     font-size: 1.05rem;
@@ -142,7 +142,7 @@
     background-color: var(--surface-dark);
 }
 
-.googleIcon {
+.google-icon {
     height: 20px;
 }
 
@@ -151,12 +151,12 @@
     text-align: center;
 }
 
-.footerText {
+.footer-text {
     color: var(--text-muted);
     font-size: 0.9rem;
 }
 
-.footerLink {
+.footer-link {
     color: var(--accent-neon);
     text-decoration: none;
     font-weight: 600;
@@ -164,7 +164,7 @@
 }
 
 /* Mobile Styles */
-.mobileContainer {
+.mobile-container {
     background-color: var(--bg-main);
     min-height: 100vh;
     width: 100%;
@@ -172,7 +172,7 @@
     flex-direction: column;
 }
 
-.mobileNav {
+.mobile-nav {
     padding: 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background-color: rgba(16, 16, 16, 0.9);
@@ -181,11 +181,11 @@
     z-index: 10;
 }
 
-.mobileLogo {
+.mobile-logo {
     height: 30px;
 }
 
-.mobileMain {
+.mobile-main {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -196,7 +196,7 @@
     overflow: hidden;
 }
 
-.mobileGlow {
+.mobile-glow {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -208,7 +208,7 @@
     pointer-events: none;
 }
 
-.mobileGlassPanel {
+.mobile-glass-panel {
     width: 100%;
     padding: 2rem 1.5rem;
     border-radius: 12px;
@@ -216,14 +216,14 @@
     position: relative;
 }
 
-.mobileTitle {
+.mobile-title {
     font-size: 1.75rem;
     font-weight: 800;
     margin-bottom: 1.5rem;
     text-align: center;
 }
 
-.mobileErrorAlert {
+.mobile-error-alert {
     background-color: rgba(255, 77, 77, 0.1);
     border: 1px solid rgba(255, 77, 77, 0.3);
     border-radius: 8px;
@@ -234,20 +234,20 @@
     text-align: center;
 }
 
-.mobileForm {
+.mobile-form {
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
 }
 
-.mobileLabel {
+.mobile-label {
     display: block;
     margin-bottom: 0.4rem;
     color: var(--text-muted);
     font-size: 0.85rem;
 }
 
-.mobileInput {
+.mobile-input {
     width: 100%;
     padding: 12px;
     border-radius: 8px;
@@ -257,7 +257,7 @@
     outline: none;
 }
 
-.mobileSubmitBtn {
+.mobile-submit-btn {
     padding: 14px;
     border-radius: 8px;
     font-size: 1rem;
@@ -269,34 +269,34 @@
     gap: 0.4rem;
 }
 
-.mobileLoadingBtn {
+.mobile-loading-btn {
     opacity: 0.6;
     cursor: wait;
 }
 
-.mobileSubmitBtnLogo {
+.mobile-submit-btn-logo {
     height: 18px;
 }
 
-.mobileDivider {
+.mobile-divider {
     display: flex;
     align-items: center;
     margin: 0.5rem 0;
 }
 
-.mobileDividerLine {
+.mobile-divider-line {
     flex: 1;
     height: 1px;
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.mobileDividerText {
+.mobile-divider-text {
     padding: 0 1rem;
     color: var(--text-muted);
     font-size: 0.85rem;
 }
 
-.mobileGoogleBtn {
+.mobile-google-btn {
     padding: 14px;
     border-radius: 8px;
     font-size: 1rem;
@@ -308,21 +308,21 @@
     background-color: var(--surface-dark);
 }
 
-.mobileGoogleIcon {
+.mobile-google-icon {
     height: 20px;
 }
 
-.mobileFooter {
+.mobile-footer {
     margin-top: 2rem;
     text-align: center;
 }
 
-.mobileFooterText {
+.mobile-footer-text {
     color: var(--text-muted);
     font-size: 0.85rem;
 }
 
-.mobileFooterLink {
+.mobile-footer-link {
     color: var(--accent-neon);
     text-decoration: none;
     font-weight: 600;

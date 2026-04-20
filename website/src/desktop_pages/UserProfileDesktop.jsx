@@ -36,7 +36,7 @@ const UserProfileDesktop = () => {
 
     if (!profileData) {
         return (
-            <div className={styles.notFound}>
+            <div className={styles['not-found']}>
                 Usuario no encontrado.
             </div>
         );
@@ -50,55 +50,55 @@ const UserProfileDesktop = () => {
             <Navbar />
 
             {/* Main Content */}
-            <main className={styles.mainContent}>
+            <main className={styles['main-content']}>
                 <header className={styles.header}>
-                    <button onClick={() => navigate(-1)} className={styles.backBtn}>
+                    <button onClick={() => navigate(-1)} className={styles['back-btn']}>
                         ←
                     </button>
-                    <div className={styles.headerText}>
+                    <div className={styles['header-text']}>
                         <h1 className={styles.title}>Perfil de {user.username}</h1>
                         <p className={styles.subtitle}>Revisa la cartera de este usuario</p>
                     </div>
                 </header>
 
-                <div className={styles.contentGrid}>
+                <div className={styles['content-grid']}>
 
                     {/* User Info Card */}
-                    <div className={`${styles.profileCard} glass-panel`}>
-                        <div className={styles.userAvatar}>
+                    <div className={`${styles['profile-card']} glass-panel`}>
+                        <div className={styles['user-avatar']}>
                             {user?.avatar_url ? (
-                                <img src={user.avatar_url} alt="Avatar" className={styles.avatarImg} />
+                                <img src={user.avatar_url} alt="Avatar" className={styles['avatar-img']} />
                             ) : (
                                 user?.username?.charAt(0).toUpperCase() || 'U'
                             )}
                         </div>
-                        <h2 className={styles.profileName}>{user.username}</h2>
-                        <div className={styles.statsBox}>
-                            <p className={styles.statsLabel}>Valor en Acciones</p>
-                            <p className={styles.statsValue}>{totalHoldingsValue.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                        <h2 className={styles['profile-name']}>{user.username}</h2>
+                        <div className={styles['stats-box']}>
+                            <p className={styles['stats-label']}>Valor en Acciones</p>
+                            <p className={styles['stats-value']}>{totalHoldingsValue.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
                         </div>
-                        <p className={styles.joinDate}>
+                        <p className={styles['join-date']}>
                             Miembro desde {new Date(user.created_at).toLocaleDateString()}
                         </p>
                     </div>
 
                     {/* Holdings Table */}
-                    <div className={styles.tableSection}>
-                        <h3 className={styles.tableTitle}>Portafolio de Activos</h3>
-                        <div className={`${styles.tableContainer} glass-panel`}>
+                    <div className={styles['table-section']}>
+                        <h3 className={styles['table-title']}>Portafolio de Activos</h3>
+                        <div className={`${styles['table-container']} glass-panel`}>
                             <table className={styles.table}>
                                 <thead>
-                                    <tr className={styles.tableHead}>
-                                        <th className={styles.tableHeadCell}>Jugador</th>
-                                        <th className={styles.tableHeadCell}>Acciones</th>
-                                        <th className={styles.tableHeadCell}>Precio</th>
-                                        <th className={styles.tableHeadCell}>Valor</th>
+                                    <tr className={styles['table-head']}>
+                                        <th className={styles['table-head-cell']}>Jugador</th>
+                                        <th className={styles['table-head-cell']}>Acciones</th>
+                                        <th className={styles['table-head-cell']}>Precio</th>
+                                        <th className={styles['table-head-cell']}>Valor</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {holdings.length === 0 ? (
                                         <tr>
-                                            <td colSpan="4" className={styles.emptyState}>
+                                            <td colSpan="4" className={styles['empty-state']}>
                                                 Este usuario no tiene acciones actualmente.
                                             </td>
                                         </tr>
@@ -106,13 +106,13 @@ const UserProfileDesktop = () => {
                                         holdings.map((h, i) => (
                                             <tr
                                                 key={i}
-                                                className={styles.tableRow}
+                                                className={styles['table-row']}
                                                 onClick={() => navigate(`/market/player/${h.player_id}`)}
                                             >
-                                                <td className={`${styles.tableCell} ${styles.tableCellBold}`}>{h.player_name}</td>
-                                                <td className={styles.tableCell}>{h.shares_owned.toLocaleString()}</td>
-                                                <td className={styles.tableCell}>{h.current_price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
-                                                <td className={`${styles.tableCell} ${styles.tableCellBold} ${styles.accentValue}`}>{h.position_value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
+                                                <td className={`${styles['table-cell']} ${styles['table-cell-bold']}`}>{h.player_name}</td>
+                                                <td className={styles['table-cell']}>{h.shares_owned.toLocaleString()}</td>
+                                                <td className={styles['table-cell']}>{h.current_price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
+                                                <td className={`${styles['table-cell']} ${styles['table-cell-bold']} ${styles['accent-value']}`}>{h.position_value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
                                             </tr>
                                         ))
                                     )}

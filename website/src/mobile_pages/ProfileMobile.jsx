@@ -41,7 +41,7 @@ const ProfileMobile = () => {
         fetchData();
     }, [userId, isOwnProfile]);
 
-    if (loading) return <div className={styles.loadingContainer}>Cargando...</div>;
+    if (loading) return <div className={styles['loading-container']}>Cargando...</div>;
 
     const totalValue = isOwnProfile 
         ? ((portfolio?.walletBalance || 0) + (portfolio?.holdings?.reduce((acc, h) => acc + h.position_value, 0) || 0))
@@ -50,75 +50,75 @@ const ProfileMobile = () => {
     const holdings = isOwnProfile ? (portfolio?.holdings || []) : (publicData?.holdings || []);
 
     return (
-        <div className={styles.mobileContainer}>
+        <div className={styles['mobile-container']}>
             
             {/* Header */}
-            <header className={styles.mobileHeader}>
+            <header className={styles['mobile-header']}>
                 {isOwnProfile ? (
-                    <img src={fsLogo} alt="Logo" className={styles.mobileLogo} />
+                    <img src={fsLogo} alt="Logo" className={styles['mobile-logo']} />
                 ) : (
-                    <button onClick={() => navigate(-1)} className={styles.mobileBackBtn}>VOLVER</button>
+                    <button onClick={() => navigate(-1)} className={styles['mobile-back-btn']}>VOLVER</button>
                 )}
-                <h3 className={styles.mobileHeaderTitle}>
+                <h3 className={styles['mobile-header-title']}>
                     {isOwnProfile ? 'MI PERFIL' : 'PERFIL'}
                 </h3>
                 {isOwnProfile ? (
                     <button onClick={() => {
                         document.cookie = "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                         window.location.href = "/login";
-                    }} className={styles.mobileLogoutBtn}>SALIR</button>
-                ) : <div className={styles.mobileHeaderSpacer} />}
+                    }} className={styles['mobile-logout-btn']}>SALIR</button>
+                ) : <div className={styles['mobile-header-spacer']} />}
             </header>
 
-            <main className={styles.mobileMain}>
+            <main className={styles['mobile-main']}>
                 
                 {/* User Info */}
-                <div className={styles.mobileUserInfo}>
-                    <div className={styles.mobileAvatar}>
+                <div className={styles['mobile-user-info']}>
+                    <div className={styles['mobile-avatar']}>
                         {user?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
-                    <h2 className={styles.mobileUserName}>{user?.username}</h2>
-                    <p className={styles.mobileUserMeta}>Miembro desde {new Date(user?.created_at).toLocaleDateString()}</p>
+                    <h2 className={styles['mobile-user-name']}>{user?.username}</h2>
+                    <p className={styles['mobile-user-meta']}>Miembro desde {new Date(user?.created_at).toLocaleDateString()}</p>
                 </div>
 
                 {/* Capital Breakdown */}
-                <div className={`${styles.mobileCapitalCard} glass-panel`}>
-                    <span className={styles.mobileCapitalLabel}>Valor Total</span>
-                    <p className={styles.mobileCapitalValue}>€{totalValue.toFixed(2)}</p>
+                <div className={`${styles['mobile-capital-card']} glass-panel`}>
+                    <span className={styles['mobile-capital-label']}>Valor Total</span>
+                    <p className={styles['mobile-capital-value']}>€{totalValue.toFixed(2)}</p>
                     
                     {isOwnProfile && (
-                        <div className={styles.mobileCapitalBreakdown}>
+                        <div className={styles['mobile-capital-breakdown']}>
                             <div>
-                                <p className={styles.mobileBreakdownItemLabel}>CASH</p>
-                                <p className={styles.mobileBreakdownItemValue}>€{portfolio?.walletBalance?.toFixed(2)}</p>
+                                <p className={styles['mobile-breakdown-item-label']}>CASH</p>
+                                <p className={styles['mobile-breakdown-item-value']}>€{portfolio?.walletBalance?.toFixed(2)}</p>
                             </div>
                             <div>
-                                <p className={styles.mobileBreakdownItemLabel}>ACCIONES</p>
-                                <p className={styles.mobileBreakdownItemValue}>€{(totalValue - portfolio?.walletBalance).toFixed(2)}</p>
+                                <p className={styles['mobile-breakdown-item-label']}>ACCIONES</p>
+                                <p className={styles['mobile-breakdown-item-value']}>€{(totalValue - portfolio?.walletBalance).toFixed(2)}</p>
                             </div>
                         </div>
                     )}
                 </div>
 
                 {/* Holdings Section (Simplified) */}
-                <div className={styles.mobileHoldingsSection}>
-                    <h3 className={styles.mobileHoldingsTitle}>Portafolio</h3>
+                <div className={styles['mobile-holdings-section']}>
+                    <h3 className={styles['mobile-holdings-title']}>Portafolio</h3>
                     {holdings.length === 0 ? (
-                        <p className={styles.mobileNoHoldings}>No hay acciones en cartera.</p>
+                        <p className={styles['mobile-no-holdings']}>No hay acciones en cartera.</p>
                     ) : (
-                        <div className={styles.mobileHoldingsList}>
+                        <div className={styles['mobile-holdings-list']}>
                             {holdings.map((h, i) => (
                                 <Link 
                                     to={`/market/player/${h.player_id}`}
                                     key={i} 
-                                    className={`${styles.mobileHoldingCard} glass-panel`} 
+                                    className={`${styles['mobile-holding-card']} glass-panel`} 
                                 >
                                     <div>
-                                        <p className={styles.mobileHoldingName}>{h.player_name}</p>
-                                        <p className={styles.mobileHoldingShares}>{h.shares_owned.toFixed(2)} acciones</p>
+                                        <p className={styles['mobile-holding-name']}>{h.player_name}</p>
+                                        <p className={styles['mobile-holding-shares']}>{h.shares_owned.toFixed(2)} acciones</p>
                                     </div>
-                                    <div className={styles.mobileHoldingValueBox}>
-                                        <p className={styles.mobileHoldingValue}>€{h.position_value.toFixed(2)}</p>
+                                    <div className={styles['mobile-holding-value-box']}>
+                                        <p className={styles['mobile-holding-value']}>€{h.position_value.toFixed(2)}</p>
                                     </div>
                                 </Link>
                             ))}
@@ -130,19 +130,19 @@ const ProfileMobile = () => {
 
             {/* Bottom Navigation */}
             {isOwnProfile && (
-                <nav className={styles.mobileBottomNav}>
-                    <Link to="/home" className={styles.mobileNavLink}>
-                        <span className={styles.mobileNavText}>Inicio</span>
+                <nav className={styles['mobile-bottom-nav']}>
+                    <Link to="/home" className={styles['mobile-nav-link']}>
+                        <span className={styles['mobile-nav-text']}>Inicio</span>
                     </Link>
-                    <Link to="/portfolio" className={styles.mobileNavLink}>
-                        <span className={styles.mobileNavText}>Portfolio</span>
+                    <Link to="/portfolio" className={styles['mobile-nav-link']}>
+                        <span className={styles['mobile-nav-text']}>Portfolio</span>
                     </Link>
-                    <Link to="/market" className={styles.mobileNavLink}>
-                        <span className={styles.mobileNavText}>Mercado</span>
+                    <Link to="/market" className={styles['mobile-nav-link']}>
+                        <span className={styles['mobile-nav-text']}>Mercado</span>
                     </Link>
-                    <Link to="/profile" className={`${styles.mobileNavLink} ${styles.mobileNavLinkActive}`}>
-                        <div className={styles.mobileNavLinkActiveBar}></div>
-                        <div className={styles.mobileNavAvatar}>
+                    <Link to="/profile" className={`${styles['mobile-nav-link']} ${styles['mobile-nav-link-active']}`}>
+                        <div className={styles['mobile-nav-link-active-bar']}></div>
+                        <div className={styles['mobile-nav-avatar']}>
                             {user?.username?.charAt(0).toUpperCase() || 'U'}
                         </div>
                     </Link>

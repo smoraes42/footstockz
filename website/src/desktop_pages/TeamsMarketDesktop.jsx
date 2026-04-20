@@ -52,19 +52,19 @@ const TeamsMarketDesktop = ({ searchTerm = '', selectedLeague = null }) => {
                         className={styles.card}
                     >
                         <div className={styles.header}>
-                            <div className={styles.teamInfo}>
-                                <h3 className={styles.teamName}>{team.name}</h3>
-                                <p className={styles.teamMeta}>{team.league} • {team.playerCount} Jugadores</p>
+                            <div className={styles['team-info']}>
+                                <h3 className={styles['team-name']}>{team.name}</h3>
+                                <p className={styles['team-meta']}>{team.league} • {team.playerCount} Jugadores</p>
                             </div>
-                            <div className={styles.priceInfo}>
+                            <div className={styles['price-info']}>
                                 <p className={styles.price}>{team.price.toFixed(2)}€</p>
-                                <p className={`${styles.change} ${team.change >= 0 ? styles.changePositive : styles.changeNegative}`}>
+                                <p className={`${styles.change} ${team.change >= 0 ? styles['change-positive'] : styles['change-negative']}`}>
                                     {team.change >= 0 ? '+' : ''}{team.change}%
                                 </p>
                             </div>
                         </div>
 
-                        <div className={styles.chartContainer}>
+                        <div className={styles['chart-container']}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={[10, 12, 11, 14, 13, 16].map(v => ({ value: v }))}>
                                     <Line type="monotone" dataKey="value" stroke="var(--accent-neon)" strokeWidth={2} dot={false} />
@@ -72,7 +72,7 @@ const TeamsMarketDesktop = ({ searchTerm = '', selectedLeague = null }) => {
                             </ResponsiveContainer>
                         </div>
 
-                        <button className={styles.actionBtn}>
+                        <button className={styles['action-btn']}>
                             Ver Detalles / Invertir
                         </button>
                     </div>

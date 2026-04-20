@@ -16,6 +16,7 @@ import PortfolioRoutes from "./routes/portfolioRoutes.js";
 import LeaderboardRoutes from "./routes/leaderboardRoutes.js";
 import TeamMarketRoutes from "./routes/teamMarketRoutes.js";
 import { startSnapshotJob } from './jobs/snapshotJob.js';
+import { startSimulation } from './jobs/simulationJob.js';
 
 // Get Environment Variables
 import path from 'path';
@@ -97,5 +98,6 @@ server.listen(PORT, async () => {
   socketService.init(server);
   await testDbConnection(db1, process.env.DB_NAME);
   startSnapshotJob();
+  startSimulation();
 });
 

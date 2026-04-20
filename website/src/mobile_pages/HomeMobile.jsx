@@ -321,29 +321,29 @@ const HomeMobile = () => {
     };
 
     return (
-        <div className={styles.mobileContainer}>
+        <div className={styles['mobile-container']}>
 
             {/* Top Header Mobile */}
-            <header className={styles.mobileHeader}>
-                <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileLogo} />
-                <div className={styles.mobileNavSpacer} />
+            <header className={styles['mobile-header']}>
+                <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-logo']} />
+                <div className={styles['mobile-nav-spacer']} />
             </header>
 
             {/* Main Content Area Mobile */}
-            <main className={styles.mobileMain}>
-                <h2 className={styles.mobileSectionTitle}>Cartera</h2>
+            <main className={styles['mobile-main']}>
+                <h2 className={styles['mobile-section-title']}>Cartera</h2>
                 
                 {/* Cartera Main Display */}
-                <div className={styles.mobilePortfolioValue}>
+                <div className={styles['mobile-portfolio-value']}>
                         {loadingPortfolio ? '---' : formatCompactNumber(displayValue)} €
-                    <span className={`${styles.mobilePortfolioVariation} ${variation24h.amount >= 0 ? styles.mobileVariationPositive : styles.mobileVariationNegative}`}>
+                    <span className={`${styles['mobile-portfolio-variation']} ${variation24h.amount >= 0 ? styles['mobile-variation-positive'] : styles['mobile-variation-negative']}`}>
                         {variation24h.amount >= 0 ? '+' : '-'} {Math.abs(variation24h.amount).toFixed(2)} € ({variation24h.percent.toFixed(2)}%)
                     </span>
                 </div>
 
                 {/* Timeframes */}
-                <div className={styles.mobileTimeframeContainer}>
-                    <div className={styles.mobileTimeframeList}>
+                <div className={styles['mobile-timeframe-container']}>
+                    <div className={styles['mobile-timeframe-list']}>
                         {timeframes.map(tf => (
                             <button
                                 key={tf}
@@ -356,7 +356,7 @@ const HomeMobile = () => {
                     </div>
                 </div>
                 {/* Cartera Chart */}
-                <div className={styles.mobileChartContainer}>
+                <div className={styles['mobile-chart-container']}>
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={chartData}>
                             <defs>
@@ -419,8 +419,8 @@ const HomeMobile = () => {
                                     if (active && payload && payload.length) {
                                         const data = payload[0].payload;
                                         return (
-                                            <div className={styles.mobileTooltip}>
-                                                <div className={styles.mobileTooltipTime}>
+                                            <div className={styles['mobile-tooltip']}>
+                                                <div className={styles['mobile-tooltip-time']}>
                                                     {new Date(data.timestamp).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false })}
                                                 </div>
                                                     {Number(data.value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
@@ -448,42 +448,42 @@ const HomeMobile = () => {
 
                 {/* Players List Section */}
                 <div>
-                    <div className={styles.mobileTopPlayersHeader}>
-                        <h2 className={styles.mobileTopPlayersTitle}>Top Jugadores</h2>
-                        <Link to="/market" className={styles.mobileViewAll}>Ver todos</Link>
+                    <div className={styles['mobile-top-players-header']}>
+                        <h2 className={styles['mobile-top-players-title']}>Top Jugadores</h2>
+                        <Link to="/market" className={styles['mobile-view-all']}>Ver todos</Link>
                     </div>
 
                     {loadingPlayers ? (
                         <div className={styles.loading}>Cargando jugadores...</div>
                     ) : (
-                        <div className={styles.mobilePlayerList}>
+                        <div className={styles['mobile-player-list']}>
                             {players.slice(0, 10).map((player, idx) => (
                                 <Link 
                                     to={`/market/player/${player.id}`} 
                                     key={player.id} 
-                                    className={`${styles.mobilePlayerCard} ${player.id === updatedPlayerId ? styles.mobilePlayerCardActive : ''} glass-panel`} 
+                                    className={`${styles['mobile-player-card']} ${player.id === updatedPlayerId ? styles['mobile-player-card-active'] : ''} glass-panel`} 
                                 >
-                                    <div className={styles.mobilePlayerRank}>
+                                    <div className={styles['mobile-player-rank']}>
                                         #{idx + 1}
                                     </div>
-                                    <div className={styles.mobilePlayerInfo}>
-                                        <div className={styles.mobilePlayerAvatarBox}>
+                                    <div className={styles['mobile-player-info']}>
+                                        <div className={styles['mobile-player-avatar-box']}>
                                             <img 
                                                 src={`${import.meta.env.VITE_API_URL}/v1/players/${player.id}/image`}
                                                 alt={player.name}
-                                                className={styles.mobilePlayerAvatarImg}
+                                                className={styles['mobile-player-avatar-img']}
                                                 onError={(e) => { e.target.style.display = 'none'; }}
                                             />
-                                            <span className={styles.mobilePlayerAvatarPlaceholder}>👤</span>
+                                            <span className={styles['mobile-player-avatar-placeholder']}>👤</span>
                                         </div>
                                         <div>
-                                            <p className={styles.mobilePlayerName}>{player.name}</p>
-                                            <p className={styles.mobilePlayerTeam}>{player.team}</p>
+                                            <p className={styles['mobile-player-name']}>{player.name}</p>
+                                            <p className={styles['mobile-player-team']}>{player.team}</p>
                                         </div>
                                     </div>
-                                    <div className={styles.mobilePlayerPriceBox}>
-                                        <p className={styles.mobilePlayerPrice}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                                        <p className={`${styles.mobilePlayerChange} ${player.change >= 0 ? styles.mobilePriceUp : styles.mobilePriceDown}`}>
+                                    <div className={styles['mobile-player-price-box']}>
+                                        <p className={styles['mobile-player-price']}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                                        <p className={`${styles['mobile-player-change']} ${player.change >= 0 ? styles['mobile-price-up'] : styles['mobile-price-down']}`}>
                                             {player.change >= 0 ? '▲' : '▼'} {Math.abs(player.change)}%
                                         </p>
                                     </div>
@@ -495,22 +495,22 @@ const HomeMobile = () => {
             </main>
 
             {/* Bottom Navigation Mobile */}
-            <nav className={styles.mobileBottomNav}>
-                <Link to="/home" className={`${styles.mobileNavLink} ${styles.mobileNavLinkActive}`}>
-                    <div className={styles.mobileNavLinkActiveBar}></div>
-                    <span className={`${styles.mobileNavText} ${styles.mobileNavTextActive}`}>Inicio</span>
+            <nav className={styles['mobile-bottom-nav']}>
+                <Link to="/home" className={`${styles['mobile-nav-link']} ${styles['mobile-nav-link-active']}`}>
+                    <div className={styles['mobile-nav-link-active-bar']}></div>
+                    <span className={`${styles['mobile-nav-text']} ${styles['mobile-nav-text-active']}`}>Inicio</span>
                 </Link>
-                <Link to="/portfolio" className={styles.mobileNavLink}>
-                    <span className={styles.mobileNavText}>Portfolio</span>
+                <Link to="/portfolio" className={styles['mobile-nav-link']}>
+                    <span className={styles['mobile-nav-text']}>Portfolio</span>
                 </Link>
-                <Link to="/market" className={styles.mobileNavLink}>
-                    <span className={styles.mobileNavText}>Mercado</span>
+                <Link to="/market" className={styles['mobile-nav-link']}>
+                    <span className={styles['mobile-nav-text']}>Mercado</span>
                 </Link>
                 <div 
                     onClick={() => window.location.href = '/profile'}
-                    className={styles.mobileNavLink}
+                    className={styles['mobile-nav-link']}
                 >
-                    <div className={styles.mobileNavAvatar}>
+                    <div className={styles['mobile-nav-avatar']}>
                         {user?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
                 </div>

@@ -269,25 +269,25 @@ export default function TeamMarketDetailDesktop() {
         <div className={styles.container}>
             <Navbar />
 
-            <main className={styles.mainContent}>
-                <div className={styles.topHeader}>
-                    <button onClick={() => navigate('/market')} className={styles.backBtn}>Volver</button>
+            <main className={styles['main-content']}>
+                <div className={styles['top-header']}>
+                    <button onClick={() => navigate('/market')} className={styles['back-btn']}>Volver</button>
                     {portfolio && (
-                        <div className={styles.walletInfo}>
-                            <span className={styles.walletLabel}>WALLET: </span>
-                            <span className={styles.walletValue}>{formatEU(portfolio.walletBalance)} €</span>
+                        <div className={styles['wallet-info']}>
+                            <span className={styles['wallet-label']}>WALLET: </span>
+                            <span className={styles['wallet-value']}>{formatEU(portfolio.walletBalance)} €</span>
                         </div>
                     )}
                 </div>
 
-                <div className={styles.contentGrid}>
-                    <div className={styles.leftCol}>
+                <div className={styles['content-grid']}>
+                    <div className={styles['left-col']}>
                         <div className={`${styles.card} glass-panel`}>
-                            <h2 className={styles.chartTitle}>
+                            <h2 className={styles['chart-title']}>
                                 {team ? `${team.name} (Índice)` : 'Cargando...'}
-                                {team && <span className={styles.chartPrice}>{formatEU(team.price)} €</span>}
+                                {team && <span className={styles['chart-price']}>{formatEU(team.price)} €</span>}
                             </h2>
-                            <div className={styles.chartContainer}>
+                            <div className={styles['chart-container']}>
                                 <ResponsiveContainer width="100%" height="100%">
                                     <LineChart data={priceHistory}>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#222" />
@@ -300,23 +300,23 @@ export default function TeamMarketDetailDesktop() {
                             </div>
                         </div>
 
-                        <div className={`${styles.playersCard} glass-panel`}>
-                            <h3 className={styles.playersTitle}>Jugadores del Equipo</h3>
-                            <div className={styles.tableContainer}>
+                        <div className={`${styles['players-card']} glass-panel`}>
+                            <h3 className={styles['players-title']}>Jugadores del Equipo</h3>
+                            <div className={styles['table-container']}>
                                 <table className={styles.table}>
                                     <thead>
-                                        <tr className={styles.tableHead}>
-                                            <th className={styles.tableHeadCell}>Jugador</th>
-                                            <th className={styles.tableHeadCell}>Precio</th>
-                                            <th className={styles.tableHeadCell}>24h</th>
+                                        <tr className={styles['table-head']}>
+                                            <th className={styles['table-head-cell']}>Jugador</th>
+                                            <th className={styles['table-head-cell']}>Precio</th>
+                                            <th className={styles['table-head-cell']}>24h</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {team?.players?.map(p => (
-                                            <tr key={p.id} className={styles.tableRow} onClick={() => navigate(`/market/player/${p.id}`)}>
-                                                <td className={`${styles.tableCell} ${styles.playerName}`}>{p.name}</td>
-                                                <td className={styles.tableCell}>{formatEU(p.price)} €</td>
-                                                <td className={`${styles.tableCell} ${p.change >= 0 ? styles.playerChangePositive : styles.playerChangeNegative}`}>{p.change >= 0 ? '+' : ''}{Number(p.change).toFixed(2)}%</td>
+                                            <tr key={p.id} className={styles['table-row']} onClick={() => navigate(`/market/player/${p.id}`)}>
+                                                <td className={`${styles['table-cell']} ${styles['player-name']}`}>{p.name}</td>
+                                                <td className={styles['table-cell']}>{formatEU(p.price)} €</td>
+                                                <td className={`${styles['table-cell']} ${p.change >= 0 ? styles['player-change-positive'] : styles['player-change-negative']}`}>{p.change >= 0 ? '+' : ''}{Number(p.change).toFixed(2)}%</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -325,46 +325,46 @@ export default function TeamMarketDetailDesktop() {
                         </div>
                     </div>
 
-                    <div className={styles.rightCol}>
+                    <div className={styles['right-col']}>
                         {/* Tu Posición */}
-                        <div className={`${styles.positionCard} glass-panel`}>
-                            <h2 className={styles.positionTitle}>Tu Posición</h2>
+                        <div className={`${styles['position-card']} glass-panel`}>
+                            <h2 className={styles['position-title']}>Tu Posición</h2>
                             {teamHolding.shares > 0 ? (
-                                <div className={styles.positionGrid}>
-                                    <div className={styles.positionItem}>
-                                        <span className={styles.positionLabel}>Acciones del Equipo:</span>
-                                        <span className={styles.positionValue}>{Number(teamHolding.shares).toFixed(4)}</span>
+                                <div className={styles['position-grid']}>
+                                    <div className={styles['position-item']}>
+                                        <span className={styles['position-label']}>Acciones del Equipo:</span>
+                                        <span className={styles['position-value']}>{Number(teamHolding.shares).toFixed(4)}</span>
                                     </div>
-                                    <div className={styles.positionItem}>
-                                        <span className={styles.positionLabel}>Valor Total:</span>
-                                        <span className={`${styles.positionValue} ${styles.positionValueAccent}`}>{formatEU(teamHolding.value)} €</span>
+                                    <div className={styles['position-item']}>
+                                        <span className={styles['position-label']}>Valor Total:</span>
+                                        <span className={`${styles['position-value']} ${styles['position-value-accent']}`}>{formatEU(teamHolding.value)} €</span>
                                     </div>
                                 </div>
                             ) : (
-                                <p className={styles.noPosition}>No tienes participaciones en este equipo.</p>
+                                <p className={styles['no-position']}>No tienes participaciones en este equipo.</p>
                             )}
                         </div>
 
                         {/* Trade Order */}
-                        <div className={`${styles.tradeCard} glass-panel`}>
-                            <h2 className={styles.tradeTitle}>Trade Order</h2>
+                        <div className={`${styles['trade-card']} glass-panel`}>
+                            <h2 className={styles['trade-title']}>Trade Order</h2>
                             
-                            <div className={styles.tabRow}>
+                            <div className={styles['tab-row']}>
                                 <button 
-                                    className={`${styles.tabBtn} ${activeTab === 'buy' ? styles.tabBtnBuy : ''}`}
+                                    className={`${styles['tab-btn']} ${activeTab === 'buy' ? styles['tab-btn-buy'] : ''}`}
                                     onClick={() => setActiveTab('buy')}
                                 >BUY</button>
                                 <button 
-                                    className={`${styles.tabBtn} ${activeTab === 'sell' ? styles.tabBtnSell : ''}`}
+                                    className={`${styles['tab-btn']} ${activeTab === 'sell' ? styles['tab-btn-sell'] : ''}`}
                                     onClick={() => setActiveTab('sell')}
                                 >SELL</button>
                             </div>
 
                             {activeTab === 'buy' ? (
                                 <>
-                                    <div className={styles.formRow}>
-                                        <div className={styles.inputGroup}>
-                                            <label className={styles.inputLabel}>Cant. Acciones</label>
+                                    <div className={styles['form-row']}>
+                                        <div className={styles['input-group']}>
+                                            <label className={styles['input-label']}>Cant. Acciones</label>
                                             <input 
                                                 type="text" 
                                                 className={styles.input}
@@ -382,8 +382,8 @@ export default function TeamMarketDetailDesktop() {
                                                 }}
                                             />
                                         </div>
-                                        <div className={styles.inputGroup}>
-                                            <label className={styles.inputLabel}>Valor (€)</label>
+                                        <div className={styles['input-group']}>
+                                            <label className={styles['input-label']}>Valor (€)</label>
                                             <input 
                                                 type="text" 
                                                 className={styles.input}
@@ -402,22 +402,22 @@ export default function TeamMarketDetailDesktop() {
                                             />
                                         </div>
                                     </div>
-                                    <div className={styles.quickSelectRow}>
-                                        <button onClick={() => handleQuickBuy(0.25)} className={styles.quickSelectBtn}>25%</button>
-                                        <button onClick={() => handleQuickBuy(0.50)} className={styles.quickSelectBtn}>50%</button>
-                                        <button onClick={() => handleQuickBuy(1.00)} className={styles.quickSelectBtn}>100%</button>
+                                    <div className={styles['quick-select-row']}>
+                                        <button onClick={() => handleQuickBuy(0.25)} className={styles['quick-select-btn']}>25%</button>
+                                        <button onClick={() => handleQuickBuy(0.50)} className={styles['quick-select-btn']}>50%</button>
+                                        <button onClick={() => handleQuickBuy(1.00)} className={styles['quick-select-btn']}>100%</button>
                                     </div>
                                     <button 
                                         onClick={handleMarketBuy}
                                         disabled={loading || !marketBuyTotal}
-                                        className={`${styles.submitBtn} ${styles.submitBtnBuy}`}
+                                        className={`${styles['submit-btn']} ${styles['submit-btn-buy']}`}
                                     >MARKET BUY</button>
                                 </>
                             ) : (
                                 <>
-                                    <div className={styles.formRow}>
-                                        <div className={styles.inputGroup}>
-                                            <label className={styles.inputLabel}>Cant. Acciones</label>
+                                    <div className={styles['form-row']}>
+                                        <div className={styles['input-group']}>
+                                            <label className={styles['input-label']}>Cant. Acciones</label>
                                             <input 
                                                 type="text" 
                                                 className={styles.input}
@@ -435,8 +435,8 @@ export default function TeamMarketDetailDesktop() {
                                                 }}
                                             />
                                         </div>
-                                        <div className={styles.inputGroup}>
-                                            <label className={styles.inputLabel}>Valor (€)</label>
+                                        <div className={styles['input-group']}>
+                                            <label className={styles['input-label']}>Valor (€)</label>
                                             <input 
                                                 type="text" 
                                                 className={styles.input}
@@ -455,20 +455,20 @@ export default function TeamMarketDetailDesktop() {
                                             />
                                         </div>
                                     </div>
-                                    <div className={styles.quickSelectRow}>
-                                        <button onClick={() => handleQuickSell(0.25)} className={styles.quickSelectBtn}>25%</button>
-                                        <button onClick={() => handleQuickSell(0.50)} className={styles.quickSelectBtn}>50%</button>
-                                        <button onClick={() => handleQuickSell(1.00)} className={styles.quickSelectBtn}>100%</button>
+                                    <div className={styles['quick-select-row']}>
+                                        <button onClick={() => handleQuickSell(0.25)} className={styles['quick-select-btn']}>25%</button>
+                                        <button onClick={() => handleQuickSell(0.50)} className={styles['quick-select-btn']}>50%</button>
+                                        <button onClick={() => handleQuickSell(1.00)} className={styles['quick-select-btn']}>100%</button>
                                     </div>
                                     <button 
                                         onClick={handleMarketSell}
                                         disabled={loading || !marketSellQty}
-                                        className={`${styles.submitBtn} ${styles.submitBtnSell}`}
+                                        className={`${styles['submit-btn']} ${styles['submit-btn-sell']}`}
                                     >MARKET SELL</button>
                                 </>
                             )}
 
-                            {error && <p className={styles.errorText}>{error}</p>}
+                            {error && <p className={styles['error-text']}>{error}</p>}
                         </div>
                     </div>
                 </div>

@@ -16,7 +16,7 @@
     position: relative;
 }
 
-.glowEffect {
+.glow-effect {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -28,7 +28,7 @@
     pointer-events: none;
 }
 
-.glassPanel {
+.glass-panel {
     width: 100%;
     max-width: 480px;
     padding: 3rem;
@@ -38,13 +38,13 @@
     text-align: center;
 }
 
-.successTitle {
+.success-title {
     font-size: 1.8rem;
     font-weight: 800;
     margin-bottom: 0.5rem;
 }
 
-.successSubtext {
+.success-subtext {
     color: var(--text-muted);
     font-size: 1rem;
 }
@@ -62,11 +62,11 @@
     line-height: 1.5;
 }
 
-.emailText {
+.email-text {
     color: var(--text-main);
 }
 
-.errorAlert {
+.error-alert {
     background-color: rgba(255, 77, 77, 0.1);
     border: 1px solid rgba(255, 77, 77, 0.3);
     border-radius: 8px;
@@ -76,14 +76,14 @@
     font-size: 0.9rem;
 }
 
-.codeContainer {
+.code-container {
     display: flex;
     justify-content: center;
     gap: 12px;
     margin-bottom: 2rem;
 }
 
-.digitInput {
+.digit-input {
     width: 56px;
     height: 64px;
     text-align: center;
@@ -98,32 +98,32 @@
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.digitInputActive {
+.digit-input-active {
     border-color: var(--accent-neon);
     box-shadow: 0 0 10px rgba(57, 255, 20, 0.15);
 }
 
-.verifyBtn {
+.verify-btn {
     padding: 14px 2rem;
     border-radius: 8px;
     font-size: 1.05rem;
     width: 100%;
 }
 
-.resendText {
+.resend-text {
     color: var(--text-muted);
     font-size: 0.85rem;
     margin-top: 2rem;
 }
 
-.resendLink {
+.resend-link {
     color: var(--accent-neon);
     text-decoration: none;
     font-weight: 600;
 }
 
 /* Mobile Styles */
-.mobileContainer {
+.mobile-container {
     background-color: var(--bg-main);
     min-height: 100vh;
     width: 100%;
@@ -131,7 +131,7 @@
     flex-direction: column;
 }
 
-.mobileNav {
+.mobile-nav {
     padding: 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background-color: rgba(16, 16, 16, 0.9);
@@ -140,11 +140,11 @@
     z-index: 10;
 }
 
-.mobileLogo {
+.mobile-logo {
     height: 30px;
 }
 
-.mobileMain {
+.mobile-main {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -155,7 +155,7 @@
     overflow: hidden;
 }
 
-.mobileGlow {
+.mobile-glow {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -167,7 +167,7 @@
     pointer-events: none;
 }
 
-.mobileGlassPanel {
+.mobile-glass-panel {
     width: 100%;
     padding: 2rem 1.5rem;
     border-radius: 12px;
@@ -176,25 +176,25 @@
     text-align: center;
 }
 
-.mobileTitle {
+.mobile-title {
     font-size: 1.5rem;
     font-weight: 800;
     margin-bottom: 0.5rem;
 }
 
-.mobileSubtext {
+.mobile-subtext {
     color: var(--text-muted);
     font-size: 0.85rem;
     margin-bottom: 1.5rem;
     line-height: 1.5;
 }
 
-.mobileEmail {
+.mobile-email {
     color: var(--text-main);
     font-size: 0.9rem;
 }
 
-.mobileErrorAlert {
+.mobile-error-alert {
     background-color: rgba(255, 77, 77, 0.1);
     border: 1px solid rgba(255, 77, 77, 0.3);
     border-radius: 8px;
@@ -204,14 +204,14 @@
     font-size: 0.85rem;
 }
 
-.mobileCodeContainer {
+.mobile-code-container {
     display: flex;
     justify-content: center;
     gap: 8px;
     margin-bottom: 1.5rem;
 }
 
-.mobileDigitInput {
+.mobile-digit-input {
     width: 46px;
     height: 54px;
     text-align: center;
@@ -226,30 +226,30 @@
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.mobileDigitInputActive {
+.mobile-digit-input-active {
     border-color: var(--accent-neon);
     box-shadow: 0 0 10px rgba(57, 255, 20, 0.15);
 }
 
-.mobileVerifyBtn {
+.mobile-verify-btn {
     padding: 14px;
     border-radius: 8px;
     font-size: 1rem;
     width: 100%;
 }
 
-.mobileLoadingBtn {
+.mobile-loading-btn {
     opacity: 0.6;
     cursor: wait;
 }
 
-.mobileFooter {
+.mobile-footer {
     color: var(--text-muted);
     font-size: 0.8rem;
     margin-top: 1.5rem;
 }
 
-.mobileFooterLink {
+.mobile-footer-link {
     color: var(--accent-neon);
     text-decoration: none;
     font-weight: 600;

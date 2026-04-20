@@ -5,7 +5,7 @@
     display: flex;
 }
 
-.mainContent {
+.main-content {
     margin-left: 250px;
     margin-right: 250px;
     flex: 1;
@@ -22,13 +22,13 @@
     margin-bottom: 2.5rem;
 }
 
-.headerLeft {
+.header-left {
     display: flex;
     align-items: center;
     gap: 2rem;
 }
 
-.marketTypeTitle {
+.market-type-title {
     font-size: 1.3rem;
     font-weight: 800;
     color: rgba(255, 255, 255, 0.3);
@@ -39,17 +39,17 @@
     transition: color 0.2s;
 }
 
-.marketTypeTitleActive {
+.market-type-title-active {
     color: var(--accent-neon);
 }
 
-.headerRight {
+.header-right {
     display: flex;
     gap: 1rem;
     align-items: center;
 }
 
-.viewModeContainer {
+.view-mode-container {
     display: flex;
     background-color: var(--surface-dark);
     padding: 4px;
@@ -57,7 +57,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.viewModeBtn {
+.view-mode-btn {
     padding: 6px 12px;
     border: none;
     background: transparent;
@@ -68,17 +68,17 @@
     transition: all 0.2s;
 }
 
-.viewModeBtnActive {
+.view-mode-btn-active {
     background: var(--bg-main);
     color: var(--text-main);
 }
 
-.searchContainer {
+.search-container {
     position: relative;
     width: 300px;
 }
 
-.searchInput {
+.search-input {
     width: 100%;
     padding: 12px 20px;
     background-color: var(--surface-dark);
@@ -89,7 +89,7 @@
     font-size: 0.9rem;
 }
 
-.tablePanel {
+.table-panel {
     border-radius: 16px;
     overflow: hidden;
     min-height: 400px;
@@ -101,12 +101,12 @@
     text-align: left;
 }
 
-.tableHeadRow {
+.table-head-row {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background-color: rgba(255, 255, 255, 0.02);
 }
 
-.tableHeaderCell {
+.table-header-cell {
     padding: 1.5rem;
     color: var(--text-muted);
     font-weight: 600;
@@ -116,38 +116,38 @@
     user-select: none;
 }
 
-.tableRow {
+.table-row {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transition: background 0.3s ease;
     cursor: pointer;
 }
 
-.tableRow:hover {
+.table-row:hover {
     background-color: rgba(255, 255, 255, 0.03);
 }
 
-.tableRowUpdated {
+.table-row-updated {
     background-color: rgba(57, 255, 20, 0.15) !important;
 }
 
-.tableCell {
+.table-cell {
     padding: 1.2rem 1.5rem;
 }
 
-.playerCellContent {
+.player-cell-content {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.playerAvatarImg {
+.player-avatar-img {
     width: 40px;
     height: 40px;
     border-radius: 8px;
     object-fit: cover;
 }
 
-.playerAvatarPlaceholder {
+.player-avatar-placeholder {
     width: 40px;
     height: 40px;
     border-radius: 8px;
@@ -158,57 +158,57 @@
     font-size: 1.2rem;
 }
 
-.playerName {
+.player-name {
     font-weight: 700;
     font-size: 1rem;
     margin: 0;
 }
 
-.playerTeam {
+.player-team {
     font-size: 0.8rem;
     color: var(--text-muted);
     margin: 0;
 }
 
-.priceCell {
+.price-cell {
     font-weight: 800;
     font-size: 1.1rem;
 }
 
-.changeCell {
+.change-cell {
     font-weight: 700;
 }
 
-.changePositive {
+.change-positive {
     color: var(--accent-neon);
 }
 
-.changeNegative {
+.change-negative {
     color: var(--error-red);
 }
 
-.sparklineCell {
+.sparkline-cell {
     width: 120px;
 }
 
-.sparklineWrapper {
+.sparkline-wrapper {
     height: 40px;
     width: 100%;
 }
 
-.gridContainer {
+.grid-container {
     display: flex;
     flex-direction: column;
 }
 
-.gridSortHeader {
+.grid-sort-header {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
-.gridSortBtn {
+.grid-sort-btn {
     background: var(--surface-dark);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-main);
@@ -221,19 +221,19 @@
     gap: 0.5rem;
 }
 
-.gridSortLabel {
+.grid-sort-label {
     color: var(--text-muted);
     font-size: 0.85rem;
     text-transform: uppercase;
 }
 
-.playerGrid {
+.player-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
 }
 
-.playerCard {
+.player-card {
     border-radius: 16px;
     padding: 1.5rem;
     cursor: pointer;
@@ -245,24 +245,24 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.playerCard:hover {
+.player-card:hover {
     transform: translateY(-4px);
     background-color: rgba(255, 255, 255, 0.03);
 }
 
-.playerCardUpdated {
+.player-card-updated {
     background-color: rgba(57, 255, 20, 0.15) !important;
     border: 1px solid var(--accent-neon) !important;
 }
 
-.playerCardAvatarContainer {
+.player-card-avatar-container {
     position: relative;
     width: 100px;
     height: 100px;
     margin-bottom: 1rem;
 }
 
-.playerCardAvatar {
+.player-card-avatar {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -270,7 +270,7 @@
     border: 3px solid var(--surface-lighter);
 }
 
-.playerCardAvatarPlaceholder {
+.player-card-avatar-placeholder {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -282,25 +282,25 @@
     border: 3px solid var(--surface-light);
 }
 
-.playerCardName {
+.player-card-name {
     margin: 0 0 0.25rem 0;
     font-size: 1.2rem;
     font-weight: 800;
     text-align: center;
 }
 
-.playerCardTeam {
+.player-card-team {
     margin: 0 0 1rem 0;
     color: var(--text-muted);
     font-size: 0.9rem;
     text-align: center;
 }
 
-.playerCardChangeContainer {
+.player-card-change-container {
     text-align: right;
 }
 
-.playerCardStats {
+.player-card-stats {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -310,24 +310,24 @@
     border-radius: 12px;
 }
 
-.playerCardStatLabel {
+.player-card-stat-label {
     margin: 0;
     font-size: 0.8rem;
     color: var(--text-muted);
 }
 
-.playerCardStatValue {
+.player-card-stat-value {
     margin: 0;
     font-size: 1rem;
     font-weight: 800;
 }
 
-.playerCardPrice {
+.player-card-price {
     font-size: 1.3rem;
     font-weight: 900;
 }
 
-.paginationContainer {
+.pagination-container {
     padding: 2rem;
     display: flex;
     justify-content: center;
@@ -335,7 +335,7 @@
     gap: 1rem;
 }
 
-.paginationBtn {
+.pagination-btn {
     padding: 10px 24px;
     background-color: rgba(57, 255, 20, 0.1);
     color: var(--accent-neon);
@@ -346,23 +346,23 @@
     transition: all 0.2s;
 }
 
-.paginationBtn:hover:not(:disabled) {
+.pagination-btn:hover:not(:disabled) {
     background-color: rgba(57, 255, 20, 0.2);
 }
 
-.paginationBtnDisabled {
+.pagination-btn-disabled {
     background-color: rgba(255, 255, 255, 0.05);
     color: var(--text-muted);
     border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: not-allowed;
 }
 
-.paginationInfo {
+.pagination-info {
     color: var(--text-muted);
     font-weight: bold;
 }
 
-.rightSidebar {
+.right-sidebar {
     width: 250px;
     background-color: rgba(28, 28, 28, 0.7);
     border-left: 1px solid rgba(255, 255, 255, 0.05);
@@ -376,37 +376,37 @@
     overflow-y: auto;
 }
 
-.filterHeader {
+.filter-header {
     margin-bottom: 2rem;
 }
 
-.filterTitle {
+.filter-title {
     margin: 0;
     font-size: 1.2rem;
     font-weight: 700;
     color: var(--text-main);
 }
 
-.filterGroupContainer {
+.filter-group-container {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.filterGroup {
+.filter-group {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     position: relative;
 }
 
-.filterLabel {
+.filter-label {
     font-size: 0.85rem;
     color: var(--text-muted);
     font-weight: 600;
 }
 
-.dropdownBtn {
+.dropdown-btn {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -420,23 +420,23 @@
     transition: all 0.2s;
 }
 
-.dropdownBtnDisabled {
+.dropdown-btn-disabled {
     background-color: rgba(255, 255, 255, 0.02);
     color: var(--text-muted);
     cursor: not-allowed;
     opacity: 0.5;
 }
 
-.dropdownArrow {
+.dropdown-arrow {
     font-size: 0.8rem;
     transition: transform 0.2s;
 }
 
-.dropdownArrowOpen {
+.dropdown-arrow-open {
     transform: rotate(180deg);
 }
 
-.dropdownMenu {
+.dropdown-menu {
     position: absolute;
     top: 100%;
     left: 0;
@@ -453,7 +453,7 @@
     padding: 0.5rem;
 }
 
-.dropdownItem {
+.dropdown-item {
     text-align: left;
     padding: 8px 12px;
     background-color: transparent;
@@ -465,11 +465,11 @@
     transition: all 0.2s;
 }
 
-.dropdownItem:hover {
+.dropdown-item:hover {
     background-color: rgba(255, 255, 255, 0.06) !important;
 }
 
-.dropdownItemActive {
+.dropdown-item-active {
     background-color: rgba(57, 255, 20, 0.1) !important;
     color: var(--accent-neon) !important;
 }
@@ -481,7 +481,7 @@
 }
 
 /* Mobile Styles */
-.mobileContainer {
+.mobile-container {
     background-color: var(--bg-main);
     height: 100dvh;
     overflow: hidden;
@@ -490,7 +490,7 @@
     flex-direction: column;
 }
 
-.mobileHeader {
+.mobile-header {
     padding: 0 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background-color: rgba(16, 16, 16, 0.9);
@@ -504,24 +504,24 @@
     box-sizing: border-box;
 }
 
-.mobileLogo {
+.mobile-logo {
     height: 22px;
 }
 
-.mobileMain {
+.mobile-main {
     flex: 1;
     padding: 1.5rem;
     padding-bottom: 80px;
     overflow-y: auto;
 }
 
-.mobileMarketTabs {
+.mobile-market-tabs {
     display: flex;
     gap: 1.5rem;
-    marginBottom: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
-.mobileMarketTab {
+.mobile-market-tab {
     font-size: 0.95rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -531,22 +531,22 @@
     transition: color 0.2s;
 }
 
-.mobileMarketTabActive {
+.mobile-market-tab-active {
     color: var(--accent-neon);
 }
 
-.mobileMarketTabInactive {
+.mobile-market-tab-inactive {
     color: rgba(255, 255, 255, 0.3);
 }
 
-.mobileFilterBar {
+.mobile-filter-bar {
     margin-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.mobileHorizontalScroll {
+.mobile-horizontal-scroll {
     display: flex;
     gap: 8px;
     overflow-x: auto;
@@ -554,11 +554,11 @@
     scrollbar-width: none;
 }
 
-.mobileHorizontalScroll::-webkit-scrollbar {
+.mobile-horizontal-scroll::-webkit-scrollbar {
     display: none;
 }
 
-.mobileSortBtn {
+.mobile-sort-btn {
     white-space: nowrap;
     padding: 8px 14px;
     border-radius: 10px;
@@ -570,13 +570,13 @@
     transition: all 0.2s;
 }
 
-.mobileSortBtnActive {
+.mobile-sort-btn-active {
     border-color: var(--accent-neon);
     background-color: rgba(57, 255, 20, 0.1);
     color: var(--accent-neon);
 }
 
-.mobileFilterBtn {
+.mobile-filter-btn {
     white-space: nowrap;
     padding: 6px 12px;
     border-radius: 8px;
@@ -587,19 +587,19 @@
     font-weight: 700;
 }
 
-.mobileFilterBtnActive {
+.mobile-filter-btn-active {
     border: 1px solid var(--accent-neon);
     background-color: rgba(57, 255, 20, 0.1);
     color: var(--accent-neon);
 }
 
-.mobilePlayerList {
+.mobile-player-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.mobilePlayerCard {
+.mobile-player-card {
     padding: 1rem;
     border-radius: 14px;
     display: flex;
@@ -609,13 +609,13 @@
     color: inherit;
 }
 
-.mobilePlayerInfo {
+.mobile-player-info {
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 
-.mobilePlayerAvatarBox {
+.mobile-player-avatar-box {
     width: 45px;
     height: 45px;
     border-radius: 10px;
@@ -626,29 +626,29 @@
     overflow: hidden;
 }
 
-.mobilePlayerAvatarImg {
+.mobile-player-avatar-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.mobilePlayerAvatarPlaceholder {
+.mobile-player-avatar-placeholder {
     font-size: 1.2rem;
 }
 
-.mobilePlayerName {
+.mobile-player-name {
     font-weight: 700;
     font-size: 0.90rem;
     margin: 0;
 }
 
-.mobilePlayerTeam {
+.mobile-player-team {
     font-size: 0.7rem;
     color: var(--text-muted);
     margin: 0;
 }
 
-.mobilePlayerPriceBox {
+.mobile-player-price-box {
     text-align: right;
     display: flex;
     flex-direction: column;
@@ -656,20 +656,20 @@
     gap: 0.25rem;
 }
 
-.mobilePlayerPrice {
+.mobile-player-price {
     font-weight: 800;
     font-size: 0.95rem;
     margin: 0;
 }
 
-.mobilePlayerChange {
+.mobile-player-change {
     font-size: 0.65rem;
     font-weight: 800;
     padding: 2px 6px;
     border-radius: 4px;
 }
 
-.mobileLoadMoreBtn {
+.mobile-load-more-btn {
     width: 100%;
     padding: 12px;
     background-color: rgba(57, 255, 20, 0.1);
@@ -681,7 +681,7 @@
     transition: all 0.2s;
 }
 
-.mobileBottomNav {
+.mobile-bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -696,7 +696,7 @@
     padding-bottom: env(safe-area-inset-bottom);
 }
 
-.mobileNavLink {
+.mobile-nav-link {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -706,12 +706,12 @@
     color: var(--text-muted);
 }
 
-.mobileNavLinkActive {
+.mobile-nav-link-active {
     color: var(--accent-neon);
     position: relative;
 }
 
-.mobileNavLinkActiveBar {
+.mobile-nav-link-active-bar {
     width: 20px;
     height: 2px;
     background-color: var(--accent-neon);
@@ -720,16 +720,16 @@
     top: 0;
 }
 
-.mobileNavText {
+.mobile-nav-text {
     font-size: 0.75rem;
     font-weight: 500;
 }
 
-.mobileNavTextActive {
+.mobile-nav-text-active {
     font-weight: 600;
 }
 
-.mobileNavAvatar {
+.mobile-nav-avatar {
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -742,7 +742,7 @@
     color: var(--text-main);
 }
 
-.mobileFab {
+.mobile-fab {
     position: fixed;
     bottom: 90px;
     right: 20px;
@@ -759,7 +759,7 @@
     background: rgba(28, 28, 28, 0.8);
 }
 
-.mobileSearchOverlay {
+.mobile-search-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -773,25 +773,25 @@
     box-sizing: border-box;
 }
 
-.mobileSearchInputBox {
+.mobile-search-input-box {
     display: flex;
     align-items: center;
     gap: 1rem;
     margin-bottom: 2rem;
 }
 
-.mobileSearchInput {
+.mobile-search-input {
     width: 100%;
     padding: 14px 18px;
     background-color: #111;
     border: 1px solid var(--accent-neon);
     border-radius: 14px;
     color: white;
-    fontSize: 1rem;
+    font-size: 1rem;
     outline: none;
 }
 
-.mobileSearchCloseBtn {
+.mobile-search-close-btn {
     background: none;
     border: none;
     color: var(--accent-neon);
@@ -799,15 +799,15 @@
     font-size: 0.9rem;
 }
 
-.mobileNavSpacer {
+.mobile-nav-spacer {
     width: 22px;
 }
 
-.mobileLeagueFilterRow {
+.mobile-league-filter-row {
     margin-top: 8px;
 }
 
-.mobileSearchOverlayBackdrop {
+.mobile-search-overlay-backdrop {
     position: absolute;
     top: 0;
     left: 0;
@@ -816,95 +816,95 @@
     z-index: -1;
 }
 
-.mobileSearchIconBox {
+.mobile-search-icon-box {
     position: relative;
     flex: 1;
 }
 
-.mobileFabIcon {
+.mobile-fab-icon {
     font-size: 1.4rem;
 }
 
-.mobileChangePositive {
+.mobile-change-positive {
     color: var(--accent-neon);
     background-color: rgba(57, 255, 20, 0.1);
 }
 
-.mobileChangeNegative {
+.mobile-change-negative {
     color: var(--error-red);
     background-color: rgba(255, 77, 77, 0.1);
 }
 
-.mobileLoadMoreContainer {
+.mobile-load-more-container {
     padding: 1rem;
     text-align: center;
 }
 
-.mobileLoadMoreBtnLoading {
+.mobile-load-more-btn-loading {
     opacity: 0.7;
 }
 
-.mobileEmptyPlayers {
+.mobile-empty-players {
     padding: 1rem;
     text-align: center;
     color: var(--text-muted);
 }
 
-.mobileSearchSubtext {
+.mobile-search-subtext {
     color: var(--text-muted);
     font-size: 0.85rem;
 }
 
-.mobileTeamsList {
+.mobile-teams-list {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.mobileTeamCard {
+.mobile-team-card {
     padding: 1.25rem;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     cursor: pointer;
 }
 
-.mobileTeamHeader {
+.mobile-team-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 1.25rem;
 }
 
-.mobileTeamName {
+.mobile-team-name {
     margin: 0;
     font-size: 1rem;
     font-weight: 800;
 }
 
-.mobileTeamMeta {
+.mobile-team-meta {
     margin: 0;
     font-size: 0.75rem;
     color: var(--text-muted);
 }
 
-.mobileTeamValueBox {
+.mobile-team-value-box {
     text-align: right;
 }
 
-.mobileTeamPrice {
+.mobile-team-price {
     margin: 0;
     font-size: 1rem;
     font-weight: 800;
     color: var(--text-main);
 }
 
-.mobileTeamChange {
+.mobile-team-change {
     margin: 0;
     font-size: 0.7rem;
     font-weight: 700;
 }
 
-.mobileTeamActionBtn {
+.mobile-team-action-btn {
     width: 100%;
     padding: 12px;
     border-radius: 10px;
@@ -915,21 +915,21 @@
     font-size: 0.9rem;
 }
 
-.mobileDetailContainer {
+.mobile-detail-container {
     background-color: var(--bg-main);
     min-height: 100vh;
     padding: 16px;
     padding-bottom: 100px;
 }
 
-.mobileDetailHeader {
+.mobile-detail-header {
     display: flex;
     align-items: center;
     margin-bottom: 16px;
     gap: 12px;
 }
 
-.mobileBackBtn {
+.mobile-back-btn {
     background-color: #222;
     border: none;
     color: #fff;
@@ -937,90 +937,90 @@
     border-radius: 8px;
 }
 
-.mobileDetailTitle {
+.mobile-detail-title {
     font-size: 1.2rem;
     margin: 0;
 }
 
-.mobileChartCard {
+.mobile-chart-card {
     background-color: rgba(255, 255, 255, 0.03);
     border-radius: 16px;
     padding: 16px;
     margin-bottom: 16px;
 }
 
-.mobileChartHeader {
+.mobile-chart-header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
 }
 
-.mobileChartLabel {
+.mobile-chart-label {
     color: var(--text-muted);
 }
 
-.mobileChartValue {
+.mobile-chart-value {
     font-weight: bold;
     color: var(--accent-neon);
     font-size: 1.2rem;
 }
 
-.mobileChartWrapper {
+.mobile-chart-wrapper {
     width: 100%;
     height: 200px;
 }
 
-.mobilePositionCard {
+.mobile-position-card {
     background-color: rgba(255, 255, 255, 0.03);
     border-radius: 16px;
     padding: 16px;
     margin-bottom: 16px;
 }
 
-.mobileCardTitle {
+.mobile-card-title {
     font-size: 1rem;
     margin-bottom: 12px;
 }
 
-.mobilePositionInfo {
+.mobile-position-info {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.mobilePositionRow {
+.mobile-position-row {
     display: flex;
     justify-content: space-between;
 }
 
-.mobilePositionLabel {
+.mobile-position-label {
     color: var(--text-muted);
     font-size: 0.85rem;
 }
 
-.mobilePositionValue {
+.mobile-position-value {
     font-weight: bold;
 }
 
-.mobilePositionValueAccent {
+.mobile-position-value-accent {
     font-weight: bold;
     color: var(--accent-neon);
 }
 
-.mobileNoPosition {
+.mobile-no-position {
     color: var(--text-muted);
     font-size: 0.85rem;
     text-align: center;
 }
 
-.mobileTradeCard {
+.mobile-trade-card {
     background-color: rgba(255, 255, 255, 0.03);
     border-radius: 16px;
     padding: 16px;
     margin-bottom: 16px;
 }
 
-.mobileTradeTabs {
+.mobile-trade-tabs {
     display: flex;
     margin-bottom: 12px;
     gap: 8px;
@@ -1029,7 +1029,7 @@
     border-radius: 10px;
 }
 
-.mobileTradeTab {
+.mobile-trade-tab {
     flex: 1;
     padding: 8px;
     border-radius: 6px;
@@ -1040,34 +1040,34 @@
     color: #666;
 }
 
-.mobileTradeTabBuyActive {
+.mobile-trade-tab-buy-active {
     background-color: rgba(57, 255, 20, 0.1);
     color: var(--accent-neon);
 }
 
-.mobileTradeTabSellActive {
+.mobile-trade-tab-sell-active {
     background-color: rgba(255, 77, 77, 0.1);
     color: #ff4d4d;
 }
 
-.mobileTradeInputs {
+.mobile-trade-inputs {
     display: flex;
     gap: 8px;
     margin-bottom: 8px;
 }
 
-.mobileTradeInputGroup {
+.mobile-trade-input-group {
     flex: 1;
 }
 
-.mobileTradeInputLabel {
+.mobile-trade-input-label {
     display: block;
     font-size: 0.65rem;
     color: #666;
     margin-bottom: 4px;
 }
 
-.mobileTradeInput {
+.mobile-trade-input {
     width: 100%;
     padding: 10px;
     border-radius: 8px;
@@ -1077,13 +1077,13 @@
     outline: none;
 }
 
-.mobileQuickTrade {
+.mobile-quick-trade {
     display: flex;
     gap: 4px;
     margin-bottom: 12px;
 }
 
-.mobileQuickBtn {
+.mobile-quick-btn {
     flex: 1;
     padding: 6px;
     border-radius: 6px;
@@ -1093,7 +1093,7 @@
     font-size: 0.75rem;
 }
 
-.mobileBuyBtn {
+.mobile-buy-btn {
     width: 100%;
     padding: 14px;
     border-radius: 8px;
@@ -1103,7 +1103,7 @@
     border: none;
 }
 
-.mobileSellBtn {
+.mobile-sell-btn {
     width: 100%;
     padding: 14px;
     border-radius: 8px;
@@ -1113,20 +1113,20 @@
     border: none;
 }
 
-.mobileTradeError {
+.mobile-trade-error {
     color: #ff4d4d;
     font-size: 0.8rem;
     margin-top: 8px;
     text-align: center;
 }
 
-.mobileRosterCard {
+.mobile-roster-card {
     background-color: rgba(255, 255, 255, 0.03);
     border-radius: 16px;
     padding: 16px;
 }
 
-.mobileRosterItem {
+.mobile-roster-item {
     display: flex;
     justify-content: space-between;
     padding: 12px 0;
@@ -1134,23 +1134,23 @@
     cursor: pointer;
 }
 
-.mobileRosterItemName {
+.mobile-roster-item-name {
     /* default span */
 }
 
-.mobileRosterItemValueBox {
+.mobile-roster-item-value-box {
     text-align: right;
 }
 
-.mobileRosterItemPrice {
+.mobile-roster-item-price {
     font-weight: bold;
 }
 
-.mobileRosterItemChange {
+.mobile-roster-item-change {
     font-size: 0.8rem;
 }
 
-.mobileSearchSubtext {
+.mobile-search-subtext {
     color: var(--text-muted);
     font-size: 0.85rem;
     text-align: center;

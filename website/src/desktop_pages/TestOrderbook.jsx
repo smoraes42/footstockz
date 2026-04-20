@@ -272,8 +272,8 @@ export default function TestOrderbook() {
         <div className={styles.container}>
             <h1 className={styles.title}>Futstocks Market Engine Test</h1>
 
-            <div className={styles.controlsRow}>
-                <div className={styles.controlGroup}>
+            <div className={styles['controls-row']}>
+                <div className={styles['control-group']}>
                     <label className={styles.label}>Impersonate User:</label>
                     <select
                         className={styles.select}
@@ -284,7 +284,7 @@ export default function TestOrderbook() {
                     </select>
                 </div>
 
-                <div className={styles.controlGroup}>
+                <div className={styles['control-group']}>
                     <label className={styles.label}>Select Player:</label>
                     <select
                         className={styles.select}
@@ -296,23 +296,23 @@ export default function TestOrderbook() {
                 </div>
 
                 {portfolio && (
-                    <div className={styles.walletInfo}>
+                    <div className={styles['wallet-info']}>
                         <span className={styles.label}>Wallet Balance:</span>
-                        <span className={styles.walletValue}>{portfolio.walletBalance?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                        <span className={styles['wallet-value']}>{portfolio.walletBalance?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                     </div>
                 )}
             </div>
 
-            <div className={styles.mainGrid}>
-                <div className={styles.leftCol}>
+            <div className={styles['main-grid']}>
+                <div className={styles['left-col']}>
 
                     {/* Chart */}
                     <div className={styles.card}>
-                        <h2 className={styles.cardTitle}>
+                        <h2 className={styles['card-title']}>
                             {currentPlayer?.name} Price Chart
-                            <span className={styles.currentPriceTag}>Current: {currentPlayer?.price?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                            <span className={styles['current-price-tag']}>Current: {currentPlayer?.price?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                         </h2>
-                        <div className={styles.chartWrapper}>
+                        <div className={styles['chart-wrapper']}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={priceHistory}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#222" />
@@ -338,59 +338,59 @@ export default function TestOrderbook() {
 
                     {/* Orderbook */}
                     <div className={styles.card}>
-                        <h2 className={styles.cardTitle}>Order Book</h2>
+                        <h2 className={styles['card-title']}>Order Book</h2>
 
-                        <div className={styles.orderbookGrid}>
-                            <div className={styles.asksContainer}>
-                                <div className={styles.orderbookHeader}>
+                        <div className={styles['orderbook-grid']}>
+                            <div className={styles['asks-container']}>
+                                <div className={styles['orderbook-header']}>
                                     <span>Price (€)</span>
                                     <span>Size</span>
                                 </div>
                                 {orderbook.asks.length > 0 ? (
                                     orderbook.asks.slice().reverse().map((ask, i) => (
-                                        <div key={`ask-${i}`} className={styles.askRow}>
-                                            <span className={styles.askPrice}>{ask.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                        <div key={`ask-${i}`} className={styles['ask-row']}>
+                                            <span className={styles['ask-price']}>{ask.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                             <span>{ask.quantity.toLocaleString()}</span>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className={styles.emptyBook}>No SELL orders</div>
+                                    <div className={styles['empty-book']}>No SELL orders</div>
                                 )}
                             </div>
 
-                            <div className={styles.spreadIndicator}>
+                            <div className={styles['spread-indicator']}>
                                 {orderbook.asks.length > 0 && orderbook.bids.length > 0
                                     ? `Spread: ${(orderbook.asks[0].price - orderbook.bids[0].price).toLocaleString('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} €`
                                     : 'Market Open'
                                 }
                             </div>
 
-                            <div className={styles.bidsContainer}>
+                            <div className={styles['bids-container']}>
                                 {orderbook.bids.length > 0 ? (
                                     orderbook.bids.map((bid, i) => (
-                                        <div key={`bid-${i}`} className={styles.bidRow}>
-                                            <span className={styles.bidPrice}>{bid.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                        <div key={`bid-${i}`} className={styles['bid-row']}>
+                                            <span className={styles['bid-price']}>{bid.price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                             <span>{bid.quantity.toLocaleString()}</span>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className={styles.emptyBook}>No BUY orders</div>
+                                    <div className={styles['empty-book']}>No BUY orders</div>
                                 )}
                             </div>
                         </div>
 
                         {/* Open Orders */}
-                        <div className={styles.openOrdersSection}>
-                            <h3 className={styles.cardTitleSmall}>Your Open Orders</h3>
+                        <div className={styles['open-orders-section']}>
+                            <h3 className={styles['card-title-small']}>Your Open Orders</h3>
                             {portfolio?.openOrders?.length > 0 ? (
                                 portfolio.openOrders.map(o => (
-                                    <div key={o.order_id} className={styles.openOrderRow}>
+                                    <div key={o.order_id} className={styles['open-order-row']}>
                                         <span>{o.trade_type === 'Buy' ? 'BUY' : 'SELL'}</span>
                                         <span>{o.quantity} @ {o.target_price}</span>
                                     </div>
                                 ))
                             ) : (
-                                <div className={styles.noOrders}>No active orders</div>
+                                <div className={styles['no-orders']}>No active orders</div>
                             )}
                         </div>
 
@@ -399,40 +399,40 @@ export default function TestOrderbook() {
                 </div>
 
                 {/* Trade Form and User Position in Right Column */}
-                <div className={styles.rightCol}>
+                <div className={styles['right-col']}>
                     {/* User Position */}
                     <div className={styles.card}>
-                        <h2 className={styles.cardTitle}>Your Position</h2>
+                        <h2 className={styles['card-title']}>Your Position</h2>
                         {portfolio?.holdings?.find(h => h.player_id === selectedPlayer) ? (
-                            <div className={styles.positionBox}>
-                                <div className={styles.posRow}>
+                            <div className={styles['position-box']}>
+                                <div className={styles['pos-row']}>
                                     <span className={styles.label}>Shares Held:</span>
-                                    <span className={styles.posValue}>{portfolio.holdings.find(h => h.player_id === selectedPlayer).shares_owned}</span>
+                                    <span className={styles['pos-value']}>{portfolio.holdings.find(h => h.player_id === selectedPlayer).shares_owned}</span>
                                 </div>
-                                <div className={styles.posRow}>
+                                <div className={styles['pos-row']}>
                                     <span className={styles.label}>Value:</span>
-                                    <span className={styles.posValue}>{portfolio.holdings.find(h => h.player_id === selectedPlayer).position_value?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                                    <span className={styles['pos-value']}>{portfolio.holdings.find(h => h.player_id === selectedPlayer).position_value?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                                 </div>
                             </div>
                         ) : (
-                            <div className={styles.noPosition}>No shares held.</div>
+                            <div className={styles['no-position']}>No shares held.</div>
                         )}
                     </div>
 
                     {/* Trade Form */}
                     <div className={styles.card}>
-                        <h2 className={styles.cardTitle}>Trade Order</h2>
+                        <h2 className={styles['card-title']}>Trade Order</h2>
 
                         {/* Tab Navigation */}
-                        <div className={styles.tabRow}>
+                        <div className={styles['tab-row']}>
                             <button
-                                className={`${styles.tabButton} ${activeTab === 'buy' ? styles.activeTabBuy : ''}`}
+                                className={`${styles['tab-button']} ${activeTab === 'buy' ? styles['active-tab-buy'] : ''}`}
                                 onClick={() => setActiveTab('buy')}
                             >
                                 BUY
                             </button>
                             <button
-                                className={`${styles.tabButton} ${activeTab === 'sell' ? styles.activeTabSell : ''}`}
+                                className={`${styles['tab-button']} ${activeTab === 'sell' ? styles['active-tab-sell'] : ''}`}
                                 onClick={() => setActiveTab('sell')}
                             >
                                 SELL
@@ -440,11 +440,11 @@ export default function TestOrderbook() {
                         </div>
 
                         {/* Market Orders Section */}
-                        <div className={styles.orderSection}>
+                        <div className={styles['order-section']}>
                             {activeTab === 'buy' && (
                                 <>
-                                    <div className={styles.formRow}>
-                                        <div className={styles.inputGroup}>
+                                    <div className={styles['form-row']}>
+                                        <div className={styles['input-group']}>
                                             <label className={styles.label}>Quantity</label>
                                             <input
                                                 type="number"
@@ -462,11 +462,11 @@ export default function TestOrderbook() {
                                                 }}
                                             />
                                         </div>
-                                        <div className={styles.inputGroup}>
+                                        <div className={styles['input-group']}>
                                             <label className={styles.label}>Value (€)</label>
                                             <input
                                                 type="number"
-                                                className={`${styles.input} ${portfolio && parseFloat(marketBuyTotal) > portfolio.walletBalance ? styles.inputError : ''}`}
+                                                className={`${styles.input} ${portfolio && parseFloat(marketBuyTotal) > portfolio.walletBalance ? styles['input-error'] : ''}`}
                                                 placeholder="Value (€)"
                                                 value={marketBuyTotal}
                                                 onChange={e => {
@@ -481,30 +481,30 @@ export default function TestOrderbook() {
                                             />
                                         </div>
                                     </div>
-                                    <div className={styles.quickSelectRow}>
+                                    <div className={styles['quick-select-row']}>
                                         <button
-                                            className={styles.quickSelectBtn}
+                                            className={styles['quick-select-btn']}
                                             onClick={() => handleQuickBuy(0.25)}
                                         >
                                             25%
                                         </button>
                                         <button
-                                            className={styles.quickSelectBtn}
+                                            className={styles['quick-select-btn']}
                                             onClick={() => handleQuickBuy(0.50)}
                                         >
                                             50%
                                         </button>
                                         <button
-                                            className={styles.quickSelectBtn}
+                                            className={styles['quick-select-btn']}
                                             onClick={() => handleQuickBuy(1.00)}
                                         >
                                             100%
                                         </button>
                                     </div>
-                                    <div className={styles.buttonRow}>
+                                    <div className={styles['button-row']}>
                                         <button
                                             disabled={loading || (marketBuyTotal && parseEU(marketBuyTotal) > (portfolio?.walletBalance || 0))}
-                                            className={`${styles.buyButton} ${(marketBuyTotal && parseEU(marketBuyTotal) > (portfolio?.walletBalance || 0)) ? styles.buttonDisabled : ''}`}
+                                            className={`${styles['buy-button']} ${(marketBuyTotal && parseEU(marketBuyTotal) > (portfolio?.walletBalance || 0)) ? styles['button-disabled'] : ''}`}
                                             onClick={handleMarketBuy}
                                         >
                                             {loading ? '...' : 'MARKET BUY'}
@@ -515,12 +515,12 @@ export default function TestOrderbook() {
 
                             {activeTab === 'sell' && (
                                 <>
-                                    <div className={styles.formRow}>
-                                        <div className={styles.inputGroup}>
+                                    <div className={styles['form-row']}>
+                                        <div className={styles['input-group']}>
                                             <label className={styles.label}>Quantity</label>
                                             <input
                                                 type="number"
-                                                className={`${styles.input} ${portfolio && portfolio.holdings?.find(h => h.player_id === selectedPlayer) && parseFloat(marketSellQty) > portfolio.holdings.find(h => h.player_id === selectedPlayer).shares_owned ? styles.inputError : ''}`}
+                                                className={`${styles.input} ${portfolio && portfolio.holdings?.find(h => h.player_id === selectedPlayer) && parseFloat(marketSellQty) > portfolio.holdings.find(h => h.player_id === selectedPlayer).shares_owned ? styles['input-error'] : ''}`}
                                                 placeholder="Qty"
                                                 value={marketSellQty}
                                                 onChange={e => {
@@ -534,7 +534,7 @@ export default function TestOrderbook() {
                                                 }}
                                             />
                                         </div>
-                                        <div className={styles.inputGroup}>
+                                        <div className={styles['input-group']}>
                                             <label className={styles.label}>Value (€)</label>
                                             <input
                                                 type="number"
@@ -553,30 +553,30 @@ export default function TestOrderbook() {
                                             />
                                         </div>
                                     </div>
-                                    <div className={styles.quickSelectRow}>
+                                    <div className={styles['quick-select-row']}>
                                         <button
-                                            className={styles.quickSelectBtn}
+                                            className={styles['quick-select-btn']}
                                             onClick={() => handleQuickSell(0.25)}
                                         >
                                             25%
                                         </button>
                                         <button
-                                            className={styles.quickSelectBtn}
+                                            className={styles['quick-select-btn']}
                                             onClick={() => handleQuickSell(0.50)}
                                         >
                                             50%
                                         </button>
                                         <button
-                                            className={styles.quickSelectBtn}
+                                            className={styles['quick-select-btn']}
                                             onClick={() => handleQuickSell(1.00)}
                                         >
                                             100%
                                         </button>
                                     </div>
-                                    <div className={styles.buttonRow}>
+                                    <div className={styles['button-row']}>
                                         <button
                                             disabled={loading || (marketSellQty && parseEU(marketSellQty) > (portfolio?.holdings?.find(h => h.player_id === selectedPlayer)?.shares_owned || 0))}
-                                            className={`${styles.sellButton} ${(marketSellQty && parseEU(marketSellQty) > (portfolio?.holdings?.find(h => h.player_id === selectedPlayer)?.shares_owned || 0)) ? styles.buttonDisabled : ''}`}
+                                            className={`${styles['sell-button']} ${(marketSellQty && parseEU(marketSellQty) > (portfolio?.holdings?.find(h => h.player_id === selectedPlayer)?.shares_owned || 0)) ? styles['button-disabled'] : ''}`}
                                             onClick={handleMarketSell}
                                         >
                                             {loading ? '...' : 'MARKET SELL'}
@@ -587,13 +587,13 @@ export default function TestOrderbook() {
                         </div>
 
                         {error && (
-                            <div className={`${styles.errorBanner} ${styles.errorBannerSpacing}`}>
+                            <div className={`${styles['error-banner']} ${styles['error-banner-spacing']}`}>
                                 {error}
                             </div>
                         )}
 
                         {lastTradeResult && (
-                            <div className={styles.successMessage}>
+                            <div className={styles['success-message']}>
                                 {lastTradeResult}
                             </div>
                         )}

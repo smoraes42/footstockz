@@ -25,7 +25,7 @@ const TeamsMarketMobile = ({ searchTerm = '', selectedLeague = null }) => {
     }, [searchTerm, selectedLeague]);
 
     return (
-        <div className={styles.mobileTeamsList}>
+        <div className={styles['mobile-teams-list']}>
             {loading ? (
                 <div className={styles.loading}>Cargando equipos...</div>
             ) : (
@@ -33,22 +33,22 @@ const TeamsMarketMobile = ({ searchTerm = '', selectedLeague = null }) => {
                     <div 
                         key={team.id}
                         onClick={() => navigate(`/market/team/${team.id}`)}
-                        className={`${styles.mobileTeamCard} glass-panel`}
+                        className={`${styles['mobile-team-card']} glass-panel`}
                     >
-                        <div className={styles.mobileTeamHeader}>
+                        <div className={styles['mobile-team-header']}>
                             <div>
-                                <h3 className={styles.mobileTeamName}>{team.name}</h3>
-                                <p className={styles.mobileTeamMeta}>{team.league} • {team.playerCount} Jugadores</p>
+                                <h3 className={styles['mobile-team-name']}>{team.name}</h3>
+                                <p className={styles['mobile-team-meta']}>{team.league} • {team.playerCount} Jugadores</p>
                             </div>
-                            <div className={styles.mobileTeamValueBox}>
-                                <p className={styles.mobileTeamPrice}>{team.price.toFixed(2)}€</p>
-                                <p className={`${styles.mobileTeamChange} ${team.change >= 0 ? styles.mobileChangePositive : styles.mobileChangeNegative}`}>
+                            <div className={styles['mobile-team-value-box']}>
+                                <p className={styles['mobile-team-price']}>{team.price.toFixed(2)}€</p>
+                                <p className={`${styles['mobile-team-change']} ${team.change >= 0 ? styles['mobile-change-positive'] : styles['mobile-change-negative']}`}>
                                     {team.change >= 0 ? '+' : ''}{team.change}%
                                 </p>
                             </div>
                         </div>
 
-                        <button className={styles.mobileTeamActionBtn}>
+                        <button className={styles['mobile-team-action-btn']}>
                             Ver Detalles / Invertir
                         </button>
                     </div>

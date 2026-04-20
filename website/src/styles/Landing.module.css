@@ -21,7 +21,7 @@
     position: relative;
 }
 
-.glowEffect {
+.glow-effect {
     position: absolute;
     top: 20%;
     left: 50%;
@@ -33,25 +33,25 @@
     pointer-events: none;
 }
 
-.heroContent {
+.hero-content {
     position: relative;
     z-index: 1;
     max-width: 800px;
 }
 
-.sloganContainer {
+.slogan-container {
     margin-bottom: 1.5rem;
     display: flex;
     justify-content: center;
 }
 
-.sloganImg {
+.slogan-img {
     max-width: 100%;
     height: auto;
     max-height: 200px;
 }
 
-.heroDescription {
+.hero-description {
     font-size: 1.25rem;
     color: var(--text-muted);
     margin-bottom: 3rem;
@@ -60,13 +60,13 @@
     line-height: 1.6;
 }
 
-.ctaContainer {
+.cta-container {
     display: flex;
     gap: 1rem;
     justify-content: center;
 }
 
-.ctaBtn {
+.cta-btn {
     padding: 16px 32px;
     border-radius: 8px;
     font-size: 1.1rem;
@@ -81,13 +81,13 @@
     align-items: center;
 }
 
-.footerLeft {
+.footer-left {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.footerLogo {
+.footer-logo {
     height: 30px;
     opacity: 0.5;
 }
@@ -97,30 +97,30 @@
     font-size: 0.9rem;
 }
 
-.footerRight {
+.footer-right {
     display: flex;
     gap: 2rem;
 }
 
-.footerLink {
+.footer-link {
     color: var(--text-muted);
     font-size: 0.9rem;
     text-decoration: none;
 }
 
 /* Mobile Styles */
-.mobileContainer {
+.mobile-container {
     background-color: var(--bg-main);
     width: 100%;
 }
 
-.mobileWrapper {
+.mobile-wrapper {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-.mobileNav {
+.mobile-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -132,24 +132,24 @@
     z-index: 10;
 }
 
-.mobileNavLogoBox {
+.mobile-nav-logo-box {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.mobileNavLogo {
+.mobile-nav-logo {
     height: 30px;
 }
 
-.mobileNavBtn {
+.mobile-nav-btn {
     padding: 6px 16px;
     border-radius: 6px;
     font-size: 0.9rem;
     text-decoration: none;
 }
 
-.mobileHero {
+.mobile-hero {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -161,7 +161,7 @@
     overflow: hidden;
 }
 
-.mobileHeroGlow {
+.mobile-hero-glow {
     position: absolute;
     top: 20%;
     left: 50%;
@@ -173,40 +173,40 @@
     pointer-events: none;
 }
 
-.mobileHeroContent {
+.mobile-hero-content {
     position: relative;
     z-index: 1;
     width: 100%;
 }
 
-.mobileSloganBox {
+.mobile-slogan-box {
     margin-bottom: 1.25rem;
     display: flex;
     justify-content: center;
     padding: 0 10px;
 }
 
-.mobileSloganImg {
-    maxWidth: 100%;
+.mobile-slogan-img {
+    max-width: 100%;
     height: auto;
-    maxHeight: 140px;
+    max-height: 140px;
 }
 
-.mobileHeroDescription {
+.mobile-hero-description {
     font-size: 1rem;
     color: var(--text-muted);
     margin-bottom: 2.5rem;
     line-height: 1.5;
 }
 
-.mobileHeroCta {
+.mobile-hero-cta {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     width: 100%;
 }
 
-.mobileHeroBtn {
+.mobile-hero-btn {
     padding: 16px;
     border-radius: 8px;
     font-size: 1.1rem;
@@ -216,7 +216,7 @@
     box-sizing: border-box;
 }
 
-.mobileFooter {
+.mobile-footer {
     padding: 2rem 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
@@ -225,28 +225,28 @@
     align-items: center;
 }
 
-.mobileFooterLeft {
+.mobile-footer-left {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.mobileFooterLogo {
+.mobile-footer-logo {
     height: 24px;
     opacity: 0.5;
 }
 
-.mobileCopyright {
+.mobile-copyright {
     color: var(--text-muted);
     font-size: 0.8rem;
 }
 
-.mobileFooterRight {
+.mobile-footer-right {
     display: flex;
     gap: 1.5rem;
 }
 
-.mobileFooterLink {
+.mobile-footer-link {
     color: var(--text-muted);
     font-size: 0.8rem;
     text-decoration: none;

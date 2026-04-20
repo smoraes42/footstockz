@@ -5,7 +5,7 @@
     display: flex;
 }
 
-.mainContent {
+.main-content {
     margin-left: 250px;
     flex: 1;
     padding: 2rem 3rem;
@@ -13,36 +13,36 @@
     height: 100vh;
 }
 
-.summaryCards {
+.summary-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     margin-bottom: 3rem;
 }
 
-.summaryCard {
+.summary-card {
     padding: 2rem;
     border-radius: 16px;
 }
 
-.summaryLabel {
+.summary-label {
     color: var(--text-muted);
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
     font-weight: 500;
 }
 
-.summaryValue {
+.summary-value {
     font-size: 2.5rem;
     font-weight: bold;
     margin: 0;
 }
 
-.summaryValueHighlight {
+.summary-value-highlight {
     color: var(--accent-neon);
 }
 
-.tabsContainer {
+.tabs-container {
     display: flex;
     background-color: var(--surface-dark);
     padding: 4px;
@@ -52,7 +52,7 @@
     margin-bottom: 2.5rem;
 }
 
-.tabBtn {
+.tab-btn {
     padding: 8px 20px;
     border: none;
     background: transparent;
@@ -66,12 +66,12 @@
     transition: all 0.2s;
 }
 
-.tabBtnActive {
+.tab-btn-active {
     background: var(--bg-main);
     color: var(--text-main);
 }
 
-.tablePanel {
+.table-panel {
     border-radius: 12px;
     overflow: hidden;
 }
@@ -82,82 +82,82 @@
     text-align: left;
 }
 
-.tableHeadRow {
+.table-head-row {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.tableHeaderCell {
+.table-header-cell {
     padding: 1.5rem;
     color: var(--text-muted);
     font-weight: 500;
     cursor: pointer;
 }
 
-.tableHeaderCellContent {
+.table-header-cell-content {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.sortIcon {
+.sort-icon {
     font-size: 0.7rem;
     opacity: 0.5;
 }
 
-.tableRow {
+.table-row {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.tableRow:hover {
+.table-row:hover {
     background-color: rgba(255, 255, 255, 0.03);
 }
 
-.tableCell {
+.table-cell {
     padding: 1.5rem;
 }
 
-.assetName {
+.asset-name {
     font-weight: bold;
 }
 
-.valueBold {
+.value-bold {
     font-weight: bold;
 }
 
-.variationPositive {
+.variation-positive {
     color: var(--accent-neon);
 }
 
-.variationNegative {
+.variation-negative {
     color: var(--error-red);
 }
 
-.noDataCell {
+.no-data-cell {
     padding: 3rem;
     text-align: center;
     color: var(--text-muted);
 }
 
-.activitySection {
+.activity-section {
     margin-top: 4rem;
 }
 
-.activityHeader {
+.activity-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
 }
 
-.activityTitle {
+.activity-title {
     font-size: 1.5rem;
     font-weight: bold;
     margin: 0;
 }
 
-.toggleBtn {
+.toggle-btn {
     background: var(--surface-dark);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-main);
@@ -171,32 +171,32 @@
     gap: 8px;
 }
 
-.toggleArrow {
+.toggle-arrow {
     transition: transform 0.3s;
 }
 
-.toggleArrowOpen {
+.toggle-arrow-open {
     transform: rotate(180deg);
 }
 
-.sideBadge {
+.side-badge {
     padding: 4px 10px;
     border-radius: 4px;
     font-size: 0.8rem;
     font-weight: bold;
 }
 
-.sideBuy {
+.side-buy {
     background-color: rgba(57, 255, 20, 0.1);
     color: var(--accent-neon);
 }
 
-.sideSell {
+.side-sell {
     background-color: rgba(255, 77, 77, 0.1);
     color: var(--error-red);
 }
 
-.dateCell {
+.date-cell {
     color: var(--text-muted);
     font-size: 0.9rem;
 }
@@ -208,7 +208,7 @@
 }
 
 /* Mobile Styles */
-.mobileContainer {
+.mobile-container {
     background-color: var(--bg-main);
     height: 100dvh;
     overflow: hidden;
@@ -217,7 +217,7 @@
     flex-direction: column;
 }
 
-.mobileHeader {
+.mobile-header {
     padding: 0 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background-color: rgba(16, 16, 16, 0.9);
@@ -231,18 +231,18 @@
     box-sizing: border-box;
 }
 
-.mobileLogo {
+.mobile-logo {
     height: 22px;
 }
 
-.mobileMain {
+.mobile-main {
     flex: 1;
     padding: 1.5rem;
     padding-bottom: 80px;
     overflow-y: auto;
 }
 
-.mobileSectionTitle {
+.mobile-section-title {
     font-size: 0.95rem;
     font-weight: 800;
     color: var(--accent-neon);
@@ -253,14 +253,14 @@
     text-align: left;
 }
 
-.mobileEquityHeader {
+.mobile-equity-header {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 2.5rem;
 }
 
-.mobileEquityLabel {
+.mobile-equity-label {
     color: var(--text-muted);
     font-size: 0.85rem;
     font-weight: 600;
@@ -268,27 +268,27 @@
     text-transform: uppercase;
 }
 
-.mobileEquityValue {
+.mobile-equity-value {
     font-size: 3.2rem;
     font-weight: 900;
     letter-spacing: -1.5px;
     line-height: 1;
 }
 
-.mobileBreakdownGrid {
+.mobile-breakdown-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
     margin-bottom: 2.5rem;
 }
 
-.mobileBreakdownCard {
+.mobile-breakdown-card {
     padding: 1.25rem;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.mobileBreakdownLabel {
+.mobile-breakdown-label {
     color: var(--text-muted);
     font-size: 0.7rem;
     font-weight: 700;
@@ -296,13 +296,13 @@
     margin: 0 0 0.5rem 0;
 }
 
-.mobileBreakdownValue {
+.mobile-breakdown-value {
     font-size: 1.1rem;
     font-weight: 800;
     margin: 0;
 }
 
-.mobileTabSwitcher {
+.mobile-tab-switcher {
     display: flex;
     background-color: var(--surface-dark);
     padding: 4px;
@@ -312,7 +312,7 @@
     width: 100%;
 }
 
-.mobileTabBtn {
+.mobile-tab-btn {
     flex: 1;
     padding: 8px 0;
     border: none;
@@ -324,19 +324,19 @@
     font-size: 0.85rem;
 }
 
-.mobileTabBtnActive {
+.mobile-tab-btn-active {
     background: var(--bg-main) !important;
     color: var(--text-main) !important;
 }
 
-.mobileHoldingsHeader {
+.mobile-holdings-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
 }
 
-.mobileHoldingsTitle {
+.mobile-holdings-title {
     font-size: 0.9rem;
     font-weight: 800;
     color: var(--text-muted);
@@ -345,7 +345,7 @@
     margin: 0;
 }
 
-.mobileSortChips {
+.mobile-sort-chips {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 1.5rem;
@@ -354,11 +354,11 @@
     scrollbar-width: none;
 }
 
-.mobileSortChips::-webkit-scrollbar {
+.mobile-sort-chips::-webkit-scrollbar {
     display: none;
 }
 
-.mobileSortChip {
+.mobile-sort-chip {
     padding: 6px 12px;
     border-radius: 20px;
     background-color: rgba(255, 255, 255, 0.05);
@@ -370,13 +370,13 @@
     cursor: pointer;
 }
 
-.mobileSortChipActive {
+.mobile-sort-chip-active {
     background-color: rgba(57, 255, 20, 0.1);
     color: var(--accent-neon);
     border: 1px solid var(--accent-neon);
 }
 
-.mobileNoData {
+.mobile-no-data {
     text-align: center;
     padding: 3rem 1rem;
     background-color: rgba(255, 255, 255, 0.02);
@@ -384,28 +384,28 @@
     border: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
-.mobileNoDataText {
+.mobile-no-data-text {
     color: var(--text-muted);
     margin: 0;
     font-size: 0.9rem;
 }
 
-.mobileGoToMarket {
+.mobile-go-to-market {
     color: var(--accent-neon);
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 700;
-    marginTop: 0.5rem;
+    margin-top: 0.5rem;
     display: inline-block;
 }
 
-.mobileAssetList {
+.mobile-asset-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.mobileAssetCard {
+.mobile-asset-card {
     padding: 1rem;
     border-radius: 14px;
     display: flex;
@@ -415,13 +415,13 @@
     color: inherit;
 }
 
-.mobileAssetInfo {
+.mobile-asset-info {
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 
-.mobileAssetIconBox {
+.mobile-asset-icon-box {
     width: 40px;
     height: 40px;
     border-radius: 10px;
@@ -432,46 +432,46 @@
     font-size: 1.2rem;
 }
 
-.mobileAssetName {
+.mobile-asset-name {
     font-weight: 700;
     font-size: 0.95rem;
     margin: 0;
 }
 
-.mobileAssetShares {
+.mobile-asset-shares {
     font-size: 0.75rem;
     color: var(--text-muted);
     margin: 0;
 }
 
-.mobileAssetValueBox {
+.mobile-asset-value-box {
     text-align: right;
 }
 
-.mobileAssetPrice {
+.mobile-asset-price {
     font-weight: 800;
     font-size: 1rem;
     margin: 0;
 }
 
-.mobileAssetPriceSub {
+.mobile-asset-price-sub {
     font-size: 0.75rem;
     color: var(--text-muted);
     margin: 0;
 }
 
-.mobileActivityContainer {
+.mobile-activity-container {
     margin-top: 3rem;
 }
 
-.mobileActivityHeader {
+.mobile-activity-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
 }
 
-.mobileActivityTitle {
+.mobile-activity-title {
     font-size: 0.9rem;
     font-weight: 800;
     color: var(--text-muted);
@@ -480,7 +480,7 @@
     margin: 0;
 }
 
-.mobileActivityToggle {
+.mobile-activity-toggle {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-muted);
@@ -494,22 +494,22 @@
     gap: 4px;
 }
 
-.mobileActivityArrow {
+.mobile-activity-arrow {
     transition: transform 0.3s;
     font-size: 0.6rem;
 }
 
-.mobileActivityArrowOpen {
+.mobile-activity-arrow-open {
     transform: rotate(180deg);
 }
 
-.mobileActivityList {
+.mobile-activity-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.mobileActivityCard {
+.mobile-activity-card {
     padding: 1rem;
     border-radius: 14px;
     display: flex;
@@ -517,7 +517,7 @@
     justify-content: space-between;
 }
 
-.mobileActivityIconBox {
+.mobile-activity-icon-box {
     width: 36px;
     height: 36px;
     border-radius: 10px;
@@ -528,39 +528,39 @@
     font-size: 1rem;
 }
 
-.mobileActivityBuy {
+.mobile-activity-buy {
     color: var(--accent-neon);
 }
 
-.mobileActivitySell {
+.mobile-activity-sell {
     color: var(--error-red);
 }
 
-.mobileActivityName {
+.mobile-activity-name {
     font-weight: 700;
     font-size: 0.9rem;
     margin: 0;
 }
 
-.mobileActivityMeta {
+.mobile-activity-meta {
     font-size: 0.7rem;
     color: var(--text-muted);
     margin: 0;
 }
 
-.mobileActivityValue {
+.mobile-activity-value {
     font-weight: 800;
     font-size: 0.9rem;
     margin: 0;
 }
 
-.mobileActivityShares {
+.mobile-activity-shares {
     font-size: 0.7rem;
     color: var(--text-muted);
     margin: 0;
 }
 
-.mobileBottomNav {
+.mobile-bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -575,7 +575,7 @@
     padding-bottom: env(safe-area-inset-bottom);
 }
 
-.mobileNavLink {
+.mobile-nav-link {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -585,12 +585,12 @@
     color: var(--text-muted);
 }
 
-.mobileNavLinkActive {
+.mobile-nav-link-active {
     color: var(--accent-neon);
     position: relative;
 }
 
-.mobileNavLinkActiveBar {
+.mobile-nav-link-active-bar {
     width: 20px;
     height: 2px;
     background-color: var(--accent-neon);
@@ -599,16 +599,16 @@
     top: 0;
 }
 
-.mobileNavText {
+.mobile-nav-text {
     font-size: 0.75rem;
     font-weight: 500;
 }
 
-.mobileNavTextActive {
+.mobile-nav-text-active {
     font-weight: 600;
 }
 
-.mobileNavAvatar {
+.mobile-nav-avatar {
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -620,11 +620,11 @@
     font-size: 0.7rem;
 }
 
-.mobileNavSpacer {
+.mobile-nav-spacer {
     width: 22px;
 }
 
-.mobileLoadingActivity {
+.mobile-loading-activity {
     text-align: center;
     padding: 1.5rem;
     color: var(--text-muted);

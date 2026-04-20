@@ -76,36 +76,36 @@ const VerifyMobile = () => {
     }, [code]);
 
     return (
-        <div className={styles.mobileContainer}>
-            <nav className={styles.mobileNav}>
+        <div className={styles['mobile-container']}>
+            <nav className={styles['mobile-nav']}>
                 <Link to="/">
-                    <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileLogo} />
+                    <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-logo']} />
                 </Link>
             </nav>
-            <main className={styles.mobileMain}>
-                <div className={styles.mobileGlow}></div>
-                <div className={`${styles.mobileGlassPanel} glass-panel fade-in-up`}>
+            <main className={styles['mobile-main']}>
+                <div className={styles['mobile-glow']}></div>
+                <div className={`${styles['mobile-glass-panel']} glass-panel fade-in-up`}>
 
                     {success ? (
                         <div>
-                            <h1 className={styles.mobileTitle}>¡Email Verificado!</h1>
-                            <p className={styles.mobileSubtext}>Redirigiendo al inicio...</p>
+                            <h1 className={styles['mobile-title']}>¡Email Verificado!</h1>
+                            <p className={styles['mobile-subtext']}>Redirigiendo al inicio...</p>
                         </div>
                     ) : (
                         <>
-                            <h1 className={styles.mobileTitle}>Verifica tu Email</h1>
-                            <p className={styles.mobileSubtext}>
+                            <h1 className={styles['mobile-title']}>Verifica tu Email</h1>
+                            <p className={styles['mobile-subtext']}>
                                 Código enviado a<br />
-                                <strong className={styles.mobileEmail}>{email}</strong>
+                                <strong className={styles['mobile-email']}>{email}</strong>
                             </p>
 
                             {error && (
-                                <div className={styles.mobileErrorAlert}>
+                                <div className={styles['mobile-error-alert']}>
                                     {error}
                                 </div>
                             )}
 
-                            <div className={styles.mobileCodeContainer} onPaste={handlePaste}>
+                            <div className={styles['mobile-code-container']} onPaste={handlePaste}>
                                 {code.map((digit, idx) => (
                                     <input
                                         key={idx}
@@ -116,22 +116,22 @@ const VerifyMobile = () => {
                                         value={digit}
                                         onChange={(e) => handleChange(idx, e.target.value)}
                                         onKeyDown={(e) => handleKeyDown(idx, e)}
-                                        className={`${styles.mobileDigitInput} ${digit ? styles.mobileDigitInputActive : ''}`}
+                                        className={`${styles['mobile-digit-input']} ${digit ? styles['mobile-digit-input-active'] : ''}`}
                                     />
                                 ))}
                             </div>
 
                             <button
                                 type="button"
-                                className={`${styles.mobileVerifyBtn} ${loading ? styles.mobileLoadingBtn : ''} neon-button`}
+                                className={`${styles['mobile-verify-btn']} ${loading ? styles['mobile-loading-btn'] : ''} neon-button`}
                                 onClick={handleVerify}
                                 disabled={loading}
                             >
                                 {loading ? 'Verificando...' : 'Verificar'}
                             </button>
 
-                            <p className={styles.mobileFooter}>
-                                ¿No recibiste el código? <Link to="/login" className={styles.mobileFooterLink}>Volver al login</Link>
+                            <p className={styles['mobile-footer']}>
+                                ¿No recibiste el código? <Link to="/login" className={styles['mobile-footer-link']}>Volver al login</Link>
                             </p>
                         </>
                     )}

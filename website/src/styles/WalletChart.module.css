@@ -1,43 +1,43 @@
-.sectionHeader {
+.section-header {
     margin-bottom: 3rem;
 }
 
-.portfolioHeader {
+.portfolio-header {
     margin-bottom: 2.5rem;
 }
 
-.portfolioValueContainer {
+.portfolio-value-container {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
 }
 
-.portfolioValueWrapper {
+.portfolio-value-wrapper {
     display: flex;
     align-items: baseline;
     gap: 1rem;
 }
 
-.portfolioValue {
+.portfolio-value {
     font-size: 3rem;
     font-weight: 900;
     letter-spacing: -1px;
 }
 
-.portfolioVariation {
+.portfolio-variation {
     font-weight: 600;
     font-size: 1.1rem;
 }
 
-.variationUp {
+.variation-up {
     color: var(--accent-neon);
 }
 
-.variationDown {
+.variation-down {
     color: var(--error-red);
 }
 
-.timeframeContainer {
+.timeframe-container {
     display: flex;
     gap: 4px;
     background-color: var(--surface-dark);
@@ -46,7 +46,7 @@
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.timeframeBtn {
+.timeframe-btn {
     padding: 6px 12px;
     border-radius: 20px;
     border: none;
@@ -58,16 +58,16 @@
     transition: all 0.2s;
 }
 
-.timeframeBtn:hover {
+.timeframe-btn:hover {
     color: var(--text-main);
 }
 
-.timeframeBtnActive {
+.timeframe-btn-active {
     background-color: var(--accent-neon);
     color: #000;
 }
 
-.chartContainer {
+.chart-container {
     height: 300px;
     width: 100%;
     margin-left: -15px;
@@ -75,7 +75,7 @@
     position: relative;
 }
 
-.tooltipContainer {
+.tooltip-container {
     background-color: rgba(20, 20, 20, 0.95);
     border: 1px solid rgba(57, 255, 20, 0.4);
     border-radius: 12px;
@@ -84,7 +84,7 @@
     backdrop-filter: blur(8px);
 }
 
-.tooltipTime {
+.tooltip-time {
     color: rgba(255, 255, 255, 0.5);
     font-size: 0.75rem;
     font-weight: 600;
@@ -93,26 +93,26 @@
     letter-spacing: 0.5px;
 }
 
-.tooltipRow {
+.tooltip-row {
     display: flex;
     align-items: baseline;
     gap: 4px;
 }
 
-.tooltipLabel {
+.tooltip-label {
     color: rgba(255, 255, 255, 0.6);
     font-size: 0.9rem;
     font-weight: 400;
 }
 
-.tooltipValue {
+.tooltip-value {
     color: var(--accent-neon);
     font-weight: 900;
     font-size: 1.4rem;
     text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
 }
 
-.sectionTitle {
+.section-title {
     font-size: 1.3rem;
     color: var(--accent-neon);
     font-weight: 800;

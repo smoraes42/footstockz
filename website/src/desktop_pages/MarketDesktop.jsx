@@ -196,47 +196,47 @@ const MarketDesktop = () => {
 
             <Navbar />
 
-            <main className={styles.mainContent}>
+            <main className={styles['main-content']}>
                 <header className={styles.header}>
-                    <div className={styles.headerLeft}>
+                    <div className={styles['header-left']}>
                         <h1 
                             onClick={() => setMarketType('players')}
-                            className={`${styles.marketTypeTitle} ${marketType === 'players' ? styles.marketTypeTitleActive : ''}`}
+                            className={`${styles['market-type-title']} ${marketType === 'players' ? styles['market-type-title-active'] : ''}`}
                         >
                             Jugadores
                         </h1>
                         <h1 
                             onClick={() => setMarketType('teams')}
-                            className={`${styles.marketTypeTitle} ${marketType === 'teams' ? styles.marketTypeTitleActive : ''}`}
+                            className={`${styles['market-type-title']} ${marketType === 'teams' ? styles['market-type-title-active'] : ''}`}
                         >
                             Equipos
                         </h1>
                     </div>
 
-                    <div className={styles.headerRight}>
+                    <div className={styles['header-right']}>
                         {/* View Mode Toggle */}
-                        <div className={styles.viewModeContainer}>
+                        <div className={styles['view-mode-container']}>
                             <button
                                 onClick={() => setViewMode('list')}
-                                className={`${styles.viewModeBtn} ${viewMode === 'list' ? styles.viewModeBtnActive : ''}`}
+                                className={`${styles['view-mode-btn']} ${viewMode === 'list' ? styles['view-mode-btn-active'] : ''}`}
                             >
                                 ≡ Lista
                             </button>
                             <button
                                 onClick={() => setViewMode('grid')}
-                                className={`${styles.viewModeBtn} ${viewMode === 'grid' ? styles.viewModeBtnActive : ''}`}
+                                className={`${styles['view-mode-btn']} ${viewMode === 'grid' ? styles['view-mode-btn-active'] : ''}`}
                             >
                                 ⊞ Grid
                             </button>
                         </div>
 
-                        <div className={styles.searchContainer}>
+                        <div className={styles['search-container']}>
                             <input
                                 type="text"
                                 placeholder="Buscar jugador..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className={styles.searchInput}
+                                className={styles['search-input']}
                             />
                         </div>
                     </div>
@@ -245,7 +245,7 @@ const MarketDesktop = () => {
                 {marketType === 'teams' ? (
                     <TeamsMarketDesktop searchTerm={searchTerm} selectedLeague={selectedLeague} />
                 ) : (
-                    <div className={`${viewMode === 'list' ? "glass-panel" : ""} ${styles.tablePanel}`}>
+                    <div className={`${viewMode === 'list' ? "glass-panel" : ""} ${styles['table-panel']}`}>
 
                     {loadingPlayers ? (
                         <div className={styles.loading}>Cargando jugadores del mercado...</div>
@@ -253,37 +253,37 @@ const MarketDesktop = () => {
                         viewMode === 'list' ? (
                             <table className={styles.table}>
                                 <thead>
-                                    <tr className={styles.tableHeadRow}>
+                                    <tr className={styles['table-head-row']}>
                                         <th
-                                            className={styles.tableHeaderCell}
+                                            className={styles['table-header-cell']}
                                             onClick={() => handleSortToggle('name')}
                                         >
                                             Jugador {sortConfig.key === 'name' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                         </th>
                                         <th
-                                            className={styles.tableHeaderCell}
+                                            className={styles['table-header-cell']}
                                             onClick={() => handleSortToggle('price')}
                                         >
                                             Precio {sortConfig.key === 'price' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                         </th>
                                         <th
-                                            className={styles.tableHeaderCell}
+                                            className={styles['table-header-cell']}
                                             onClick={() => handleSortToggle('change')}
                                         >
                                             24h % {sortConfig.key === 'change' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                         </th>
-                                        <th className={styles.tableHeaderCell}>Evolución</th>
+                                        <th className={styles['table-header-cell']}>Evolución</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {filteredPlayers.map(player => (
                                         <tr
                                             key={player.id}
-                                            className={`${styles.tableRow} ${updatedPlayerId === player.id ? styles.tableRowUpdated : ''}`}
+                                            className={`${styles['table-row']} ${updatedPlayerId === player.id ? styles['table-row-updated'] : ''}`}
                                             onClick={() => navigate(`/market/player/${player.id}`)}
                                         >
-                                            <td className={styles.tableCell}>
-                                                <div className={styles.playerCellContent}>
+                                            <td className={styles['table-cell']}>
+                                                <div className={styles['player-cell-content']}>
                                                     {/* Using the image endpoint wrapper directly for UI display */}
                                                     <img
                                                         src={getPlayerImageUrl(player.id)}
@@ -292,25 +292,25 @@ const MarketDesktop = () => {
                                                             e.target.style.display = 'none';
                                                             e.target.nextSibling.style.display = 'flex';
                                                         }}
-                                                        className={styles.playerAvatarImg}
+                                                        className={styles['player-avatar-img']}
                                                     />
-                                                    <div className={styles.playerAvatarPlaceholder}>
+                                                    <div className={styles['player-avatar-placeholder']}>
                                                         👤
                                                     </div>
                                                     <div>
-                                                        <p className={styles.playerName}>{player.name}</p>
-                                                        <p className={styles.playerTeam}>{player.team}</p>
+                                                        <p className={styles['player-name']}>{player.name}</p>
+                                                        <p className={styles['player-team']}>{player.team}</p>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className={`${styles.tableCell} ${styles.priceCell}`}>
+                                            <td className={`${styles['table-cell']} ${styles['price-cell']}`}>
                                                 {Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                                             </td>
-                                            <td className={`${styles.tableCell} ${styles.changeCell} ${player.change >= 0 ? styles.changePositive : styles.changeNegative}`}>
+                                            <td className={`${styles['table-cell']} ${styles['change-cell']} ${player.change >= 0 ? styles['change-positive'] : styles['change-negative']}`}>
                                                 {player.change >= 0 ? '+' : ''}{Number(player.change).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
                                             </td>
-                                            <td className={`${styles.tableCell} ${styles.sparklineCell}`}>
-                                                <div className={styles.sparklineWrapper}>
+                                            <td className={`${styles['table-cell']} ${styles['sparkline-cell']}`}>
+                                                <div className={styles['sparkline-wrapper']}>
                                                     <ResponsiveContainer width="100%" height="100%">
                                                         <LineChart data={player.sparkline.map((v, i) => ({ v, i }))}>
                                                             <Line
@@ -329,38 +329,38 @@ const MarketDesktop = () => {
                                 </tbody>
                             </table>
                         ) : (
-                            <div className={styles.gridContainer}>
-                                <div className={styles.gridSortHeader}>
+                            <div className={styles['grid-container']}>
+                                <div className={styles['grid-sort-header']}>
                                     <button
                                         onClick={() => handleSortToggle('name')}
-                                        className={styles.gridSortBtn}
+                                        className={styles['grid-sort-btn']}
                                     >
-                                        <span className={styles.gridSortLabel}>Ordenar: </span>
+                                        <span className={styles['grid-sort-label']}>Ordenar: </span>
                                         Nombre {sortConfig.key === 'name' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                     </button>
                                     <button
                                         onClick={() => handleSortToggle('price')}
-                                        className={styles.gridSortBtn}
+                                        className={styles['grid-sort-btn']}
                                     >
-                                        <span className={styles.gridSortLabel}>Ordenar:</span>
+                                        <span className={styles['grid-sort-label']}>Ordenar:</span>
                                         Precio {sortConfig.key === 'price' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                     </button>
                                     <button
                                         onClick={() => handleSortToggle('change')}
-                                        className={styles.gridSortBtn}
+                                        className={styles['grid-sort-btn']}
                                     >
-                                        <span className={styles.gridSortLabel}>Ordenar:</span>
+                                        <span className={styles['grid-sort-label']}>Ordenar:</span>
                                         24h % {sortConfig.key === 'change' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '↕') : '↕'}
                                     </button>
                                 </div>
-                                <div className={styles.playerGrid}>
+                                <div className={styles['player-grid']}>
                                     {filteredPlayers.map(player => (
                                         <div
                                             key={player.id}
-                                            className={`glass-panel ${styles.playerCard} ${updatedPlayerId === player.id ? styles.playerCardUpdated : ''}`}
+                                            className={`glass-panel ${styles['player-card']} ${updatedPlayerId === player.id ? styles['player-card-updated'] : ''}`}
                                             onClick={() => navigate(`/market/player/${player.id}`)}
                                         >
-                                            <div className={styles.playerCardAvatarContainer}>
+                                            <div className={styles['player-card-avatar-container']}>
                                                 <img
                                                     src={getPlayerImageUrl(player.id)}
                                                     alt={player.name}
@@ -368,24 +368,24 @@ const MarketDesktop = () => {
                                                         e.target.style.display = 'none';
                                                         e.target.nextSibling.style.display = 'flex';
                                                     }}
-                                                    className={styles.playerCardAvatar}
+                                                    className={styles['player-card-avatar']}
                                                 />
-                                                <div className={styles.playerCardAvatarPlaceholder}>
+                                                <div className={styles['player-card-avatar-placeholder']}>
                                                     👤
                                                 </div>
                                             </div>
 
-                                            <h3 className={styles.playerCardName}>{player.name}</h3>
-                                            <p className={styles.playerCardTeam}>{player.team}</p>
+                                            <h3 className={styles['player-card-name']}>{player.name}</h3>
+                                            <p className={styles['player-card-team']}>{player.team}</p>
 
-                                            <div className={styles.playerCardStats}>
+                                            <div className={styles['player-card-stats']}>
                                                 <div>
-                                                    <p className={styles.playerCardStatLabel}>Precio</p>
-                                                    <p className={`${styles.playerCardStatValue} ${styles.playerCardPrice}`}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                                                    <p className={styles['player-card-stat-label']}>Precio</p>
+                                                    <p className={`${styles['player-card-stat-value']} ${styles['player-card-price']}`}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
                                                 </div>
-                                                <div className={styles.playerCardChangeContainer}>
-                                                    <p className={styles.playerCardStatLabel}>24h</p>
-                                                    <p className={`${styles.playerCardStatValue} ${player.change >= 0 ? styles.changePositive : styles.changeNegative}`}>
+                                                <div className={styles['player-card-change-container']}>
+                                                    <p className={styles['player-card-stat-label']}>24h</p>
+                                                    <p className={`${styles['player-card-stat-value']} ${player.change >= 0 ? styles['change-positive'] : styles['change-negative']}`}>
                                                         {player.change >= 0 ? '+' : ''}{Number(player.change).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
                                                     </p>
                                                 </div>
@@ -398,21 +398,21 @@ const MarketDesktop = () => {
                     )}
 
                     {!loadingPlayers && totalPages > 1 && (
-                        <div className={styles.paginationContainer}>
+                        <div className={styles['pagination-container']}>
                             <button
                                 onClick={handlePrevPage}
                                 disabled={currentPage === 1}
-                                className={`${styles.paginationBtn} ${currentPage === 1 ? styles.paginationBtnDisabled : ''}`}
+                                className={`${styles['pagination-btn']} ${currentPage === 1 ? styles['pagination-btn-disabled'] : ''}`}
                             >
                                 ← Anterior
                             </button>
-                            <span className={styles.paginationInfo}>
+                            <span className={styles['pagination-info']}>
                                 Pág. {currentPage} de {totalPages}
                             </span>
                             <button
                                 onClick={handleNextPage}
                                 disabled={currentPage === totalPages}
-                                className={`${styles.paginationBtn} ${currentPage === totalPages ? styles.paginationBtnDisabled : ''}`}
+                                className={`${styles['pagination-btn']} ${currentPage === totalPages ? styles['pagination-btn-disabled'] : ''}`}
                             >
                                 Siguiente →
                             </button>
@@ -424,29 +424,29 @@ const MarketDesktop = () => {
             </main>
 
             {/* Right Sidebar (Leagues and Teams Menu) */}
-            <aside className={styles.rightSidebar}>
-                <div className={styles.filterHeader}>
-                    <h3 className={styles.filterTitle}>Filtros</h3>
+            <aside className={styles['right-sidebar']}>
+                <div className={styles['filter-header']}>
+                    <h3 className={styles['filter-title']}>Filtros</h3>
                 </div>
 
-                <div className={styles.filterGroupContainer}>
+                <div className={styles['filter-group-container']}>
 
                     {/* League Selector */}
-                    <div className={styles.filterGroup}>
-                        <label className={styles.filterLabel}>Competición</label>
+                    <div className={styles['filter-group']}>
+                        <label className={styles['filter-label']}>Competición</label>
                         <button
                             onClick={() => setIsLeagueDropdownOpen(!isLeagueDropdownOpen)}
-                            className={styles.dropdownBtn}
+                            className={styles['dropdown-btn']}
                         >
                             <span>{selectedLeague ? selectedLeague.name : 'Todas las competiciones'}</span>
-                            <span className={`${styles.dropdownArrow} ${isLeagueDropdownOpen ? styles.dropdownArrowOpen : ''}`}>▼</span>
+                            <span className={`${styles['dropdown-arrow']} ${isLeagueDropdownOpen ? styles['dropdown-arrow-open'] : ''}`}>▼</span>
                         </button>
 
                         {isLeagueDropdownOpen && (
-                            <div className={styles.dropdownMenu}>
+                            <div className={styles['dropdown-menu']}>
                                 <button
                                     onClick={() => handleSelectLeague(null)}
-                                    className={`${styles.dropdownItem} ${!selectedLeague ? styles.dropdownItemActive : ''}`}
+                                    className={`${styles['dropdown-item']} ${!selectedLeague ? styles['dropdown-item-active'] : ''}`}
                                 >
                                     Todas las competiciones
                                 </button>
@@ -454,7 +454,7 @@ const MarketDesktop = () => {
                                     <button
                                         key={league.id}
                                         onClick={() => handleSelectLeague(league)}
-                                        className={`${styles.dropdownItem} ${selectedLeague?.id === league.id ? styles.dropdownItemActive : ''}`}
+                                        className={`${styles['dropdown-item']} ${selectedLeague?.id === league.id ? styles['dropdown-item-active'] : ''}`}
                                     >
                                         {league.name}
                                     </button>
@@ -464,27 +464,27 @@ const MarketDesktop = () => {
                     </div>
 
                     {/* Team Selector */}
-                    <div className={styles.filterGroup}>
-                        <label className={styles.filterLabel}>Equipo</label>
+                    <div className={styles['filter-group']}>
+                        <label className={styles['filter-label']}>Equipo</label>
                         <button
                             onClick={() => selectedLeague && setIsTeamDropdownOpen(!isTeamDropdownOpen)}
                             disabled={!selectedLeague}
-                            className={`${styles.dropdownBtn} ${!selectedLeague ? styles.dropdownBtnDisabled : ''}`}
+                            className={`${styles['dropdown-btn']} ${!selectedLeague ? styles['dropdown-btn-disabled'] : ''}`}
                         >
                             <span>
                                 {!selectedLeague
                                     ? 'Selecciona competición'
                                     : (selectedTeam ? selectedTeam.name : 'Todos los equipos')}
                             </span>
-                            <span className={`${styles.dropdownArrow} ${isTeamDropdownOpen ? styles.dropdownArrowOpen : ''}`}>▼</span>
+                            <span className={`${styles['dropdown-arrow']} ${isTeamDropdownOpen ? styles['dropdown-arrow-open'] : ''}`}>▼</span>
                         </button>
 
                         {/* Team Options Dropdown */}
                         {isTeamDropdownOpen && selectedLeague && (
-                            <div className={styles.dropdownMenu}>
+                            <div className={styles['dropdown-menu']}>
                                 <button
                                     onClick={() => handleSelectTeam(null)}
-                                    className={`${styles.dropdownItem} ${!selectedTeam ? styles.dropdownItemActive : ''}`}
+                                    className={`${styles['dropdown-item']} ${!selectedTeam ? styles['dropdown-item-active'] : ''}`}
                                 >
                                     Todos los equipos
                                 </button>
@@ -492,7 +492,7 @@ const MarketDesktop = () => {
                                     <button
                                         key={team.id}
                                         onClick={() => handleSelectTeam(team)}
-                                        className={`${styles.dropdownItem} ${selectedTeam?.id === team.id ? styles.dropdownItemActive : ''}`}
+                                        className={`${styles['dropdown-item']} ${selectedTeam?.id === team.id ? styles['dropdown-item-active'] : ''}`}
                                     >
                                         {team.name}
                                     </button>

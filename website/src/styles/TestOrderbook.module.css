@@ -20,7 +20,7 @@
     letter-spacing: -1px;
 }
 
-.errorBanner {
+.error-banner {
     background-color: #ff525222;
     color: #ff5252;
     padding: 12px 20px;
@@ -29,12 +29,12 @@
     font-size: 0.9rem;
 }
 
-.errorBannerSpacing {
+.error-banner-spacing {
     margin-top: 20px;
     margin-bottom: 0;
 }
 
-.controlsRow {
+.controls-row {
     display: flex;
     align-items: center;
     gap: 30px;
@@ -44,13 +44,13 @@
     border: 1px solid #222;
 }
 
-.controlGroup {
+.control-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.walletInfo {
+.wallet-info {
     margin-left: auto;
     display: flex;
     flex-direction: column;
@@ -58,7 +58,7 @@
     gap: 4px;
 }
 
-.walletValue {
+.wallet-value {
     font-size: 1.4rem;
     font-weight: 700;
     color: #00e676;
@@ -101,12 +101,12 @@
     border-color: #00e676;
 }
 
-.inputError {
+.input-error {
     color: #ff3d00 !important;
     border-color: #ff3d0044 !important;
 }
 
-.tabRow {
+.tab-row {
     display: flex;
     margin-bottom: 20px;
     gap: 10px;
@@ -116,7 +116,7 @@
     border: 1px solid #222;
 }
 
-.tabButton {
+.tab-button {
     flex: 1;
     padding: 12px 16px;
     border-radius: 8px;
@@ -129,7 +129,7 @@
     transition: all 0.2s;
 }
 
-.positionBox {
+.position-box {
     background-color: #0a0a0a;
     padding: 15px 20px;
     border-radius: 12px;
@@ -142,19 +142,19 @@
     box-sizing: border-box;
 }
 
-.posRow {
+.pos-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.posValue {
+.pos-value {
     font-weight: bold;
     font-size: 1.1rem;
     color: #fff;
 }
 
-.noPosition {
+.no-position {
     color: #666;
     font-style: italic;
     background-color: #0a0a0a;
@@ -168,25 +168,25 @@
     box-sizing: border-box;
 }
 
-.activeTabBuy {
+.active-tab-buy {
     background-color: rgba(0, 230, 118, 0.15) !important;
     color: #00e676 !important;
     border-color: #00e676 !important;
 }
 
-.activeTabSell {
+.active-tab-sell {
     background-color: rgba(255, 61, 0, 0.15) !important;
     color: #ff3d00 !important;
     border-color: #ff3d00 !important;
 }
 
-.toggleHeader {
+.toggle-header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
 }
 
-.toggleBtn {
+.toggle-btn {
     background: none;
     border: none;
     color: #00e676;
@@ -196,20 +196,20 @@
     text-decoration: underline;
 }
 
-.mainGrid {
+.main-grid {
     display: grid;
     grid-template-columns: 2.5fr 1fr;
     gap: 24px;
     flex: 1;
 }
 
-.leftCol {
+.left-col {
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
-.rightCol {
+.right-col {
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -223,12 +223,12 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.chartWrapper {
+.chart-wrapper {
     width: 100%;
     height: 350px;
 }
 
-.cardTitle {
+.card-title {
     font-size: 1.3rem;
     font-weight: 700;
     margin-bottom: 24px;
@@ -238,7 +238,7 @@
     align-items: center;
 }
 
-.cardTitleSmall {
+.card-title-small {
     font-size: 1rem;
     font-weight: 700;
     margin: 20px 0 12px 0;
@@ -246,7 +246,7 @@
     text-transform: uppercase;
 }
 
-.currentPriceTag {
+.current-price-tag {
     font-size: 0.9rem;
     background-color: rgba(0, 230, 118, 0.06);
     color: #00e676;
@@ -255,25 +255,25 @@
     border: 1px solid rgba(0, 230, 118, 0.13);
 }
 
-.formRow {
+.form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
     margin-bottom: 20px;
 }
 
-.inputGroup {
+.input-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.buttonRow {
+.button-row {
     display: flex;
     justify-content: center;
 }
 
-.buyButton {
+.buy-button {
     padding: 18px;
     border: none;
     border-radius: 14px;
@@ -286,7 +286,7 @@
     width: 50%;
 }
 
-.sellButton {
+.sell-button {
     padding: 18px;
     border: none;
     border-radius: 14px;
@@ -299,23 +299,23 @@
     width: 50%;
 }
 
-.buyButton:hover, .sellButton:hover {
+.buy-button:hover, .sell-button:hover {
     opacity: 0.9;
     transform: scale(0.98);
 }
 
-.buttonDisabled {
+.button-disabled {
     opacity: 0.3 !important;
     cursor: not-allowed !important;
     transform: none !important;
 }
 
-.orderbookGrid {
+.orderbook-grid {
     display: flex;
     flex-direction: column;
 }
 
-.orderbookHeader {
+.orderbook-header {
     display: flex;
     justify-content: space-between;
     padding-bottom: 12px;
@@ -325,43 +325,43 @@
     text-transform: uppercase;
 }
 
-.asksContainer {
+.asks-container {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.bidsContainer {
+.bids-container {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.askRow {
+.ask-row {
     display: flex;
     justify-content: space-between;
     font-size: 0.9rem;
     color: rgba(255, 82, 82, 0.66);
 }
 
-.bidRow {
+.bid-row {
     display: flex;
     justify-content: space-between;
     font-size: 0.9rem;
     color: rgba(0, 230, 118, 0.66);
 }
 
-.askPrice {
+.ask-price {
     color: #ff5252;
     font-weight: 750;
 }
 
-.bidPrice {
+.bid-price {
     color: #00e676;
     font-weight: 750;
 }
 
-.spreadIndicator {
+.spread-indicator {
     text-align: center;
     padding: 20px 0;
     color: #333;
@@ -371,19 +371,19 @@
     letter-spacing: 2px;
 }
 
-.emptyBook {
+.empty-book {
     text-align: center;
     color: #222;
     padding: 10px;
     font-size: 0.8rem;
 }
 
-.openOrdersSection {
+.open-orders-section {
     margin-top: 30px;
     border-top: 1px solid #1a1a1a;
 }
 
-.openOrderRow {
+.open-order-row {
     display: flex;
     justify-content: space-between;
     padding: 8px 0;
@@ -392,16 +392,16 @@
     color: #888;
 }
 
-.noOrders {
+.no-orders {
     color: #222;
     font-size: 0.8rem;
 }
 
-.orderSection {
+.order-section {
     padding: 10px 0;
 }
 
-.successMessage {
+.success-message {
     margin-top: 20px;
     padding: 15px;
     border-radius: 12px;
@@ -413,14 +413,14 @@
     text-align: center;
 }
 
-.quickSelectRow {
+.quick-select-row {
     display: flex;
     justify-content: space-between;
     margin-top: 15px;
     gap: 10px;
 }
 
-.quickSelectBtn {
+.quick-select-btn {
     flex: 1;
     padding: 8px 0;
     background-color: #1a1a1a;
@@ -433,7 +433,7 @@
     transition: all 0.2s;
 }
 
-.quickSelectBtn:hover {
+.quick-select-btn:hover {
     background-color: #222;
     color: #fff;
 }
