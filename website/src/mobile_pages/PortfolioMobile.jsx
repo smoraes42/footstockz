@@ -24,6 +24,21 @@ const PortfolioMobile = () => {
     const [loadingTrades, setLoadingTrades] = useState(true);
     const [showActivity, setShowActivity] = useState(true);
 
+    const [sortConfig, setSortConfig] = useState({ key: 'player_name', direction: 'asc' });
+
+    const requestSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const getSortIndicator = (key) => {
+        if (sortConfig.key !== key) return '';
+        return sortConfig.direction === 'asc' ? ' ↑' : ' ↓';
+    };
+
     const { socket, connected } = useSocket();
 
     const fetchPortfolioData = async () => {
