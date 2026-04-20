@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import { loginUser, googleLogin, initGoogleSignIn } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import styles from '../styles/LoginDesktop.module.css';
+import styles from '../styles/Login.module.css';
 import Navbar from '../components/Navbar';
 
 const LoginDesktop = () => {

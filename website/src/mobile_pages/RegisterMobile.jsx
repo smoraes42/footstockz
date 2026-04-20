@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import fsLogoBlack from '../assets/fs-logo-black.png';
 import { registerUser, googleLogin, initGoogleSignIn } from '../services/api';
+import styles from '../styles/Register.module.css';
 
 const RegisterMobile = () => {
     const navigate = useNavigate();
@@ -62,58 +63,90 @@ const RegisterMobile = () => {
     };
 
     return (
-        <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
-            <nav style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)', backgroundColor: 'rgba(16,16,16,0.9)', position: 'sticky', top: 0, zIndex: 10 }}>
+        <div className={styles.mobileContainer}>
+            <nav className={styles.mobileNav}>
                 <Link to="/">
-                    <img src={fsLogo} alt="Futstocks Logo" style={{ height: '30px' }} />
+                    <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileLogo} />
                 </Link>
             </nav>
-            <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 1.5rem', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '150vw', height: '150vw', background: 'radial-gradient(circle, rgba(57,255,20,0.1) 0%, rgba(16,16,16,0) 60%)', zIndex: 0, pointerEvents: 'none' }}></div>
-                <div className="glass-panel fade-in-up" style={{ width: '100%', padding: '2rem 1.5rem', borderRadius: '12px', zIndex: 1, position: 'relative' }}>
-                    <h1 style={{ fontSize: '1.75rem', fontWeight: '800', marginBottom: '1.5rem', textAlign: 'center' }}>Crear Cuenta</h1>
+            <main className={styles.mobileMain}>
+                <div className={styles.mobileGlow}></div>
+                <div className={`${styles.mobileGlassPanel} glass-panel fade-in-up`}>
+                    <h1 className={styles.mobileTitle}>Crear Cuenta</h1>
 
                     {error && (
-                        <div style={{ backgroundColor: 'rgba(255,77,77,0.1)', border: '1px solid rgba(255,77,77,0.3)', borderRadius: '8px', padding: '10px', marginBottom: '1.25rem', color: '#ff4d4d', fontSize: '0.85rem', textAlign: 'center' }}>
+                        <div className={styles.mobileErrorAlert}>
                             {error}
                         </div>
                     )}
 
-                    <form style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }} onSubmit={(e) => { e.preventDefault(); handleRegister(); }}>
+                    <form className={styles.mobileForm} onSubmit={(e) => { e.preventDefault(); handleRegister(); }}>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '0.4rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Username</label>
-                            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'var(--surface-lighter)', color: 'var(--text-main)', outline: 'none' }} placeholder="Tu username" />
+                            <label className={styles.mobileLabel}>Username</label>
+                            <input 
+                                type="text" 
+                                value={username} 
+                                onChange={(e) => setUsername(e.target.value)} 
+                                className={styles.mobileInput} 
+                                placeholder="Tu username" 
+                            />
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '0.4rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Email</label>
-                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'var(--surface-lighter)', color: 'var(--text-main)', outline: 'none' }} placeholder="tu@email.com" />
+                            <label className={styles.mobileLabel}>Email</label>
+                            <input 
+                                type="email" 
+                                value={email} 
+                                onChange={(e) => setEmail(e.target.value)} 
+                                className={styles.mobileInput} 
+                                placeholder="tu@email.com" 
+                            />
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '0.4rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Contraseña</label>
-                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'var(--surface-lighter)', color: 'var(--text-main)', outline: 'none' }} placeholder="••••••••" />
+                            <label className={styles.mobileLabel}>Contraseña</label>
+                            <input 
+                                type="password" 
+                                value={password} 
+                                onChange={(e) => setPassword(e.target.value)} 
+                                className={styles.mobileInput} 
+                                placeholder="••••••••" 
+                            />
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '0.4rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Repetir Contraseña</label>
-                            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'var(--surface-lighter)', color: 'var(--text-main)', outline: 'none' }} placeholder="••••••••" />
+                            <label className={styles.mobileLabel}>Repetir Contraseña</label>
+                            <input 
+                                type="password" 
+                                value={confirmPassword} 
+                                onChange={(e) => setConfirmPassword(e.target.value)} 
+                                className={styles.mobileInput} 
+                                placeholder="••••••••" 
+                            />
                         </div>
-                        <button type="submit" className="neon-button" style={{ padding: '14px', borderRadius: '8px', fontSize: '1rem', marginTop: '1rem', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', opacity: loading ? 0.6 : 1, cursor: loading ? 'wait' : 'pointer' }} disabled={loading}>
-                            {loading ? 'Creando cuenta...' : <>Unirse a <img src={fsLogoBlack} alt="Futstocks" style={{ height: '18px' }} /></>}
+                        <button 
+                            type="submit" 
+                            className={`${styles.mobileSubmitBtn} ${loading ? styles.mobileLoadingBtn : ''} neon-button`} 
+                            disabled={loading}
+                        >
+                            {loading ? 'Creando cuenta...' : <>Unirse a <img src={fsLogoBlack} alt="Futstocks" className={styles.mobileSubmitBtnLogo} /></>}
                         </button>
 
-                        <div style={{ display: 'flex', alignItems: 'center', margin: '0.5rem 0' }}>
-                            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(255,255,255,0.1)' }}></div>
-                            <span style={{ padding: '0 1rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>O</span>
-                            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(255,255,255,0.1)' }}></div>
+                        <div className={styles.mobileDivider}>
+                            <div className={styles.mobileDividerLine}></div>
+                            <span className={styles.mobileDividerText}>O</span>
+                            <div className={styles.mobileDividerLine}></div>
                         </div>
 
-                        <button type="button" className="outline-button" onClick={handleGoogleClick} style={{ padding: '14px', borderRadius: '8px', fontSize: '1rem', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', backgroundColor: 'var(--surface-dark)' }}>
-                            <img src="https://authjs.dev/img/providers/google.svg" alt="Google" style={{ height: '20px' }} />
+                        <button 
+                            type="button" 
+                            className={`${styles.mobileGoogleBtn} outline-button`} 
+                            onClick={handleGoogleClick} 
+                        >
+                            <img src="https://authjs.dev/img/providers/google.svg" alt="Google" className={styles.mobileGoogleIcon} />
                             Continuar con Google
                         </button>
                     </form>
-                    <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>¿Ya tienes cuenta? </span>
-                        <Link to="/login" style={{ color: 'var(--accent-neon)', textDecoration: 'none', fontWeight: '600', fontSize: '0.85rem' }}>Inicia sesión</Link>
+                    <div className={styles.mobileFooter}>
+                        <span className={styles.mobileFooterText}>¿Ya tienes cuenta? </span>
+                        <Link to="/login" className={styles.mobileFooterLink}>Inicia sesión</Link>
                     </div>
                 </div>
             </main>

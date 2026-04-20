@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
 import TeamsMarketDesktop from './TeamsMarketDesktop';
-import styles from '../styles/MarketDesktop.module.css';
+import styles from '../styles/Market.module.css';
 
 
 const MarketDesktop = () => {

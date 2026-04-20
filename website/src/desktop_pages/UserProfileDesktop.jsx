@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getPublicProfile } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import styles from '../styles/UserProfileDesktop.module.css';
+import styles from '../styles/UserProfile.module.css';
 
 const UserProfileDesktop = () => {
     const { userId } = useParams();

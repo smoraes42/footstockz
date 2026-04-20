@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import fsSlogan from '../assets/fs-slogan.png';
-import styles from '../styles/LandingDesktop.module.css';
+import styles from '../styles/Landing.module.css';
 import Navbar from '../components/Navbar';
 
 const LandingDesktop = () => {

@@ -1,0 +1,330 @@
+.container {
+    background-color: var(--bg-main);
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+}
+
+.glowEffect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40vw;
+    height: 40vw;
+    background: radial-gradient(circle, rgba(57, 255, 20, 0.05) 0%, rgba(16, 16, 16, 0) 70%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.glassPanel {
+    width: 100%;
+    max-width: 400px;
+    padding: 3rem;
+    border-radius: 16px;
+    z-index: 1;
+    position: relative;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.errorAlert {
+    background-color: rgba(255, 77, 77, 0.1);
+    border: 1px solid rgba(255, 77, 77, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 1.5rem;
+    color: #ff4d4d;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.fieldGroup {
+    /* No specific styles needed but keeping for structure */
+}
+
+.label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--surface-lighter);
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.inputError {
+    border-color: rgba(255, 77, 77, 0.6);
+}
+
+.fieldHint {
+    color: #ff4d4d;
+    font-size: 0.78rem;
+    margin-top: 4px;
+}
+
+.submitBtn {
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.loadingBtn {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.submitBtnLogo {
+    height: 20px;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.dividerLine {
+    flex: 1;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dividerText {
+    padding: 0 1rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.googleBtn {
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background-color: var(--surface-dark);
+}
+
+.googleIcon {
+    height: 20px;
+}
+
+.footer {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.footerText {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.footerLink {
+    color: var(--accent-neon);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Mobile Styles */
+.mobileContainer {
+    background-color: var(--bg-main);
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobileNav {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(16, 16, 16, 0.9);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.mobileLogo {
+    height: 30px;
+}
+
+.mobileMain {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.mobileGlow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150vw;
+    height: 150vw;
+    background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, rgba(16, 16, 16, 0) 60%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.mobileGlassPanel {
+    width: 100%;
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    z-index: 1;
+    position: relative;
+}
+
+.mobileTitle {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.mobileErrorAlert {
+    background-color: rgba(255, 77, 77, 0.1);
+    border: 1px solid rgba(255, 77, 77, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 1.25rem;
+    color: #ff4d4d;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.mobileForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.mobileLabel {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.mobileInput {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--surface-lighter);
+    color: var(--text-main);
+    outline: none;
+}
+
+.mobileSubmitBtn {
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.mobileLoadingBtn {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.mobileSubmitBtnLogo {
+    height: 18px;
+}
+
+.mobileDivider {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 0;
+}
+
+.mobileDividerLine {
+    flex: 1;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobileDividerText {
+    padding: 0 1rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.mobileGoogleBtn {
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background-color: var(--surface-dark);
+}
+
+.mobileGoogleIcon {
+    height: 20px;
+}
+
+.mobileFooter {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.mobileFooterText {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.mobileFooterLink {
+    color: var(--accent-neon);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+}

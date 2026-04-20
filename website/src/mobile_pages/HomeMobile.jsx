@@ -5,6 +5,7 @@ import fsLogo from '../assets/fs-logo.png';
 
 import { getPlayers, getPortfolio, getPortfolioHistory, getMe } from '../services/api';
 import { useSocket } from '../context/SocketContext';
+import styles from '../styles/Home.module.css';
 
 
 const formatCompactNumber = (number) => {
@@ -320,41 +321,29 @@ const HomeMobile = () => {
     };
 
     return (
-        <div style={{ backgroundColor: 'var(--bg-main)', height: '100dvh', overflow: 'hidden', width: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div className={styles.mobileContainer}>
 
             {/* Top Header Mobile */}
-            <header style={{
-                padding: '0 1.5rem',
-                borderBottom: '1px solid rgba(255,255,255,0.05)',
-                backgroundColor: 'rgba(16,16,16,0.9)',
-                position: 'sticky',
-                top: 0,
-                zIndex: 10,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                height: '60px',
-                boxSizing: 'border-box'
-            }}>
-                <img src={fsLogo} alt="Futstocks Logo" style={{ height: '22px' }} />
-                <div style={{ width: '22px' }} />
+            <header className={styles.mobileHeader}>
+                <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileLogo} />
+                <div className={styles.mobileNavSpacer} />
             </header>
 
             {/* Main Content Area Mobile */}
-            <main style={{ flex: 1, padding: '1.5rem', paddingBottom: '80px', overflowY: 'auto' }}>
-                <h2 style={{ fontSize: '0.95rem', fontWeight: '800', color: 'var(--accent-neon)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', marginTop: '0', textAlign: 'left' }}>Cartera</h2>
+            <main className={styles.mobileMain}>
+                <h2 className={styles.mobileSectionTitle}>Cartera</h2>
                 
                 {/* Cartera Main Display */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2rem' }}>
+                <div className={styles.mobilePortfolioValue}>
                         {loadingPortfolio ? '---' : formatCompactNumber(displayValue)} €
-                    <span style={{ color: variation24h.amount >= 0 ? 'var(--accent-neon)' : 'var(--error-red)', fontWeight: '600', fontSize: '1rem', marginTop: '0.5rem', backgroundColor: variation24h.amount >= 0 ? 'rgba(57,255,20,0.1)' : 'rgba(255,77,77,0.1)', padding: '4px 12px', borderRadius: '20px' }}>
+                    <span className={`${styles.mobilePortfolioVariation} ${variation24h.amount >= 0 ? styles.mobileVariationPositive : styles.mobileVariationNegative}`}>
                         {variation24h.amount >= 0 ? '+' : '-'} {Math.abs(variation24h.amount).toFixed(2)} € ({variation24h.percent.toFixed(2)}%)
                     </span>
                 </div>
 
                 {/* Timeframes */}
-                <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '1rem', msOverflowStyle: 'none', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
-                    <div style={{ display: 'flex', gap: '4px', backgroundColor: 'var(--surface-dark)', padding: '4px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', minWidth: 'max-content' }}>
+                <div className={styles.mobileTimeframeContainer}>
+                    <div className={styles.mobileTimeframeList}>
                         {timeframes.map(tf => (
                             <button
                                 key={tf}
@@ -367,7 +356,7 @@ const HomeMobile = () => {
                     </div>
                 </div>
                 {/* Cartera Chart */}
-                <div style={{ height: '220px', width: '100%', marginBottom: '2rem', marginLeft: '-15px', minWidth: 0, position: 'relative' }}>
+                <div className={styles.mobileChartContainer}>
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={chartData}>
                             <defs>
@@ -430,15 +419,8 @@ const HomeMobile = () => {
                                     if (active && payload && payload.length) {
                                         const data = payload[0].payload;
                                         return (
-                                            <div style={{
-                                                backgroundColor: 'rgba(20, 20, 20, 0.95)',
-                                                border: '1px solid rgba(57, 255, 20, 0.4)',
-                                                borderRadius: '8px',
-                                                padding: '8px 12px',
-                                                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
-                                                backdropFilter: 'blur(8px)',
-                                            }}>
-                                                <div style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.65rem', marginBottom: '2px', textTransform: 'uppercase' }}>
+                                            <div className={styles.mobileTooltip}>
+                                                <div className={styles.mobileTooltipTime}>
                                                     {new Date(data.timestamp).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false })}
                                                 </div>
                                                     {Number(data.value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
@@ -466,56 +448,42 @@ const HomeMobile = () => {
 
                 {/* Players List Section */}
                 <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                        <h2 style={{ fontSize: '0.90rem', fontWeight: '800', color: 'var(--accent-neon)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem', marginTop: '0', textAlign: 'left' }}>Top Jugadores</h2>
-                        <Link to="/market" style={{ color: 'var(--accent-neon)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: '600' }}>Ver todos</Link>
+                    <div className={styles.mobileTopPlayersHeader}>
+                        <h2 className={styles.mobileTopPlayersTitle}>Top Jugadores</h2>
+                        <Link to="/market" className={styles.mobileViewAll}>Ver todos</Link>
                     </div>
 
                     {loadingPlayers ? (
-                        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Cargando jugadores...</div>
+                        <div className={styles.loading}>Cargando jugadores...</div>
                     ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                        <div className={styles.mobilePlayerList}>
                             {players.slice(0, 10).map((player, idx) => (
                                 <Link 
                                     to={`/market/player/${player.id}`} 
                                     key={player.id} 
-                                    className="glass-panel" 
-                                    style={{ 
-                                        padding: '1rem', 
-                                        borderRadius: '16px', 
-                                        display: 'flex', 
-                                        alignItems: 'center', 
-                                        justifyContent: 'space-between', 
-                                        textDecoration: 'none', 
-                                        color: 'inherit',
-                                        position: 'relative',
-                                        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                                        border: player.id === updatedPlayerId ? '1px solid var(--accent-neon)' : '1px solid rgba(255,255,255,0.05)',
-                                        transform: player.id === updatedPlayerId ? 'scale(1.02)' : 'scale(1)',
-                                        boxShadow: player.id === updatedPlayerId ? '0 0 10px rgba(57, 255, 20, 0.15)' : 'none'
-                                    }}
+                                    className={`${styles.mobilePlayerCard} ${player.id === updatedPlayerId ? styles.mobilePlayerCardActive : ''} glass-panel`} 
                                 >
-                                    <div style={{ position: 'absolute', left: 0, top: 0, padding: '2px 6px', backgroundColor: 'rgba(57,255,20,0.1)', color: 'var(--accent-neon)', fontSize: '0.6rem', fontWeight: '900', borderBottomRightRadius: '8px' }}>
+                                    <div className={styles.mobilePlayerRank}>
                                         #{idx + 1}
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                        <div style={{ width: '42px', height: '42px', borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', backgroundColor: 'var(--surface-dark)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <div className={styles.mobilePlayerInfo}>
+                                        <div className={styles.mobilePlayerAvatarBox}>
                                             <img 
                                                 src={`${import.meta.env.VITE_API_URL}/v1/players/${player.id}/image`}
                                                 alt={player.name}
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                className={styles.mobilePlayerAvatarImg}
                                                 onError={(e) => { e.target.style.display = 'none'; }}
                                             />
-                                            <span style={{ fontSize: '1.25rem', position: 'absolute' }}>👤</span>
+                                            <span className={styles.mobilePlayerAvatarPlaceholder}>👤</span>
                                         </div>
                                         <div>
-                                            <p style={{ fontWeight: '800', margin: 0, fontSize: '0.9rem', color: '#fff' }}>{player.name}</p>
-                                            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', margin: 0, fontWeight: '500' }}>{player.team}</p>
+                                            <p className={styles.mobilePlayerName}>{player.name}</p>
+                                            <p className={styles.mobilePlayerTeam}>{player.team}</p>
                                         </div>
                                     </div>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <p style={{ fontWeight: '900', margin: 0, fontSize: '1rem', color: 'var(--text-main)' }}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                                        <p style={{ color: player.change >= 0 ? 'var(--accent-neon)' : 'var(--error-red)', margin: 0, fontSize: '0.75rem', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '3px' }}>
+                                    <div className={styles.mobilePlayerPriceBox}>
+                                        <p className={styles.mobilePlayerPrice}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                                        <p className={`${styles.mobilePlayerChange} ${player.change >= 0 ? styles.mobilePriceUp : styles.mobilePriceDown}`}>
                                             {player.change >= 0 ? '▲' : '▼'} {Math.abs(player.change)}%
                                         </p>
                                     </div>
@@ -527,35 +495,22 @@ const HomeMobile = () => {
             </main>
 
             {/* Bottom Navigation Mobile */}
-            <nav style={{
-                position: 'fixed',
-                bottom: 0,
-                left: 0,
-                width: '100%',
-                backgroundColor: 'rgba(28,28,28,0.95)',
-                borderTop: '1px solid rgba(255,255,255,0.05)',
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                zIndex: 20,
-                paddingBottom: 'env(safe-area-inset-bottom)'
-            }}>
-                <Link to="/home" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', padding: '12px 0', textDecoration: 'none', color: 'var(--accent-neon)' }}>
-                    <div style={{ width: '20px', height: '2px', backgroundColor: 'var(--accent-neon)', borderRadius: '2px', position: 'absolute', top: 0 }}></div>
-                    <span style={{ fontSize: '0.75rem', fontWeight: '600' }}>Inicio</span>
+            <nav className={styles.mobileBottomNav}>
+                <Link to="/home" className={`${styles.mobileNavLink} ${styles.mobileNavLinkActive}`}>
+                    <div className={styles.mobileNavLinkActiveBar}></div>
+                    <span className={`${styles.mobileNavText} ${styles.mobileNavTextActive}`}>Inicio</span>
                 </Link>
-                <Link to="/portfolio" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', padding: '12px 0', textDecoration: 'none', color: 'var(--text-muted)' }}>
-                    <span style={{ fontSize: '0.75rem', fontWeight: '500' }}>Portfolio</span>
+                <Link to="/portfolio" className={styles.mobileNavLink}>
+                    <span className={styles.mobileNavText}>Portfolio</span>
                 </Link>
-                <Link to="/market" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', padding: '12px 0', textDecoration: 'none', color: 'var(--text-muted)' }}>
-                    <span style={{ fontSize: '0.75rem', fontWeight: '500' }}>Mercado</span>
+                <Link to="/market" className={styles.mobileNavLink}>
+                    <span className={styles.mobileNavText}>Mercado</span>
                 </Link>
                 <div 
                     onClick={() => window.location.href = '/profile'}
-                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '12px 0', color: 'var(--text-muted)' }}
+                    className={styles.mobileNavLink}
                 >
-                    <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: 'var(--surface-lighter)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', fontSize: '0.7rem' }}>
+                    <div className={styles.mobileNavAvatar}>
                         {user?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
                 </div>

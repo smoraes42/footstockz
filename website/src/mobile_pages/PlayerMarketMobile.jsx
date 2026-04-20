@@ -6,6 +6,7 @@ import {
 import { toast } from 'react-toastify';
 import { getPortfolio, getPlayerById, getMe, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell } from '../services/api';
 import fsLogo from '../assets/fs-logo.png';
+import styles from '../styles/PlayerMarket.module.css';
 
 const playSuccessSound = () => {
     try {
@@ -49,6 +50,7 @@ const PlayerMarketMobile = () => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [fetchError, setFetchError] = useState(null);
     const [kFactor, setKFactor] = useState(0.0001);
 
     const calculateQuantityFromValue = (value, p0) => {
@@ -94,8 +96,9 @@ const PlayerMarketMobile = () => {
 
     const fetchData = useCallback(async () => {
         if (!playerId) return;
+        setFetchError(null);
         try {
-            const [history, trades, port, pData, userData] = await Promise.all([
+            const results = await Promise.allSettled([
                 getPlayerHistory(playerId),
                 getPlayerTradeHistory(playerId),
                 getPortfolio(),
@@ -103,22 +106,40 @@ const PlayerMarketMobile = () => {
                 getMe()
             ]);
 
-            const formattedHistory = (history || []).map(h => {
-                const time = new Date(h.time);
-                return {
-                    ...h,
-                    timestamp: isNaN(time.getTime()) ? Date.now() : time.getTime(),
-                    price: parseFloat(h.price) || 0
-                };
-            });
+            const [historyRes, tradesRes, portRes, pDataRes, userRes] = results;
 
-            setPriceHistory(formattedHistory);
-            setTradeHistory(trades || []);
-            setPortfolio(port);
-            setCurrentPlayer(pData);
-            setUser(userData);
+            if (pDataRes.status === 'fulfilled') {
+                setCurrentPlayer(pDataRes.value);
+            } else {
+                setFetchError('Jugador no encontrado.');
+            }
+
+            if (historyRes.status === 'fulfilled') {
+                const formattedHistory = (historyRes.value || []).map(h => {
+                    const time = new Date(h.time);
+                    return {
+                        ...h,
+                        timestamp: isNaN(time.getTime()) ? Date.now() : time.getTime(),
+                        price: parseFloat(h.price) || 0
+                    };
+                });
+                setPriceHistory(formattedHistory);
+            }
+
+            if (tradesRes.status === 'fulfilled') {
+                setTradeHistory(tradesRes.value || []);
+            }
+
+            if (portRes.status === 'fulfilled') {
+                setPortfolio(portRes.value);
+            }
+
+            if (userRes.status === 'fulfilled') {
+                setUser(userRes.value);
+            }
         } catch (err) {
             console.error('Fetch error:', err);
+            setFetchError('Error de conexión.');
         }
     }, [playerId]);
 
@@ -150,7 +171,7 @@ const PlayerMarketMobile = () => {
         setLoading(true);
         setError(null);
         try {
-            const data = await marketBuy(
+            await marketBuy(
                 parseInt(playerId),
                 parseFloat(marketBuyTotal),
                 currentPlayer?.price
@@ -179,7 +200,7 @@ const PlayerMarketMobile = () => {
         setLoading(true);
         setError(null);
         try {
-            const data = await marketSell(
+            await marketSell(
                 parseInt(playerId),
                 parseFloat(marketSellQty),
                 currentPlayer?.price
@@ -224,58 +245,51 @@ const PlayerMarketMobile = () => {
     };
 
     return (
-        <div style={{ backgroundColor: 'var(--bg-main)', height: '100dvh', overflow: 'hidden', width: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div className={styles.mobileContainer}>
             {/* Header */}
-            <header style={{
-                padding: '0 1.5rem',
-                borderBottom: '1px solid rgba(255,255,255,0.05)',
-                backgroundColor: 'rgba(16,16,16,0.9)',
-                position: 'sticky',
-                top: 0,
-                zIndex: 10,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                height: '60px',
-                boxSizing: 'border-box'
-            }}>
-                <img src={fsLogo} alt="Logo" style={{ height: '22px' }} />
-                <div style={{ textAlign: 'right', minWidth: '60px' }}>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--accent-neon)', fontWeight: '800', margin: 0 }}>€{portfolio?.walletBalance?.toFixed(2) || '0.00'}</p>
+            <header className={styles.mobileHeader}>
+                <img src={fsLogo} alt="Logo" className={styles.mobileLogo} />
+                <div className={styles.mobileWalletBox}>
+                    <p className={styles.mobileWalletValue}>€{portfolio?.walletBalance?.toFixed(2) || '0.00'}</p>
                 </div>
             </header>
 
-            <div style={{ padding: '4px 1.5rem', backgroundColor: 'rgba(0,0,0,0.3)', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Posición: <span style={{ color: '#fff', fontWeight: '700' }}>{portfolio?.holdings?.find(h => h.player_id === parseInt(playerId))?.shares_owned?.toFixed(4) || '0.0000'}</span></span>
+            <div className={styles.mobilePositionBar}>
+                <span className={styles.mobilePosLabel}>Posición: <span className={styles.mobilePosValue}>{portfolio?.holdings?.find(h => h.player_id === parseInt(playerId))?.shares_owned?.toFixed(4) || '0.0000'}</span></span>
             </div>
 
-            <main style={{ flex: 1, padding: '1.5rem', paddingBottom: '80px', overflowY: 'auto' }}>
+            <main className={styles.mobileMain}>
                 {/* Player Hero */}
-                <div style={{ marginBottom: '2rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                        <div>
-                            <h2 style={{ fontSize: '1.8rem', fontWeight: '900', margin: 0, letterSpacing: '-0.5px' }}>{currentPlayer?.name}</h2>
-                            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: '600', margin: 0 }}>{currentPlayer?.team}</p>
+                <div className={styles.mobilePlayerHero}>
+                    {fetchError ? (
+                        <div className={styles.mobileFetchErrorCard}>
+                            <p className={styles.mobileFetchErrorText}>{fetchError}</p>
+                            <button onClick={() => navigate('/market')} className={styles.mobileFetchErrorBtn}>Volver</button>
                         </div>
-                        <div style={{ textAlign: 'right' }}>
-                            <p style={{ fontSize: '1.8rem', fontWeight: '900', color: 'var(--accent-neon)', margin: 0 }}>€{currentPlayer?.price?.toFixed(2)}</p>
-                            <span style={{ fontSize: '0.8rem', color: 'var(--accent-neon)', backgroundColor: 'rgba(57,255,20,0.1)', padding: '2px 8px', borderRadius: '4px', fontWeight: '700' }}>+0.00%</span>
+                    ) : (
+                        <div className={styles.mobileHeroTop}>
+                            <div>
+                                <h2 className={styles.mobilePlayerName}>{currentPlayer?.name || 'Cargando...'}</h2>
+                                <p className={styles.mobilePlayerTeam}>{currentPlayer?.team || '---'}</p>
+                            </div>
+                            <div className={styles.mobilePriceDisplay}>
+                                <p className={styles.mobileCurrentPrice}>€{currentPlayer?.price?.toFixed(2) || '0.00'}</p>
+                                <span className={`${styles.mobilePriceChange} ${(currentPlayer?.change || 0) >= 0 ? styles.mobilePriceChangePositive : styles.mobilePriceChangeNegative}`}>
+                                    {(currentPlayer?.change || 0) >= 0 ? '+' : ''}{(currentPlayer?.change || 0).toFixed(2)}%
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Chart Section */}
-                <div className="glass-panel" style={{ padding: '1rem', borderRadius: '20px', marginBottom: '2rem', height: '260px', position: 'relative', marginLeft: '-15px', minWidth: 0 }}>
+                <div className={`${styles.mobileChartBox} glass-panel`}>
                     {hoverInfo && (
-                        <div style={{
-                            position: 'absolute', top: 12, left: 24, zIndex: 10,
-                            backgroundColor: 'rgba(20,20,20,0.9)', border: '1px solid rgba(255,255,255,0.1)',
-                            borderRadius: '8px', padding: '4px 10px', pointerEvents: 'none'
-                        }}>
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>
+                        <div className={styles.mobileTooltip}>
+                            <div className={styles.mobileTooltipTime}>
                                 {new Date(hoverInfo.timestamp).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false })}
                             </div>
-                            <div style={{ color: 'var(--accent-neon)', fontWeight: '800', fontSize: '1rem' }}>€{Number(hoverInfo.price).toFixed(2)}</div>
+                            <div className={styles.mobileTooltipPrice}>€{Number(hoverInfo.price).toFixed(2)}</div>
                         </div>
                     )}
                     <ResponsiveContainer width="100%" height="100%">
@@ -305,27 +319,27 @@ const PlayerMarketMobile = () => {
                 </div>
 
                 {/* Trade Tabs */}
-                <div className="glass-panel" style={{ padding: '1.25rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                    <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', backgroundColor: '#000', padding: '4px', borderRadius: '12px' }}>
+                <div className={`${styles.mobileTradeCard} glass-panel`}>
+                    <div className={styles.mobileTabRow}>
                         <button
                             onClick={() => setActiveTab('buy')}
-                            style={{ flex: 1, padding: '12px', borderRadius: '10px', border: 'none', backgroundColor: activeTab === 'buy' ? 'rgba(57,255,20,0.15)' : 'transparent', color: activeTab === 'buy' ? 'var(--accent-neon)' : '#666', fontWeight: '800', fontSize: '0.85rem', transition: 'all 0.2s' }}
+                            className={`${styles.mobileTabBtn} ${activeTab === 'buy' ? styles.mobileTabBtnActiveBuy : ''}`}
                         >
                             COMPRAR
                         </button>
                         <button
                             onClick={() => setActiveTab('sell')}
-                            style={{ flex: 1, padding: '12px', borderRadius: '10px', border: 'none', backgroundColor: activeTab === 'sell' ? 'rgba(255,77,77,0.15)' : 'transparent', color: activeTab === 'sell' ? 'var(--error-red)' : '#666', fontWeight: '800', fontSize: '0.85rem', transition: 'all 0.2s' }}
+                            className={`${styles.mobileTabBtn} ${activeTab === 'sell' ? styles.mobileTabBtnActiveSell : ''}`}
                         >
                             VENDER
                         </button>
                     </div>
 
                     {activeTab === 'buy' ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                    <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>CANTIDAD</label>
+                        <div className={styles.mobileTradeForm}>
+                            <div className={styles.mobileInputGrid}>
+                                <div className={styles.mobileInputGroup}>
+                                    <label className={styles.mobileInputLabel}>CANTIDAD</label>
                                     <input
                                         type="number"
                                         placeholder="0.00"
@@ -339,11 +353,11 @@ const PlayerMarketMobile = () => {
                                                 setMarketBuyTotal('');
                                             }
                                         }}
-                                        style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #222', color: '#fff', fontSize: '0.95rem', boxSizing: 'border-box' }}
+                                        className={styles.mobileInput}
                                     />
                                 </div>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                    <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>TOTAL (€)</label>
+                                <div className={styles.mobileInputGroup}>
+                                    <label className={styles.mobileInputLabel}>TOTAL (€)</label>
                                     <input
                                         type="number"
                                         placeholder="0.00"
@@ -357,35 +371,25 @@ const PlayerMarketMobile = () => {
                                                 setMarketBuyQty('');
                                             }
                                         }}
-                                        style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #222', color: '#fff', fontSize: '0.95rem', boxSizing: 'border-box' }}
+                                        className={styles.mobileInput}
                                     />
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', gap: '8px' }}>
+                            <div className={styles.mobileQuickSelectRow}>
                                 {[0.25, 0.5, 1].map(p => (
-                                    <button key={p} onClick={() => handleQuickBuy(p)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #222', backgroundColor: 'transparent', color: '#fff', fontSize: '0.75rem', fontWeight: '700' }}>{p * 100}%</button>
+                                    <button key={p} onClick={() => handleQuickBuy(p)} className={styles.mobileQuickSelectBtn}>{p * 100}%</button>
                                 ))}
                             </div>
 
                             {/* Slippage Settings */}
-                            <div style={{ marginTop: '0.5rem' }}>
-                                <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>SLIPPAGE (%)</label>
-                                <div style={{ display: 'flex', gap: '6px', marginTop: '4px' }}>
+                            <div className={styles.mobileSlippageBox}>
+                                <label className={styles.mobileInputLabel}>SLIPPAGE (%)</label>
+                                <div className={styles.mobileSlippageRow}>
                                     {['0.1', '0.5', '1.0'].map(val => (
                                         <button
                                             key={val}
                                             onClick={() => setMaxSlippage(val)}
-                                            style={{
-                                                flex: 1,
-                                                padding: '8px',
-                                                borderRadius: '8px',
-                                                border: '1px solid',
-                                                borderColor: maxSlippage === val ? 'var(--accent-neon)' : '#222',
-                                                backgroundColor: maxSlippage === val ? 'rgba(57,255,20,0.1)' : 'transparent',
-                                                color: maxSlippage === val ? 'var(--accent-neon)' : '#666',
-                                                fontSize: '0.75rem',
-                                                fontWeight: '800'
-                                            }}
+                                            className={`${styles.mobileSlippageBtn} ${maxSlippage === val ? styles.mobileSlippageBtnActive : ''}`}
                                         >
                                             {val}%
                                         </button>
@@ -394,25 +398,26 @@ const PlayerMarketMobile = () => {
                                         type="number"
                                         value={maxSlippage}
                                         onChange={e => setMaxSlippage(e.target.value)}
-                                        style={{ width: '60px', padding: '8px', borderRadius: '8px', backgroundColor: '#000', border: '1px solid #222', color: '#fff', fontSize: '0.8rem', textAlign: 'center' }}
+                                        className={styles.mobileSlippageInput}
                                     />
                                 </div>
                             </div>
 
-                            {error && <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--error-red)', fontWeight: '600' }}>{error}</p>}
+                            {error && <p className={styles.mobileErrorMsg}>{error}</p>}
                             <button
                                 onClick={handleMarketBuy}
                                 disabled={loading || !marketBuyQty}
-                                style={{ width: '100%', padding: '16px', borderRadius: '14px', border: 'none', backgroundColor: '#00c853', color: '#000', fontWeight: '900', fontSize: '1rem', marginTop: '0.5rem', opacity: loading ? 0.7 : 1 }}
+                                className={`${styles.mobileExecuteBtn} ${styles.mobileBuyBtn}`}
+                                style={{ opacity: loading ? 0.7 : 1 }}
                             >
                                 {loading ? 'PROCESANDO...' : 'EJECUTAR COMPRA'}
                             </button>
                         </div>
                     ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                    <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>CANTIDAD</label>
+                        <div className={styles.mobileTradeForm}>
+                            <div className={styles.mobileInputGrid}>
+                                <div className={styles.mobileInputGroup}>
+                                    <label className={styles.mobileInputLabel}>CANTIDAD</label>
                                     <input
                                         type="number"
                                         placeholder="0.00"
@@ -426,11 +431,11 @@ const PlayerMarketMobile = () => {
                                                 setMarketSellTotal('');
                                             }
                                         }}
-                                        style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #222', color: '#fff', fontSize: '0.95rem', boxSizing: 'border-box' }}
+                                        className={styles.mobileInput}
                                     />
                                 </div>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                    <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>TOTAL (€)</label>
+                                <div className={styles.mobileInputGroup}>
+                                    <label className={styles.mobileInputLabel}>TOTAL (€)</label>
                                     <input
                                         type="number"
                                         placeholder="0.00"
@@ -444,35 +449,25 @@ const PlayerMarketMobile = () => {
                                                 setMarketSellQty('');
                                             }
                                         }}
-                                        style={{ width: '100%', padding: '12px', borderRadius: '10px', backgroundColor: '#000', border: '1px solid #222', color: '#fff', fontSize: '0.95rem', boxSizing: 'border-box' }}
+                                        className={styles.mobileInput}
                                     />
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', gap: '8px' }}>
+                            <div className={styles.mobileQuickSelectRow}>
                                 {[0.25, 0.5, 1].map(p => (
-                                    <button key={p} onClick={() => handleQuickSell(p)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #222', backgroundColor: 'transparent', color: '#fff', fontSize: '0.75rem', fontWeight: '700' }}>{p * 100}%</button>
+                                    <button key={p} onClick={() => handleQuickSell(p)} className={styles.mobileQuickSelectBtn}>{p * 100}%</button>
                                 ))}
                             </div>
 
                             {/* Slippage Settings */}
-                            <div style={{ marginTop: '0.5rem' }}>
-                                <label style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>SLIPPAGE (%)</label>
-                                <div style={{ display: 'flex', gap: '6px', marginTop: '4px' }}>
+                            <div className={styles.mobileSlippageBox}>
+                                <label className={styles.mobileInputLabel}>SLIPPAGE (%)</label>
+                                <div className={styles.mobileSlippageRow}>
                                     {['0.1', '0.5', '1.0'].map(val => (
                                         <button
                                             key={val}
                                             onClick={() => setMaxSlippage(val)}
-                                            style={{
-                                                flex: 1,
-                                                padding: '8px',
-                                                borderRadius: '8px',
-                                                border: '1px solid',
-                                                borderColor: maxSlippage === val ? 'var(--accent-neon)' : '#222',
-                                                backgroundColor: maxSlippage === val ? 'rgba(57,255,20,0.1)' : 'transparent',
-                                                color: maxSlippage === val ? 'var(--accent-neon)' : '#666',
-                                                fontSize: '0.75rem',
-                                                fontWeight: '800'
-                                            }}
+                                            className={`${styles.mobileSlippageBtn} ${maxSlippage === val ? styles.mobileSlippageBtnActive : ''}`}
                                         >
                                             {val}%
                                         </button>
@@ -481,16 +476,17 @@ const PlayerMarketMobile = () => {
                                         type="number"
                                         value={maxSlippage}
                                         onChange={e => setMaxSlippage(e.target.value)}
-                                        style={{ width: '60px', padding: '8px', borderRadius: '8px', backgroundColor: '#000', border: '1px solid #222', color: '#fff', fontSize: '0.8rem', textAlign: 'center' }}
+                                        className={styles.mobileSlippageInput}
                                     />
                                 </div>
                             </div>
 
-                            {error && <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--error-red)', fontWeight: '600' }}>{error}</p>}
+                            {error && <p className={styles.mobileErrorMsg}>{error}</p>}
                             <button
                                 onClick={handleMarketSell}
                                 disabled={loading || !marketSellQty}
-                                style={{ width: '100%', padding: '16px', borderRadius: '14px', border: 'none', backgroundColor: '#ff5252', color: '#000', fontWeight: '900', fontSize: '1rem', marginTop: '0.5rem', opacity: loading ? 0.7 : 1 }}
+                                className={`${styles.mobileExecuteBtn} ${styles.mobileSellBtn}`}
+                                style={{ opacity: loading ? 0.7 : 1 }}
                             >
                                 {loading ? 'PROCESANDO...' : 'EJECUTAR VENTA'}
                             </button>
@@ -498,39 +494,26 @@ const PlayerMarketMobile = () => {
                     )}
                 </div>
 
-                <div style={{ paddingBottom: '40px' }} />
+                <div className={styles.mobileSpacer} />
             </main>
 
             {/* Bottom Navigation Mobile */}
-            <nav style={{
-                position: 'fixed',
-                bottom: 0,
-                left: 0,
-                width: '100%',
-                backgroundColor: 'rgba(28,28,28,0.95)',
-                borderTop: '1px solid rgba(255,255,255,0.05)',
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                zIndex: 20,
-                paddingBottom: 'env(safe-area-inset-bottom)'
-            }}>
-                <Link to="/home" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', padding: '12px 0', textDecoration: 'none', color: 'var(--text-muted)' }}>
-                    <span style={{ fontSize: '0.75rem', fontWeight: '500' }}>Inicio</span>
+            <nav className={styles.mobileBottomNav}>
+                <Link to="/home" className={styles.mobileNavLink}>
+                    <span className={styles.mobileNavText}>Inicio</span>
                 </Link>
-                <Link to="/portfolio" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', padding: '12px 0', textDecoration: 'none', color: 'var(--text-muted)' }}>
-                    <span style={{ fontSize: '0.75rem', fontWeight: '500' }}>Portfolio</span>
+                <Link to="/portfolio" className={styles.mobileNavLink}>
+                    <span className={styles.mobileNavText}>Portfolio</span>
                 </Link>
-                <Link to="/market" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', padding: '12px 0', textDecoration: 'none', color: 'var(--accent-neon)' }}>
-                    <div style={{ width: '20px', height: '2px', backgroundColor: 'var(--accent-neon)', borderRadius: '2px', position: 'absolute', top: 0 }}></div>
-                    <span style={{ fontSize: '0.75rem', fontWeight: '600' }}>Mercado</span>
+                <Link to="/market" className={`${styles.mobileNavLink} ${styles.mobileNavLinkActive}`}>
+                    <div className={styles.mobileNavLinkActiveBar}></div>
+                    <span className={`${styles.mobileNavText} ${styles.mobileNavTextActive}`}>Mercado</span>
                 </Link>
                 <div
                     onClick={() => window.location.href = '/profile'}
-                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '12px 0', color: 'var(--text-muted)' }}
+                    className={styles.mobileNavProfile}
                 >
-                    <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: 'var(--surface-lighter)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', fontSize: '0.7rem' }}>
+                    <div className={styles.mobileNavAvatar}>
                         {user?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
                 </div>

@@ -1,0 +1,477 @@
+.loadingContainer {
+    background-color: var(--bg-main);
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-main);
+}
+
+.container {
+    background-color: var(--bg-main);
+    height: 100vh;
+    width: 100%;
+    display: flex;
+}
+
+.mainContent {
+    margin-left: 250px;
+    flex: 1;
+    padding: 2rem 3rem;
+    overflow-y: auto;
+}
+
+.header {
+    margin-bottom: 3rem;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.errorBanner {
+    background-color: rgba(255, 77, 77, 0.1);
+    border: 1px solid rgba(255, 77, 77, 0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 2rem;
+    color: #ff4d4d;
+    font-size: 0.9rem;
+}
+
+.contentGrid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+
+.userCard {
+    padding: 2rem;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.avatarContainer {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: var(--surface-lighter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--accent-neon);
+    margin-bottom: 1.5rem;
+    border: 4px solid rgba(57, 255, 20, 0.2);
+    overflow: hidden;
+}
+
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.userName {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.userEmail {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.levelExpGrid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.statBox {
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: 1rem;
+    border-radius: 16px;
+}
+
+.statLabel {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0 0 0.5rem 0;
+}
+
+.statValue {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.logoutBtn {
+    margin-top: 2rem;
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background-color: rgba(255, 50, 50, 0.1);
+    color: #ff5050;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.logoutBtn:hover {
+    background-color: rgba(255, 50, 50, 0.2);
+}
+
+.detailsCol {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.summaryCard {
+    padding: 2rem;
+    border-radius: 24px;
+}
+
+.cardTitle {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.summaryGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.summaryItem {
+}
+
+.summaryLabel {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.summaryValue {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.summaryValueAccent {
+    color: var(--accent-neon);
+}
+
+.detailsCard {
+    padding: 2rem;
+    border-radius: 24px;
+}
+
+.detailsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.detailsItem {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 0.8rem;
+}
+
+.detailsLabel {
+    color: var(--text-muted);
+}
+
+.detailsValue {
+    font-weight: 500;
+}
+
+.detailsValueAccent {
+    color: var(--accent-neon);
+    font-weight: 600;
+}
+
+.detailsValueMuted {
+    font-family: monospace;
+    color: var(--text-muted);
+}
+
+/* Mobile Styles */
+.mobileContainer {
+    background-color: var(--bg-main);
+    height: 100dvh;
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobileHeader {
+    padding: 0 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(16, 16, 16, 0.9);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    box-sizing: border-box;
+}
+
+.mobileLogo {
+    height: 22px;
+}
+
+.mobileBackBtn {
+    background: none;
+    border: none;
+    color: var(--accent-neon);
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.mobileHeaderTitle {
+    font-size: 0.95rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: 1px;
+    color: var(--accent-neon);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.mobileLogoutBtn {
+    background: none;
+    border: none;
+    color: #ff5050;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.mobileMain {
+    flex: 1;
+    padding: 1.5rem;
+    padding-bottom: 80px;
+    overflow-y: auto;
+}
+
+.mobileUserInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.mobileAvatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: var(--surface-lighter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--accent-neon);
+    margin-bottom: 1rem;
+    border: 3px solid rgba(57, 255, 20, 0.2);
+    overflow: hidden;
+}
+
+.mobileUserName {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0 0 0.25rem 0;
+}
+
+.mobileUserMeta {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.mobileCapitalCard {
+    padding: 1.5rem;
+    border-radius: 24px;
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.mobileCapitalLabel {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.mobileCapitalValue {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: var(--accent-neon);
+    margin: 0.25rem 0 1rem 0;
+    letter-spacing: -1px;
+}
+
+.mobileCapitalBreakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 1rem;
+}
+
+.mobileBreakdownItemLabel {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin: 0 0 4px 0;
+}
+
+.mobileBreakdownItemValue {
+    font-size: 1rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.mobileHoldingsSection {
+    margin-top: 2.5rem;
+}
+
+.mobileHoldingsTitle {
+    font-size: 0.90rem;
+    font-weight: 800;
+    color: var(--accent-neon);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1.25rem;
+}
+
+.mobileNoHoldings {
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.mobileHoldingsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.mobileHoldingCard {
+    padding: 1rem;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    color: inherit;
+}
+
+.mobileHoldingName {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.mobileHoldingShares {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.mobileHoldingValue {
+    font-weight: 800;
+    font-size: 0.95rem;
+    margin: 0;
+    color: var(--accent-neon);
+}
+
+.mobileBottomNav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(28, 28, 28, 0.95);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 20;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.mobileNavLink {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 12px 0;
+    text-decoration: none;
+    color: var(--text-muted);
+}
+
+.mobileNavLinkActive {
+    color: var(--accent-neon);
+    position: relative;
+}
+
+.mobileNavLinkActiveBar {
+    width: 20px;
+    height: 2px;
+    background-color: var(--accent-neon);
+    border-radius: 2px;
+    position: absolute;
+    top: 0;
+}
+
+.mobileNavText {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.mobileNavAvatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--surface-lighter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 0.7rem;
+}
+
+.mobileHeaderSpacer {
+    width: 60px;
+}
+
+.mobileHoldingValueBox {
+    text-align: right;
+}

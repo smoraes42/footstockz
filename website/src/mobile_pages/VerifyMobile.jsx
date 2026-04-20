@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import { verifyEmail } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import styles from '../styles/Verify.module.css';
 
 const VerifyMobile = () => {
     const navigate = useNavigate();
@@ -74,44 +75,37 @@ const VerifyMobile = () => {
         }
     }, [code]);
 
-    const digitInputStyle = {
-        width: '46px', height: '54px', textAlign: 'center', fontSize: '1.5rem', fontWeight: '800',
-        borderRadius: '10px', border: '2px solid rgba(255,255,255,0.1)', backgroundColor: 'var(--surface-lighter)',
-        color: 'var(--text-main)', outline: 'none', caretColor: 'var(--accent-neon)',
-        transition: 'border-color 0.2s, box-shadow 0.2s'
-    };
-
     return (
-        <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
-            <nav style={{ padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)', backgroundColor: 'rgba(16,16,16,0.9)', position: 'sticky', top: 0, zIndex: 10 }}>
+        <div className={styles.mobileContainer}>
+            <nav className={styles.mobileNav}>
                 <Link to="/">
-                    <img src={fsLogo} alt="Futstocks Logo" style={{ height: '30px' }} />
+                    <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileLogo} />
                 </Link>
             </nav>
-            <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 1.5rem', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '150vw', height: '150vw', background: 'radial-gradient(circle, rgba(57,255,20,0.1) 0%, rgba(16,16,16,0) 60%)', zIndex: 0, pointerEvents: 'none' }}></div>
-                <div className="glass-panel fade-in-up" style={{ width: '100%', padding: '2rem 1.5rem', borderRadius: '12px', zIndex: 1, position: 'relative', textAlign: 'center' }}>
+            <main className={styles.mobileMain}>
+                <div className={styles.mobileGlow}></div>
+                <div className={`${styles.mobileGlassPanel} glass-panel fade-in-up`}>
 
                     {success ? (
                         <div>
-                            <h1 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '0.5rem' }}>¡Email Verificado!</h1>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Redirigiendo al inicio...</p>
+                            <h1 className={styles.mobileTitle}>¡Email Verificado!</h1>
+                            <p className={styles.mobileSubtext}>Redirigiendo al inicio...</p>
                         </div>
                     ) : (
                         <>
-                            <h1 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '0.5rem' }}>Verifica tu Email</h1>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+                            <h1 className={styles.mobileTitle}>Verifica tu Email</h1>
+                            <p className={styles.mobileSubtext}>
                                 Código enviado a<br />
-                                <strong style={{ color: 'var(--text-main)', fontSize: '0.9rem' }}>{email}</strong>
+                                <strong className={styles.mobileEmail}>{email}</strong>
                             </p>
 
                             {error && (
-                                <div style={{ backgroundColor: 'rgba(255,77,77,0.1)', border: '1px solid rgba(255,77,77,0.3)', borderRadius: '8px', padding: '10px', marginBottom: '1.25rem', color: '#ff4d4d', fontSize: '0.85rem' }}>
+                                <div className={styles.mobileErrorAlert}>
                                     {error}
                                 </div>
                             )}
 
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '1.5rem' }} onPaste={handlePaste}>
+                            <div className={styles.mobileCodeContainer} onPaste={handlePaste}>
                                 {code.map((digit, idx) => (
                                     <input
                                         key={idx}
@@ -122,27 +116,22 @@ const VerifyMobile = () => {
                                         value={digit}
                                         onChange={(e) => handleChange(idx, e.target.value)}
                                         onKeyDown={(e) => handleKeyDown(idx, e)}
-                                        style={{
-                                            ...digitInputStyle,
-                                            borderColor: digit ? 'var(--accent-neon)' : 'rgba(255,255,255,0.1)',
-                                            boxShadow: digit ? '0 0 10px rgba(57,255,20,0.15)' : 'none'
-                                        }}
+                                        className={`${styles.mobileDigitInput} ${digit ? styles.mobileDigitInputActive : ''}`}
                                     />
                                 ))}
                             </div>
 
                             <button
                                 type="button"
-                                className="neon-button"
-                                style={{ padding: '14px', borderRadius: '8px', fontSize: '1rem', width: '100%', opacity: loading ? 0.6 : 1, cursor: loading ? 'wait' : 'pointer' }}
+                                className={`${styles.mobileVerifyBtn} ${loading ? styles.mobileLoadingBtn : ''} neon-button`}
                                 onClick={handleVerify}
                                 disabled={loading}
                             >
                                 {loading ? 'Verificando...' : 'Verificar'}
                             </button>
 
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '1.5rem' }}>
-                                ¿No recibiste el código? <Link to="/login" style={{ color: 'var(--accent-neon)', textDecoration: 'none', fontWeight: '600' }}>Volver al login</Link>
+                            <p className={styles.mobileFooter}>
+                                ¿No recibiste el código? <Link to="/login" className={styles.mobileFooterLink}>Volver al login</Link>
                             </p>
                         </>
                     )}

@@ -4,7 +4,7 @@ import { getPortfolio, getUserTradeHistory } from '../services/api';
 import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
-import styles from '../styles/PortfolioDesktop.module.css';
+import styles from '../styles/Portfolio.module.css';
 
 
 const formatCompactNumber = (number) => {

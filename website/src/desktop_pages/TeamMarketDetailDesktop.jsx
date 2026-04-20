@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { getPortfolio, getTeamById, getTeamHistory, getMe, teamMarketBuy, teamMarketSell, getTradeConfig } from '../services/api';
 import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
-import styles from '../styles/TeamMarketDetailDesktop.module.css';
+import styles from '../styles/TeamMarketDetail.module.css';
 
 const formatEU = (val, decimals = 2) => {
     if (val === null || val === undefined || val === '') return '';

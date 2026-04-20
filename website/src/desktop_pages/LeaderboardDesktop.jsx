@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
-import styles from '../styles/LeaderboardDesktop.module.css';
+import styles from '../styles/Leaderboard.module.css';
 import { getLeaderboard } from '../services/api';
 
 

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import fsLogoBlack from '../assets/fs-logo-black.png';
 import { registerUser, googleLogin, initGoogleSignIn } from '../services/api';
-import styles from '../styles/RegisterDesktop.module.css';
+import styles from '../styles/Register.module.css';
 import Navbar from '../components/Navbar';
 
 const RegisterDesktop = () => {

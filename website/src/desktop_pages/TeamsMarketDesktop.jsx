@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { getMe, getTeamMarket, teamMarketBuy } from '../services/api';
 import { useSocket } from '../context/SocketContext';
-import styles from '../styles/TeamsMarketDesktop.module.css';
+import styles from '../styles/TeamsMarket.module.css';
 
 const TeamsMarketDesktop = ({ searchTerm = '', selectedLeague = null }) => {
     const navigate = useNavigate();

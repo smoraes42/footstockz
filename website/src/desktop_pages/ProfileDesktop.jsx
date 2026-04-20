@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getPortfolio, logout } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
-import styles from '../styles/ProfileDesktop.module.css';
+import styles from '../styles/Profile.module.css';
 
 const ProfileDesktop = () => {
     const navigate = useNavigate();

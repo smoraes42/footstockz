@@ -4,6 +4,7 @@ import { getPlayers, getMe, getLeagues, API_URL } from '../services/api';
 import fsLogo from '../assets/fs-logo.png';
 import { useSocket } from '../context/SocketContext';
 import TeamsMarketMobile from './TeamsMarketMobile';
+import styles from '../styles/Market.module.css';
 
 
 const MarketMobile = () => {
@@ -136,53 +137,25 @@ const MarketMobile = () => {
     };
 
     return (
-        <div style={{ backgroundColor: 'var(--bg-main)', height: '100dvh', overflow: 'hidden', width: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div className={styles.mobileContainer}>
 
             {/* Top Header Mobile */}
-            <header style={{
-                padding: '0 1.5rem',
-                borderBottom: '1px solid rgba(255,255,255,0.05)',
-                backgroundColor: 'rgba(16,16,16,0.9)',
-                position: 'sticky',
-                top: 0,
-                zIndex: 10,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                height: '60px',
-                boxSizing: 'border-box'
-            }}>
-                <img src={fsLogo} alt="Futstocks Logo" style={{ height: '22px' }} />
-                <div style={{ width: '22px' }} />
+            <header className={styles.mobileHeader}>
+                <img src={fsLogo} alt="Futstocks Logo" className={styles.mobileLogo} />
+                <div className={styles.mobileNavSpacer} />
             </header>
 
-            <main style={{ flex: 1, padding: '1.5rem', paddingBottom: '80px', overflowY: 'auto' }}>
-                <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem' }}>
+            <main className={styles.mobileMain}>
+                <div className={styles.mobileMarketTabs}>
                     <h2 
                         onClick={() => setMarketType('players')}
-                        style={{ 
-                            fontSize: '0.95rem', 
-                            fontWeight: '800', 
-                            color: marketType === 'players' ? 'var(--accent-neon)' : 'rgba(255,255,255,0.3)', 
-                            textTransform: 'uppercase', 
-                            letterSpacing: '1px', 
-                            margin: 0,
-                            cursor: 'pointer'
-                        }}
+                        className={`${styles.mobileMarketTab} ${marketType === 'players' ? styles.mobileMarketTabActive : styles.mobileMarketTabInactive}`}
                     >
                         Jugadores
                     </h2>
                     <h2 
                         onClick={() => setMarketType('teams')}
-                        style={{ 
-                            fontSize: '0.95rem', 
-                            fontWeight: '800', 
-                            color: marketType === 'teams' ? 'var(--accent-neon)' : 'rgba(255,255,255,0.3)', 
-                            textTransform: 'uppercase', 
-                            letterSpacing: '1px', 
-                            margin: 0,
-                            cursor: 'pointer'
-                        }}
+                        className={`${styles.mobileMarketTab} ${marketType === 'teams' ? styles.mobileMarketTabActive : styles.mobileMarketTabInactive}`}
                     >
                         Equipos
                     </h2>
@@ -193,74 +166,35 @@ const MarketMobile = () => {
                 ) : (
                     <>
                 {/* Sort & Filter Bar */}
-                <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div className={styles.mobileFilterBar}>
 
                     {/* Horizontal Scroll Sort Buttons */}
-                    <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none' }}>
+                    <div className={styles.mobileHorizontalScroll}>
                         <button
                             onClick={() => handleSortToggle('price')}
-                            style={{
-                                whiteSpace: 'nowrap',
-                                padding: '8px 14px',
-                                borderRadius: '10px',
-                                border: sortConfig.key === 'price' ? '1px solid var(--accent-neon)' : '1px solid #222',
-                                backgroundColor: sortConfig.key === 'price' ? 'rgba(57,255,20,0.1)' : 'rgba(255,255,255,0.03)',
-                                color: sortConfig.key === 'price' ? 'var(--accent-neon)' : 'var(--text-muted)',
-                                fontSize: '0.75rem',
-                                fontWeight: '700',
-                                transition: 'all 0.2s'
-                            }}
+                            className={`${styles.mobileSortBtn} ${sortConfig.key === 'price' ? styles.mobileSortBtnActive : ''}`}
                         >
                             Precio {sortConfig.key === 'price' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '') : '↕'}
                         </button>
                         <button
                             onClick={() => handleSortToggle('change')}
-                            style={{
-                                whiteSpace: 'nowrap',
-                                padding: '8px 14px',
-                                borderRadius: '10px',
-                                border: sortConfig.key === 'change' ? '1px solid var(--accent-neon)' : '1px solid #222',
-                                backgroundColor: sortConfig.key === 'change' ? 'rgba(57,255,20,0.1)' : 'rgba(255,255,255,0.03)',
-                                color: sortConfig.key === 'change' ? 'var(--accent-neon)' : 'var(--text-muted)',
-                                fontSize: '0.75rem',
-                                fontWeight: '700',
-                                transition: 'all 0.2s'
-                            }}
+                            className={`${styles.mobileSortBtn} ${sortConfig.key === 'change' ? styles.mobileSortBtnActive : ''}`}
                         >
                             Cambio 24h {sortConfig.key === 'change' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '') : '↕'}
                         </button>
                         <button
                             onClick={() => handleSortToggle('name')}
-                            style={{
-                                whiteSpace: 'nowrap',
-                                padding: '8px 14px',
-                                borderRadius: '10px',
-                                border: sortConfig.key === 'name' ? '1px solid var(--accent-neon)' : '1px solid #222',
-                                backgroundColor: sortConfig.key === 'name' ? 'rgba(57,255,20,0.1)' : 'rgba(255,255,255,0.03)',
-                                color: sortConfig.key === 'name' ? 'var(--accent-neon)' : 'var(--text-muted)',
-                                fontSize: '0.75rem',
-                                fontWeight: '700',
-                                transition: 'all 0.2s'
-                            }}
+                            className={`${styles.mobileSortBtn} ${sortConfig.key === 'name' ? styles.mobileSortBtnActive : ''}`}
                         >
                             Nombre {sortConfig.key === 'name' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '') : '↕'}
                         </button>
                     </div>
 
                     {/* League Filter (Horizontal Scroll) */}
-                    <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none', marginTop: '8px' }}>
+                    <div className={`${styles.mobileHorizontalScroll} ${styles.mobileLeagueFilterRow}`}>
                         <button
                             onClick={() => { setSelectedLeague(null); setSelectedTeam(null); }}
-                            style={{
-                                whiteSpace: 'nowrap',
-                                padding: '6px 12px',
-                                borderRadius: '8px',
-                                border: !selectedLeague ? '1px solid var(--accent-neon)' : '1px solid transparent',
-                                backgroundColor: !selectedLeague ? 'rgba(57,255,20,0.1)' : 'transparent',
-                                color: !selectedLeague ? 'var(--accent-neon)' : 'var(--text-muted)',
-                                fontSize: '0.7rem',
-                                fontWeight: '700'
-                            }}
+                            className={`${styles.mobileFilterBtn} ${!selectedLeague ? styles.mobileFilterBtnActive : ''}`}
                         >
                             TODAS LAS LIGAS
                         </button>
@@ -268,16 +202,7 @@ const MarketMobile = () => {
                             <button
                                 key={league.id}
                                 onClick={() => { setSelectedLeague(league); setSelectedTeam(null); }}
-                                style={{
-                                    whiteSpace: 'nowrap',
-                                    padding: '6px 12px',
-                                    borderRadius: '8px',
-                                    border: selectedLeague?.id === league.id ? '1px solid var(--accent-neon)' : '1px solid transparent',
-                                    backgroundColor: selectedLeague?.id === league.id ? 'rgba(57,255,20,0.1)' : 'rgba(255,255,255,0.03)',
-                                    color: selectedLeague?.id === league.id ? 'var(--accent-neon)' : 'var(--text-muted)',
-                                    fontSize: '0.7rem',
-                                    fontWeight: '700'
-                                }}
+                                className={`${styles.mobileFilterBtn} ${selectedLeague?.id === league.id ? styles.mobileFilterBtnActive : ''}`}
                             >
                                 {league.name.toUpperCase()}
                             </button>
@@ -286,19 +211,10 @@ const MarketMobile = () => {
 
                     {/* Team Filter (Horizontal Scroll) */}
                     {selectedLeague && (
-                        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none' }}>
+                        <div className={styles.mobileHorizontalScroll}>
                             <button
                                 onClick={() => setSelectedTeam(null)}
-                                style={{
-                                    whiteSpace: 'nowrap',
-                                    padding: '6px 12px',
-                                    borderRadius: '8px',
-                                    border: !selectedTeam ? '1px solid var(--accent-neon)' : '1px solid transparent',
-                                    backgroundColor: !selectedTeam ? 'rgba(57,255,20,0.1)' : 'transparent',
-                                    color: !selectedTeam ? 'var(--accent-neon)' : 'var(--text-muted)',
-                                    fontSize: '0.7rem',
-                                    fontWeight: '700'
-                                }}
+                                className={`${styles.mobileFilterBtn} ${!selectedTeam ? styles.mobileFilterBtnActive : ''}`}
                             >
                                 TODOS
                             </button>
@@ -306,16 +222,7 @@ const MarketMobile = () => {
                                 <button
                                     key={team.id}
                                     onClick={() => setSelectedTeam(team)}
-                                    style={{
-                                        whiteSpace: 'nowrap',
-                                        padding: '6px 12px',
-                                        borderRadius: '8px',
-                                        border: selectedTeam?.id === team.id ? '1px solid var(--accent-neon)' : '1px solid transparent',
-                                        backgroundColor: selectedTeam?.id === team.id ? 'rgba(57,255,20,0.1)' : 'rgba(255,255,255,0.03)',
-                                        color: selectedTeam?.id === team.id ? 'var(--accent-neon)' : 'var(--text-muted)',
-                                        fontSize: '0.7rem',
-                                        fontWeight: '700'
-                                    }}
+                                    className={`${styles.mobileFilterBtn} ${selectedTeam?.id === team.id ? styles.mobileFilterBtnActive : ''}`}
                                 >
                                     {team.name.toUpperCase()}
                                 </button>
@@ -324,47 +231,34 @@ const MarketMobile = () => {
                     )}
                 </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div className={styles.mobilePlayerList}>
 
                         {loadingPlayers ? (
-                            <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Cargando mercado...</div>
+                            <div className={styles.loading}>Cargando mercado...</div>
                         ) : (
                             players.map(player => (
                                 <Link
                                     to={`/market/player/${player.id}`}
                                     key={player.id}
-                                    className="glass-panel"
-                                    style={{ padding: '1rem', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', textDecoration: 'none', color: 'inherit' }}
+                                    className={`${styles.mobilePlayerCard} glass-panel`}
                                 >
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                        <div style={{ width: '45px', height: '45px', borderRadius: '10px', backgroundColor: 'var(--surface-lighter)', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+                                    <div className={styles.mobilePlayerInfo}>
+                                        <div className={styles.mobilePlayerAvatarBox}>
                                             <img
                                                 src={`${API_URL}/v1/players/${player.id}/image`}
                                                 alt={player.name}
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                onError={(e) => {
-                                                    e.target.style.display = 'none';
-                                                    e.target.nextSibling.style.display = 'block';
-                                                }}
-                                            />
-                                            <span style={{ fontSize: '1.2rem', display: 'none' }}>👤</span>
+                                                className={styles.mobilePlayerAvatarImg}
+                                            <span className={styles.mobilePlayerAvatarPlaceholder}>👤</span>
                                         </div>
                                         <div>
-                                            <p style={{ fontWeight: '700', fontSize: '0.90rem', margin: 0 }}>{player.name}</p>
-                                            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', margin: 0 }}>{player.team}</p>
+                                            <p className={styles.mobilePlayerName}>{player.name}</p>
+                                            <p className={styles.mobilePlayerTeam}>{player.team}</p>
                                         </div>
                                     </div>
 
-                                    <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem' }}>
-                                        <p style={{ fontWeight: '800', fontSize: '0.95rem', margin: 0 }}>€{player.price.toFixed(2)}</p>
-                                        <span style={{
-                                            fontSize: '0.65rem',
-                                            fontWeight: '800',
-                                            color: player.change >= 0 ? 'var(--accent-neon)' : 'var(--error-red)',
-                                            backgroundColor: player.change >= 0 ? 'rgba(57,255,20,0.1)' : 'rgba(255,77,77,0.1)',
-                                            padding: '2px 6px',
-                                            borderRadius: '4px'
-                                        }}>
+                                    <div className={styles.mobilePlayerPriceBox}>
+                                        <p className={styles.mobilePlayerPrice}>€{player.price.toFixed(2)}</p>
+                                        <span className={`${styles.mobilePlayerChange} ${player.change >= 0 ? styles.mobileChangePositive : styles.mobileChangeNegative}`}>
                                             {player.change >= 0 ? '+' : ''}{player.change.toFixed(2)}%
                                         </span>
                                     </div>
@@ -373,28 +267,17 @@ const MarketMobile = () => {
                         )}
 
                         {!loadingPlayers && players.length === 0 && (
-                            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
+                            <div className={styles.loading}>
                                 No se encontraron jugadores con estos filtros.
                             </div>
                         )}
 
                         {!loadingPlayers && currentPage < totalPages && (
-                            <div style={{ padding: '1rem', textAlign: 'center' }}>
+                            <div className={styles.mobileLoadMoreContainer}>
                                 <button
                                     onClick={handleLoadMore}
                                     disabled={fetchingMore}
-                                    style={{
-                                        width: '100%',
-                                        padding: '12px',
-                                        backgroundColor: 'rgba(57,255,20,0.1)',
-                                        color: 'var(--accent-neon)',
-                                        border: '1px solid rgba(57,255,20,0.3)',
-                                        borderRadius: '10px',
-                                        fontWeight: 'bold',
-                                        fontSize: '0.9rem',
-                                        transition: 'all 0.2s',
-                                        opacity: fetchingMore ? 0.7 : 1
-                                    }}
+                                    className={`${styles.mobileLoadMoreBtn} ${fetchingMore ? styles.mobileLoadMoreBtnLoading : ''}`}
                                 >
                                     {fetchingMore ? 'Cargando...' : 'Cargar más jugadores'}
                                 </button>
@@ -407,32 +290,19 @@ const MarketMobile = () => {
             </main>
 
             {/* Bottom Navigation Mobile */}
-            <nav style={{
-                position: 'fixed',
-                bottom: 0,
-                left: 0,
-                width: '100%',
-                backgroundColor: 'rgba(28,28,28,0.95)',
-                borderTop: '1px solid rgba(255,255,255,0.05)',
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                zIndex: 20,
-                paddingBottom: 'env(safe-area-inset-bottom)'
-            }}>
-                <Link to="/home" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', padding: '12px 0', textDecoration: 'none', color: 'var(--text-muted)' }}>
-                    <span style={{ fontSize: '0.75rem', fontWeight: '500' }}>Inicio</span>
+            <nav className={styles.mobileBottomNav}>
+                <Link to="/home" className={styles.mobileNavLink}>
+                    <span className={styles.mobileNavText}>Inicio</span>
                 </Link>
-                <Link to="/portfolio" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', padding: '12px 0', textDecoration: 'none', color: 'var(--text-muted)' }}>
-                    <span style={{ fontSize: '0.75rem', fontWeight: '500' }}>Portfolio</span>
+                <Link to="/portfolio" className={styles.mobileNavLink}>
+                    <span className={styles.mobileNavText}>Portfolio</span>
                 </Link>
-                <Link to="/market" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', padding: '12px 0', textDecoration: 'none', color: 'var(--accent-neon)' }}>
-                    <div style={{ width: '20px', height: '2px', backgroundColor: 'var(--accent-neon)', borderRadius: '2px', position: 'absolute', top: 0 }}></div>
-                    <span style={{ fontSize: '0.75rem', fontWeight: '600' }}>Mercado</span>
+                <Link to="/market" className={`${styles.mobileNavLink} ${styles.mobileNavLinkActive}`}>
+                    <div className={styles.mobileNavLinkActiveBar}></div>
+                    <span className={`${styles.mobileNavText} ${styles.mobileNavTextActive}`}>Mercado</span>
                 </Link>
-                <Link to="/profile" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', padding: '12px 0', textDecoration: 'none', color: 'var(--text-muted)' }}>
-                    <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: 'var(--surface-lighter)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', fontSize: '0.7rem', color: 'var(--text-main)' }}>
+                <Link to="/profile" className={styles.mobileNavLink}>
+                    <div className={styles.mobileNavAvatar}>
                         {user?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
                 </Link>
@@ -442,76 +312,39 @@ const MarketMobile = () => {
             {!showSearch && (
                 <button
                     onClick={() => setShowSearch(true)}
-                    className="glass-panel"
-                    style={{
-                        position: 'fixed',
-                        bottom: '90px',
-                        right: '20px',
-                        width: '56px',
-                        height: '56px',
-                        borderRadius: '18px',
-                        border: '1px solid rgba(57,255,20,0.3)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        zIndex: 25,
-                        cursor: 'pointer',
-                        boxShadow: '0 8px 32px 0 rgba(57, 255, 20, 0.15)',
-                        background: 'rgba(28, 28, 28, 0.8)',
-                    }}
+                    className={`${styles.mobileFab} glass-panel`}
                 >
-                    <span style={{ fontSize: '1.4rem' }}>🔍</span>
+                    <span className={styles.mobileFabIcon}>🔍</span>
                 </button>
             )}
 
             {/* Search Overlay */}
             {showSearch && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0,0,0,0.85)',
-                    backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)',
-                    zIndex: 100,
-                    padding: '2rem 1.5rem',
-                    boxSizing: 'border-box'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                        <div style={{ position: 'relative', flex: 1 }}>
+                <div className={styles.mobileSearchOverlay}>
+                    <div className={styles.mobileSearchInputBox}>
+                        <div className={styles.mobileSearchIconBox}>
                             <input
                                 autoFocus
                                 type="text"
                                 placeholder="Nombre del jugador..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                style={{
-                                    width: '100%',
-                                    padding: '14px 18px',
-                                    backgroundColor: '#111',
-                                    border: '1px solid var(--accent-neon)',
-                                    borderRadius: '14px',
-                                    color: 'white',
-                                    fontSize: '1rem',
-                                    outline: 'none'
-                                }}
+                                className={styles.mobileSearchInput}
                             />
                         </div>
                         <button
                             onClick={() => { setShowSearch(false); if (searchTerm) fetchPlayers(1); }}
-                            style={{ background: 'none', border: 'none', color: 'var(--accent-neon)', fontWeight: '800', fontSize: '0.9rem' }}
+                            className={styles.mobileSearchCloseBtn}
                         >
                             LISTO
                         </button>
                     </div>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center' }}>
+                    <p className={styles.mobileSearchSubtext}>
                         Presiona "LISTO" o toca fuera para cerrar.
                     </p>
                     <div
                         onClick={() => setShowSearch(false)}
-                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}
+                        className={styles.mobileSearchOverlayBackdrop}
                     />
                 </div>
             )}

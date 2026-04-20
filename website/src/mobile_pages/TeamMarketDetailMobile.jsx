@@ -6,6 +6,7 @@ import {
 import { toast } from 'react-toastify';
 import { getPortfolio, getTeamById, getTeamHistory, teamMarketBuy, teamMarketSell, getTradeConfig } from '../services/api';
 import { useSocket } from '../context/SocketContext';
+import styles from '../styles/Market.module.css';
 
 const formatEU = (val, decimals = 2) => {
     if (val === null || val === undefined || val === '') return '';
@@ -178,18 +179,18 @@ export default function TeamMarketDetailMobile() {
     if (teamHolding.value === undefined) teamHolding.value = teamHolding.position_value || 0;
 
     return (
-        <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '16px', paddingBottom: '100px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px', gap: '12px' }}>
-                <button onClick={() => navigate(-1)} style={{ backgroundColor: '#222', border: 'none', color: '#fff', padding: '8px 16px', borderRadius: '8px' }}>← Volver</button>
-                <h1 style={{ fontSize: '1.2rem', margin: 0 }}>{team?.name || 'Cargando...'}</h1>
+        <div className={styles.mobileDetailContainer}>
+            <div className={styles.mobileDetailHeader}>
+                <button onClick={() => navigate(-1)} className={styles.mobileBackBtn}>← Volver</button>
+                <h1 className={styles.mobileDetailTitle}>{team?.name || 'Cargando...'}</h1>
             </div>
 
-            <div style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Índice de Equipo</span>
-                    <span style={{ fontWeight: 'bold', color: 'var(--accent-neon)', fontSize: '1.2rem' }}>{formatEU(team?.price)} €</span>
+            <div className={styles.mobileChartCard}>
+                <div className={styles.mobileChartHeader}>
+                    <span className={styles.mobileChartLabel}>Índice de Equipo</span>
+                    <span className={styles.mobileChartValue}>{formatEU(team?.price)} €</span>
                 </div>
-                <div style={{ width: '100%', height: 200 }}>
+                <div className={styles.mobileChartWrapper}>
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={priceHistory}>
                             <XAxis dataKey="time" hide />
@@ -202,48 +203,48 @@ export default function TeamMarketDetailMobile() {
             </div>
 
             {/* Tu Posición */}
-            <div style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
-                <h2 style={{ fontSize: '1rem', marginBottom: '12px' }}>Tu Posición</h2>
+            <div className={styles.mobilePositionCard}>
+                <h2 className={styles.mobileCardTitle}>Tu Posición</h2>
                 {teamHolding.shares > 0 ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Acciones:</span>
-                            <span style={{ fontWeight: 'bold' }}>{Number(teamHolding.shares).toFixed(4)}</span>
+                    <div className={styles.mobilePositionInfo}>
+                        <div className={styles.mobilePositionRow}>
+                            <span className={styles.mobilePositionLabel}>Acciones:</span>
+                            <span className={styles.mobilePositionValue}>{Number(teamHolding.shares).toFixed(4)}</span>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Valor Total:</span>
-                            <span style={{ fontWeight: 'bold', color: 'var(--accent-neon)' }}>{formatEU(teamHolding.value)} €</span>
+                        <div className={styles.mobilePositionRow}>
+                            <span className={styles.mobilePositionLabel}>Valor Total:</span>
+                            <span className={styles.mobilePositionValueAccent}>{formatEU(teamHolding.value)} €</span>
                         </div>
                     </div>
                 ) : (
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center' }}>No tienes participaciones en este equipo.</p>
+                    <p className={styles.mobileNoPosition}>No tienes participaciones en este equipo.</p>
                 )}
             </div>
 
             {/* Trade Order */}
-            <div style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
-                <h2 style={{ fontSize: '1rem', marginBottom: '12px' }}>Trade Order</h2>
+            <div className={styles.mobileTradeCard}>
+                <h2 className={styles.mobileCardTitle}>Trade Order</h2>
                 
-                <div style={{ display: 'flex', marginBottom: '12px', gap: '8px', backgroundColor: '#000', padding: '4px', borderRadius: '10px' }}>
+                <div className={styles.mobileTradeTabs}>
                     <button 
-                        style={{ flex: 1, padding: '8px', borderRadius: '6px', border: 'none', fontWeight: 'bold', cursor: 'pointer', backgroundColor: activeTab === 'buy' ? 'rgba(57,255,20,0.1)' : 'transparent', color: activeTab === 'buy' ? 'var(--accent-neon)' : '#666' }}
+                        className={`${styles.mobileTradeTab} ${activeTab === 'buy' ? styles.mobileTradeTabBuyActive : ''}`}
                         onClick={() => setActiveTab('buy')}
                     >BUY</button>
                     <button 
-                        style={{ flex: 1, padding: '8px', borderRadius: '6px', border: 'none', fontWeight: 'bold', cursor: 'pointer', backgroundColor: activeTab === 'sell' ? 'rgba(255,77,77,0.1)' : 'transparent', color: activeTab === 'sell' ? '#ff4d4d' : '#666' }}
+                        className={`${styles.mobileTradeTab} ${activeTab === 'sell' ? styles.mobileTradeTabSellActive : ''}`}
                         onClick={() => setActiveTab('sell')}
                     >SELL</button>
                 </div>
 
                 {activeTab === 'buy' ? (
                     <>
-                        <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                            <div style={{ flex: 1 }}>
-                                <label style={{ display: 'block', fontSize: '0.65rem', color: '#666', marginBottom: '4px' }}>CANT. ACCIONES</label>
+                        <div className={styles.mobileTradeInputs}>
+                            <div className={styles.mobileTradeInputGroup}>
+                                <label className={styles.mobileTradeInputLabel}>CANT. ACCIONES</label>
                                 <input 
                                     type="text" 
                                     placeholder="0,0000" 
-                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: '#000', border: '1px solid #333', color: '#fff', outline: 'none' }}
+                                    className={styles.mobileTradeInput}
                                     value={marketBuyQty}
                                     onChange={e => {
                                         const val = e.target.value;
@@ -254,12 +255,12 @@ export default function TeamMarketDetailMobile() {
                                     }}
                                 />
                             </div>
-                            <div style={{ flex: 1 }}>
-                                <label style={{ display: 'block', fontSize: '0.65rem', color: '#666', marginBottom: '4px' }}>VALOR (€)</label>
+                            <div className={styles.mobileTradeInputGroup}>
+                                <label className={styles.mobileTradeInputLabel}>VALOR (€)</label>
                                 <input 
                                     type="text" 
                                     placeholder="0,00" 
-                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: '#000', border: '1px solid #333', color: '#fff', outline: 'none' }}
+                                    className={styles.mobileTradeInput}
                                     value={marketBuyTotal}
                                     onChange={e => {
                                         const val = e.target.value;
@@ -271,26 +272,26 @@ export default function TeamMarketDetailMobile() {
                                 />
                             </div>
                         </div>
-                        <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
-                            <button onClick={() => handleQuickBuy(0.25)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', fontSize: '0.75rem' }}>25%</button>
-                            <button onClick={() => handleQuickBuy(0.50)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', fontSize: '0.75rem' }}>50%</button>
-                            <button onClick={() => handleQuickBuy(1.00)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', fontSize: '0.75rem' }}>100%</button>
+                        <div className={styles.mobileQuickTrade}>
+                            <button onClick={() => handleQuickBuy(0.25)} className={styles.mobileQuickBtn}>25%</button>
+                            <button onClick={() => handleQuickBuy(0.50)} className={styles.mobileQuickBtn}>50%</button>
+                            <button onClick={() => handleQuickBuy(1.00)} className={styles.mobileQuickBtn}>100%</button>
                         </div>
                         <button 
                             onClick={handleMarketBuy}
                             disabled={loading || !marketBuyTotal}
-                            style={{ width: '100%', padding: '14px', borderRadius: '8px', backgroundColor: 'var(--accent-neon)', color: '#000', fontWeight: 'bold', border: 'none' }}
+                            className={styles.mobileBuyBtn}
                         >MARKET BUY</button>
                     </>
                 ) : (
                     <>
-                        <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                            <div style={{ flex: 1 }}>
-                                <label style={{ display: 'block', fontSize: '0.65rem', color: '#666', marginBottom: '4px' }}>CANT. ACCIONES</label>
+                        <div className={styles.mobileTradeInputs}>
+                            <div className={styles.mobileTradeInputGroup}>
+                                <label className={styles.mobileTradeInputLabel}>CANT. ACCIONES</label>
                                 <input 
                                     type="text" 
                                     placeholder="0,0000" 
-                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: '#000', border: '1px solid #333', color: '#fff', outline: 'none' }}
+                                    className={styles.mobileTradeInput}
                                     value={marketSellQty}
                                     onChange={e => {
                                         const val = e.target.value;
@@ -301,12 +302,12 @@ export default function TeamMarketDetailMobile() {
                                     }}
                                 />
                             </div>
-                            <div style={{ flex: 1 }}>
-                                <label style={{ display: 'block', fontSize: '0.65rem', color: '#666', marginBottom: '4px' }}>VALOR (€)</label>
+                            <div className={styles.mobileTradeInputGroup}>
+                                <label className={styles.mobileTradeInputLabel}>VALOR (€)</label>
                                 <input 
                                     type="text" 
                                     placeholder="0,00" 
-                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: '#000', border: '1px solid #333', color: '#fff', outline: 'none' }}
+                                    className={styles.mobileTradeInput}
                                     value={marketSellTotal}
                                     onChange={e => {
                                         const val = e.target.value;
@@ -318,29 +319,29 @@ export default function TeamMarketDetailMobile() {
                                 />
                             </div>
                         </div>
-                        <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
-                            <button onClick={() => handleQuickSell(0.25)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', fontSize: '0.75rem' }}>25%</button>
-                            <button onClick={() => handleQuickSell(0.50)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', fontSize: '0.75rem' }}>50%</button>
-                            <button onClick={() => handleQuickSell(1.00)} style={{ flex: 1, padding: '6px', borderRadius: '6px', backgroundColor: '#111', color: '#666', border: '1px solid #333', fontSize: '0.75rem' }}>100%</button>
+                        <div className={styles.mobileQuickTrade}>
+                            <button onClick={() => handleQuickSell(0.25)} className={styles.mobileQuickBtn}>25%</button>
+                            <button onClick={() => handleQuickSell(0.50)} className={styles.mobileQuickBtn}>50%</button>
+                            <button onClick={() => handleQuickSell(1.00)} className={styles.mobileQuickBtn}>100%</button>
                         </div>
                         <button 
                             onClick={handleMarketSell}
                             disabled={loading || !marketSellQty}
-                            style={{ width: '100%', padding: '14px', borderRadius: '8px', backgroundColor: '#ff4d4d', color: '#fff', fontWeight: 'bold', border: 'none' }}
+                            className={styles.mobileSellBtn}
                         >MARKET SELL</button>
                     </>
                 )}
-                {error && <p style={{ color: '#ff4d4d', fontSize: '0.8rem', marginTop: '8px', textAlign: 'center' }}>{error}</p>}
+                {error && <p className={styles.mobileTradeError}>{error}</p>}
             </div>
 
-            <div style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '16px', padding: '16px' }}>
-                <h2 style={{ fontSize: '1rem', marginBottom: '12px' }}>Roster</h2>
+            <div className={styles.mobileRosterCard}>
+                <h2 className={styles.mobileCardTitle}>Roster</h2>
                 {team?.players?.map(p => (
-                    <div key={p.id} onClick={() => navigate(`/market/player/${p.id}`)} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                        <span>{p.name}</span>
-                        <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontWeight: 'bold' }}>{formatEU(p.price)} €</div>
-                            <div style={{ fontSize: '0.8rem', color: p.change >= 0 ? 'var(--accent-neon)' : '#ff4d4d' }}>{p.change >= 0 ? '+' : ''}{Number(p.change).toFixed(2)}%</div>
+                    <div key={p.id} onClick={() => navigate(`/market/player/${p.id}`)} className={styles.mobileRosterItem}>
+                        <span className={styles.mobileRosterItemName}>{p.name}</span>
+                        <div className={styles.mobileRosterItemValueBox}>
+                            <div className={styles.mobileRosterItemPrice}>{formatEU(p.price)} €</div>
+                            <div className={`${styles.mobileRosterItemChange} ${p.change >= 0 ? styles.mobileChangePositive : styles.mobileChangeNegative}`}>{p.change >= 0 ? '+' : ''}{Number(p.change).toFixed(2)}%</div>
                         </div>
                     </div>
                 ))}

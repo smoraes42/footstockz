@@ -8,7 +8,7 @@ import { getPortfolio, getPlayerById, getPlayerHistory, getPlayerTradeHistory, m
 import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
-import styles from '../styles/PlayerMarketDesktop.module.css';
+import styles from '../styles/PlayerMarket.module.css';
 
 
 const playSuccessSound = () => {
