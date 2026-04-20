@@ -51,6 +51,19 @@ const Navbar = ({ type = 'sidebar' }) => {
                 </NavLink>
             </nav>
 
+            <div className={css.modeSwitchContainer}>
+                <div className={css.modeSwitch}>
+                    <button className={`${css.modeBtn} ${css.active}`}>
+                        DEMO
+                    </button>
+                    <button className={css.modeBtn} disabled>
+                        REAL
+                        <span className={css.comingSoon}>Próximamente</span>
+                    </button>
+                    <div className={css.modeSlider}></div>
+                </div>
+            </div>
+
             <div
                 onClick={() => navigate('/profile')}
                 className={css.sidebarProfile}
