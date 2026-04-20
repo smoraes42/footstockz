@@ -801,3 +801,88 @@
     color: var(--error-red);
     background-color: rgba(255, 82, 82, 0.1);
 }
+
+.mobile-trades-section {
+    margin-top: 2.5rem;
+}
+
+.mobile-trades-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.mobile-trades-card {
+    padding: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobile-trades-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+}
+
+.mobile-trades-header {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobile-trades-header th {
+    padding: 10px 12px;
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.mobile-trade-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.mobile-trade-row:last-child {
+    border-bottom: none;
+}
+
+.mobile-trade-row td {
+    padding: 12px;
+}
+
+.mobile-trade-side {
+    font-weight: 800;
+}
+
+.mobile-trade-side-buy {
+    color: var(--accent-neon);
+}
+
+.mobile-trade-side-sell {
+    color: var(--error-red);
+}
+
+.mobile-trade-price {
+    color: #fff;
+    font-weight: 600;
+}
+
+.mobile-trade-qty {
+    color: var(--text-muted);
+}
+
+.mobile-trade-time {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    text-align: right;
+}
+
+.mobile-no-trades {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}

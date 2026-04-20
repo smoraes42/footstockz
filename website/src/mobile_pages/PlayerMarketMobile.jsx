@@ -437,7 +437,7 @@ const PlayerMarketMobile = () => {
                                 ))}
                             </div>
 
-                            {error && <p className={styles['mobile-error-msg']}>{error}</p>}
+                    {error && <p className={styles['mobile-error-msg']}>{error}</p>}
                             <button
                                 onClick={handleMarketBuy}
                                 disabled={loading || !marketBuyQty}
@@ -506,6 +506,45 @@ const PlayerMarketMobile = () => {
                             </button>
                         </div>
                     )}
+                </div>
+
+                {/* Recent Trades Section Mobile */}
+                <div className={styles['mobile-trades-section']}>
+                    <h3 className={styles['mobile-trades-title']}>Operaciones Recientes</h3>
+                    <div className={styles['mobile-trades-card']}>
+                        {tradeHistory.length > 0 ? (
+                            <table className={styles['mobile-trades-table']}>
+                                <thead className={styles['mobile-trades-header']}>
+                                    <tr>
+                                        <th>TIPO</th>
+                                        <th>PRECIO</th>
+                                        <th>CANT.</th>
+                                        <th style={{ textAlign: 'right' }}>HORA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {tradeHistory.slice(0, 10).map((trade, idx) => (
+                                        <tr key={idx} className={styles['mobile-trade-row']}>
+                                            <td className={`${styles['mobile-trade-side']} ${trade.side === 'buy' ? styles['mobile-trade-side-buy'] : styles['mobile-trade-side-sell']}`}>
+                                                {trade.side === 'buy' ? 'COMPRA' : 'VENTA'}
+                                            </td>
+                                            <td className={styles['mobile-trade-price']}>
+                                                {parseFloat(trade.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€
+                                            </td>
+                                            <td className={styles['mobile-trade-qty']}>
+                                                {parseFloat(trade.quantity).toFixed(2)}
+                                            </td>
+                                            <td className={styles['mobile-trade-time']}>
+                                                {new Date(trade.timestamp || trade.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <div className={styles['mobile-no-trades']}>No hay operaciones recientes para este jugador.</div>
+                        )}
+                    </div>
                 </div>
 
                 <div className={styles['mobile-spacer']} />

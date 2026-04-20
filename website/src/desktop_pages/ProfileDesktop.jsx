@@ -7,30 +7,8 @@ import styles from '../styles/Profile.module.css';
 
 const ProfileDesktop = () => {
     const navigate = useNavigate();
-    const { user, clearUser } = useAuth();   // user already fetched globally — no redundant getMe()
-    const [portfolio, setPortfolio] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [portfolioError, setPortfolioError] = useState('');
-
-    useEffect(() => {
-        const fetchPortfolio = async () => {
-            try {
-                const portfolioData = await getPortfolio();
-                setPortfolio(portfolioData);
-            } catch (error) {
-                if (error.status === 401 || error.status === 403) {
-                    clearUser();
-                    navigate('/login');
-                    return;
-                }
-                setPortfolioError('No se pudo cargar el portfolio. Inténtalo de nuevo.');
-                console.error('Failed to load portfolio:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchPortfolio();
-    }, []);
+    const { user, clearUser } = useAuth();
+    const [loading, setLoading] = useState(false);
 
     if (loading) {
         return (
@@ -52,12 +30,6 @@ const ProfileDesktop = () => {
                     <h1 className={styles.title}>Mi Perfil</h1>
                     <p className={styles.subtitle}>Gestiona tu cuenta y revisa tus estadísticas</p>
                 </header>
-
-                {portfolioError && (
-                    <div className={styles['error-banner']}>
-                        {portfolioError}
-                    </div>
-                )}
 
                 <div className={styles['content-grid']}>
 
@@ -95,25 +67,6 @@ const ProfileDesktop = () => {
 
                     {/* Stats & Details */}
                     <div className={styles['details-col']}>
-
-                        {/* Wallet Summary */}
-                        <div className={`${styles['summary-card']} glass-panel`}>
-                            <h3 className={styles['card-title']}>Resumen de Cuenta</h3>
-                            <div className={styles['summary-grid']}>
-                                <div className={styles['summary-item']}>
-                                    <p className={styles['summary-label']}>Balance de Wallet</p>
-                                    <p className={`${styles['summary-value']} ${styles['summary-value-accent']}`}>{portfolio?.walletBalance?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0,00'} €</p>
-                                </div>
-                                <div className={styles['summary-item']}>
-                                    <p className={styles['summary-label']}>Valor en Acciones</p>
-                                    <p className={styles['summary-value']}>{(portfolio?.holdings?.reduce((acc, h) => acc + h.position_value, 0) || 0).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                                </div>
-                                <div className={styles['summary-item']}>
-                                    <p className={styles['summary-label']}>Valor Total</p>
-                                    <p className={styles['summary-value']}>{((portfolio?.walletBalance || 0) + (portfolio?.holdings?.reduce((acc, h) => acc + h.position_value, 0) || 0)).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                                </div>
-                            </div>
-                        </div>
 
                         {/* Account Details */}
                         <div className={`${styles['details-card']} glass-panel`}>

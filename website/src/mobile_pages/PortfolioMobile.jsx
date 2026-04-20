@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import { getPortfolio, getMe, getUserTradeHistory } from '../services/api';
 import { useSocket } from '../context/SocketContext';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Portfolio.module.css';
 
 const formatCompactNumber = (number) => {
@@ -23,6 +24,7 @@ const PortfolioMobile = () => {
     const [tradeHistory, setTradeHistory] = useState([]);
     const [loadingTrades, setLoadingTrades] = useState(true);
     const [showActivity, setShowActivity] = useState(true);
+    const [updatedPlayerId, setUpdatedPlayerId] = useState(null);
 
     const [sortConfig, setSortConfig] = useState({ key: 'player_name', direction: 'asc' });
 
@@ -78,6 +80,9 @@ const PortfolioMobile = () => {
         if (!socket || !connected) return;
 
         const handlePriceUpdate = (data) => {
+            setUpdatedPlayerId(data.playerId);
+            setTimeout(() => setUpdatedPlayerId(null), 1000);
+
             setPortfolio(prev => {
                 if (!prev) return prev;
                 const k = 0.0001;
@@ -236,12 +241,20 @@ const PortfolioMobile = () => {
                                         </div>
 
                                         <div className={styles['mobile-asset-value-box']}>
-                                            <p className={styles['mobile-asset-price']}>{item.position_value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                                            <p className={styles['mobile-asset-price-sub']}>{item.current_price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €/u</p>
+                                            <PlayerPrice 
+                                                price={item.position_value} 
+                                                isUpdated={updatedPlayerId === item.player_id} 
+                                                className={styles['mobile-asset-price']} 
+                                            />
+                                            <p className={styles['mobile-asset-price-sub']}>
+                                                {item.current_price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €/u
+                                            </p>
                                             {item.variation_24h !== undefined && (
-                                                <p className={`${styles['mobile-asset-change']} ${item.variation_24h >= 0 ? styles['mobile-change-positive'] : styles['mobile-change-negative']}`}>
-                                                    {item.variation_24h >= 0 ? '+' : ''}{Number(item.variation_24h).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
-                                                </p>
+                                                <PlayerChange 
+                                                    change={item.variation_24h} 
+                                                    indicatorType="sign" 
+                                                    className={styles['mobile-asset-change']} 
+                                                />
                                             )}
                                         </div>
                                     </Link>

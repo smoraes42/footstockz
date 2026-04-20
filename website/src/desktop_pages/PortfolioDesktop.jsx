@@ -4,6 +4,7 @@ import { getPortfolio, getUserTradeHistory } from '../services/api';
 import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Portfolio.module.css';
 
 
@@ -25,6 +26,7 @@ const PortfolioDesktop = () => {
     const [tradeHistory, setTradeHistory] = useState([]);
     const [loadingTrades, setLoadingTrades] = useState(true);
     const [showActivity, setShowActivity] = useState(true);
+    const [updatedPlayerId, setUpdatedPlayerId] = useState(null);
     const { socket, connected, subscribeToUser, unsubscribeFromUser } = useSocket();
     const { user } = useAuth();
 
@@ -63,6 +65,9 @@ const PortfolioDesktop = () => {
         if (!socket || !connected) return;
 
         const handlePriceUpdate = (data) => {
+            setUpdatedPlayerId(data.playerId);
+            setTimeout(() => setUpdatedPlayerId(null), 1000);
+
             setPortfolio(prev => {
                 if (!prev) return prev;
                 const k = 0.0001; // CONFIG.PRICE_IMPACT_FACTOR
@@ -290,10 +295,18 @@ const PortfolioDesktop = () => {
                                                     {`${position.current_price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`}
                                                 </td>
                                                 <td className={`${styles['table-cell']} ${styles['value-bold']}`}>
-                                                    {position.position_value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+                                                    <PlayerPrice 
+                                                        price={position.position_value} 
+                                                        isUpdated={updatedPlayerId === position.player_id} 
+                                                        className={styles['value-bold']} 
+                                                    />
                                                 </td>
-                                                <td className={`${styles['table-cell']} ${styles['value-bold']} ${position.variation_24h >= 0 ? styles['variation-positive'] : styles['variation-negative']}`}>
-                                                    {position.variation_24h >= 0 ? '+' : ''}{position.variation_24h.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
+                                                <td className={`${styles['table-cell']} ${styles['value-bold']}`}>
+                                                    <PlayerChange 
+                                                        change={position.variation_24h} 
+                                                        indicatorType="sign" 
+                                                        className={styles['value-bold']} 
+                                                    />
                                                 </td>
                                             </tr>
                                         ));

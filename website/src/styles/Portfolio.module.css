@@ -460,6 +460,20 @@
     margin: 0;
 }
 
+.mobile-asset-change {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.mobile-change-positive {
+    color: var(--accent-neon);
+}
+
+.mobile-change-negative {
+    color: var(--error-red);
+}
+
 .mobile-activity-container {
     margin-top: 3rem;
 }

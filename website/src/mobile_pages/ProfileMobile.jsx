@@ -10,27 +10,17 @@ const ProfileMobile = () => {
     const isOwnProfile = !userId;
     
     const [user, setUser] = useState(null);
-    const [portfolio, setPortfolio] = useState(null);
-    const [publicData, setPublicData] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 if (isOwnProfile) {
-                    const [userData, portData] = await Promise.all([
-                        getMe(),
-                        getPortfolio()
-                    ]);
+                    const userData = await getMe();
                     setUser(userData);
-                    setPortfolio(portData);
                 } else {
                     const pData = await getPublicProfile(userId);
-                    setPublicData(pData);
                     setUser(pData.user);
-                    
-                    // Still try to get "me" for navigation thumbnail
-                    getMe().then(me => setPortfolio({ myUsername: me.username }));
                 }
             } catch (error) {
                 console.error('Failed to load profile:', error);
@@ -42,12 +32,6 @@ const ProfileMobile = () => {
     }, [userId, isOwnProfile]);
 
     if (loading) return <div className={styles['loading-container']}>Cargando...</div>;
-
-    const totalValue = isOwnProfile 
-        ? ((portfolio?.walletBalance || 0) + (portfolio?.holdings?.reduce((acc, h) => acc + h.position_value, 0) || 0))
-        : (publicData?.totalHoldingsValue || 0);
-
-    const holdings = isOwnProfile ? (portfolio?.holdings || []) : (publicData?.holdings || []);
 
     return (
         <div className={styles['mobile-container']}>
@@ -79,51 +63,10 @@ const ProfileMobile = () => {
                     </div>
                     <h2 className={styles['mobile-user-name']}>{user?.username}</h2>
                     <p className={styles['mobile-user-meta']}>Miembro desde {new Date(user?.created_at).toLocaleDateString()}</p>
-                </div>
-
-                {/* Capital Breakdown */}
-                <div className={`${styles['mobile-capital-card']} glass-panel`}>
-                    <span className={styles['mobile-capital-label']}>Valor Total</span>
-                    <p className={styles['mobile-capital-value']}>€{totalValue.toFixed(2)}</p>
-                    
-                    {isOwnProfile && (
-                        <div className={styles['mobile-capital-breakdown']}>
-                            <div>
-                                <p className={styles['mobile-breakdown-item-label']}>CASH</p>
-                                <p className={styles['mobile-breakdown-item-value']}>€{portfolio?.walletBalance?.toFixed(2)}</p>
-                            </div>
-                            <div>
-                                <p className={styles['mobile-breakdown-item-label']}>ACCIONES</p>
-                                <p className={styles['mobile-breakdown-item-value']}>€{(totalValue - portfolio?.walletBalance).toFixed(2)}</p>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Holdings Section (Simplified) */}
-                <div className={styles['mobile-holdings-section']}>
-                    <h3 className={styles['mobile-holdings-title']}>Portafolio</h3>
-                    {holdings.length === 0 ? (
-                        <p className={styles['mobile-no-holdings']}>No hay acciones en cartera.</p>
-                    ) : (
-                        <div className={styles['mobile-holdings-list']}>
-                            {holdings.map((h, i) => (
-                                <Link 
-                                    to={`/market/player/${h.player_id}`}
-                                    key={i} 
-                                    className={`${styles['mobile-holding-card']} glass-panel`} 
-                                >
-                                    <div>
-                                        <p className={styles['mobile-holding-name']}>{h.player_name}</p>
-                                        <p className={styles['mobile-holding-shares']}>{h.shares_owned.toFixed(2)} acciones</p>
-                                    </div>
-                                    <div className={styles['mobile-holding-value-box']}>
-                                        <p className={styles['mobile-holding-value']}>€{h.position_value.toFixed(2)}</p>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
+                    <div style={{ marginTop: '2rem', padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>ID DE USUARIO</p>
+                        <p style={{ color: 'var(--accent-neon)', fontSize: '1.2rem', fontWeight: '900' }}>#{user?.id}</p>
+                    </div>
                 </div>
 
             </main>

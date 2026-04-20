@@ -57,14 +57,14 @@ const UserProfileDesktop = () => {
                     </button>
                     <div className={styles['header-text']}>
                         <h1 className={styles.title}>Perfil de {user.username}</h1>
-                        <p className={styles.subtitle}>Revisa la cartera de este usuario</p>
+                        <p className={styles.subtitle}>Información pública del usuario</p>
                     </div>
                 </header>
 
-                <div className={styles['content-grid']}>
+                <div className={styles['content-grid']} style={{ gridTemplateColumns: '1fr' }}>
 
                     {/* User Info Card */}
-                    <div className={`${styles['profile-card']} glass-panel`}>
+                    <div className={`${styles['profile-card']} glass-panel`} style={{ maxWidth: '600px', margin: '0 auto' }}>
                         <div className={styles['user-avatar']}>
                             {user?.avatar_url ? (
                                 <img src={user.avatar_url} alt="Avatar" className={styles['avatar-img']} />
@@ -73,51 +73,12 @@ const UserProfileDesktop = () => {
                             )}
                         </div>
                         <h2 className={styles['profile-name']}>{user.username}</h2>
-                        <div className={styles['stats-box']}>
-                            <p className={styles['stats-label']}>Valor en Acciones</p>
-                            <p className={styles['stats-value']}>{totalHoldingsValue.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                        </div>
-                        <p className={styles['join-date']}>
+                        <p className={styles['join-date']} style={{ fontSize: '1.1rem', marginTop: '1rem' }}>
                             Miembro desde {new Date(user.created_at).toLocaleDateString()}
                         </p>
-                    </div>
-
-                    {/* Holdings Table */}
-                    <div className={styles['table-section']}>
-                        <h3 className={styles['table-title']}>Portafolio de Activos</h3>
-                        <div className={`${styles['table-container']} glass-panel`}>
-                            <table className={styles.table}>
-                                <thead>
-                                    <tr className={styles['table-head']}>
-                                        <th className={styles['table-head-cell']}>Jugador</th>
-                                        <th className={styles['table-head-cell']}>Acciones</th>
-                                        <th className={styles['table-head-cell']}>Precio</th>
-                                        <th className={styles['table-head-cell']}>Valor</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {holdings.length === 0 ? (
-                                        <tr>
-                                            <td colSpan="4" className={styles['empty-state']}>
-                                                Este usuario no tiene acciones actualmente.
-                                            </td>
-                                        </tr>
-                                    ) : (
-                                        holdings.map((h, i) => (
-                                            <tr
-                                                key={i}
-                                                className={styles['table-row']}
-                                                onClick={() => navigate(`/market/player/${h.player_id}`)}
-                                            >
-                                                <td className={`${styles['table-cell']} ${styles['table-cell-bold']}`}>{h.player_name}</td>
-                                                <td className={styles['table-cell']}>{h.shares_owned.toLocaleString()}</td>
-                                                <td className={styles['table-cell']}>{h.current_price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
-                                                <td className={`${styles['table-cell']} ${styles['table-cell-bold']} ${styles['accent-value']}`}>{h.position_value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
-                                            </tr>
-                                        ))
-                                    )}
-                                </tbody>
-                            </table>
+                        <div className={styles['stats-box']} style={{ marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '2rem' }}>
+                            <p className={styles['stats-label']}>ID de Usuario</p>
+                            <p className={styles['stats-value']} style={{ fontSize: '1.5rem' }}>#{user.id}</p>
                         </div>
                     </div>
 
