@@ -248,6 +248,8 @@ const MarketMobile = () => {
                                                 src={`${API_URL}/v1/players/${player.id}/image`}
                                                 alt={player.name}
                                                 className={styles.mobilePlayerAvatarImg}
+                                                onError={(e) => { e.target.style.display = 'none'; }}
+                                            />
                                             <span className={styles.mobilePlayerAvatarPlaceholder}>👤</span>
                                         </div>
                                         <div>
