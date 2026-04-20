@@ -4,6 +4,7 @@ import { getPlayers, getMe, getLeagues, API_URL } from '../services/api';
 import fsLogo from '../assets/fs-logo.png';
 import { useSocket } from '../context/SocketContext';
 import TeamsMarketMobile from './TeamsMarketMobile';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Market.module.css';
 
 
@@ -264,10 +265,8 @@ const MarketMobile = () => {
                                     </div>
 
                                     <div className={styles['mobile-player-price-box']}>
-                                        <p className={`${styles['mobile-player-price']} ${updatedPlayerId === player.id ? styles['price-pulse'] : ''}`}>€{player.price.toFixed(2)}</p>
-                                        <span className={`${styles['mobile-player-change']} ${player.change >= 0 ? styles['mobile-change-positive'] : styles['mobile-change-negative']}`}>
-                                            {player.change >= 0 ? '+' : ''}{player.change.toFixed(2)}%
-                                        </span>
+                                        <PlayerPrice price={player.price} isUpdated={updatedPlayerId === player.id} className={styles['mobile-player-price']} />
+                                        <PlayerChange change={player.change} indicatorType="sign" className={styles['mobile-player-change']} />
                                     </div>
                                 </Link>
                             ))

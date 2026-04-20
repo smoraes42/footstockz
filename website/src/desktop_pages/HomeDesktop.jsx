@@ -5,6 +5,7 @@ import WalletChart from '../components/WalletChart';
 import { getPlayers, getPortfolio, getPortfolioHistory, getPlayerImageUrl } from '../services/api';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Home.module.css';
 
 
@@ -353,9 +354,11 @@ const HomeDesktop = () => {
                     </div>
                   </div>
                   <div className={styles['player-stats']}>
-                    <p className={`${styles['player-price']} ${player.id === updatedPlayerId ? styles['price-pulse'] : ''}`}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                    <p className={`${styles['player-change']} ${player.change >= 0 ? styles['player-change-up'] : styles['player-change-down']}`}>
-                      {player.change >= 0 ? '▲' : '▼'} {Math.abs(player.change)}%
+                    <p className={styles['player-price']}>
+                      <PlayerPrice price={player.price} isUpdated={player.id === updatedPlayerId} />
+                    </p>
+                    <p className={styles['player-change']}>
+                      <PlayerChange change={player.change} indicatorType="arrow" />
                     </p>
                   </div>
                 </div>

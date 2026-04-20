@@ -5,6 +5,7 @@ import fsLogo from '../assets/fs-logo.png';
 
 import { getPlayers, getPortfolio, getPortfolioHistory, getMe } from '../services/api';
 import { useSocket } from '../context/SocketContext';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Home.module.css';
 
 
@@ -482,9 +483,11 @@ const HomeMobile = () => {
                                         </div>
                                     </div>
                                     <div className={styles['mobile-player-price-box']}>
-                                        <p className={`${styles['mobile-player-price']} ${player.id === updatedPlayerId ? styles['price-pulse'] : ''}`}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                                        <p className={`${styles['mobile-player-change']} ${player.change >= 0 ? styles['mobile-price-up'] : styles['mobile-price-down']}`}>
-                                            {player.change >= 0 ? '▲' : '▼'} {Math.abs(player.change)}%
+                                        <p className={styles['mobile-player-price']}>
+                                            <PlayerPrice price={player.price} isUpdated={player.id === updatedPlayerId} />
+                                        </p>
+                                        <p className={styles['mobile-player-change']}>
+                                            <PlayerChange change={player.change} indicatorType="arrow" />
                                         </p>
                                     </div>
                                 </Link>

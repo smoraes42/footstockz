@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
 import TeamsMarketDesktop from './TeamsMarketDesktop';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Market.module.css';
 
 
@@ -303,11 +304,11 @@ const MarketDesktop = () => {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className={`${styles['table-cell']} ${styles['price-cell']} ${updatedPlayerId === player.id ? styles['price-pulse'] : ''}`}>
-                                                {Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+                                            <td className={`${styles['table-cell']} ${styles['price-cell']}`}>
+                                                <PlayerPrice price={player.price} isUpdated={updatedPlayerId === player.id} />
                                             </td>
-                                            <td className={`${styles['table-cell']} ${styles['change-cell']} ${player.change >= 0 ? styles['change-positive'] : styles['change-negative']}`}>
-                                                {player.change >= 0 ? '+' : ''}{Number(player.change).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
+                                            <td className={`${styles['table-cell']} ${styles['change-cell']}`}>
+                                                <PlayerChange change={player.change} indicatorType="sign" />
                                             </td>
                                             <td className={`${styles['table-cell']} ${styles['sparkline-cell']}`}>
                                                 <div className={styles['sparkline-wrapper']}>
@@ -381,12 +382,14 @@ const MarketDesktop = () => {
                                             <div className={styles['player-card-stats']}>
                                                 <div>
                                                     <p className={styles['player-card-stat-label']}>Precio</p>
-                                                    <p className={`${styles['player-card-stat-value']} ${styles['player-card-price']} ${updatedPlayerId === player.id ? styles['price-pulse'] : ''}`}>{Number(player.price).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                                                    <p className={`${styles['player-card-stat-value']} ${styles['player-card-price']}`}>
+                                                        <PlayerPrice price={player.price} isUpdated={updatedPlayerId === player.id} />
+                                                    </p>
                                                 </div>
                                                 <div className={styles['player-card-change-container']}>
                                                     <p className={styles['player-card-stat-label']}>24h</p>
-                                                    <p className={`${styles['player-card-stat-value']} ${player.change >= 0 ? styles['change-positive'] : styles['change-negative']}`}>
-                                                        {player.change >= 0 ? '+' : ''}{Number(player.change).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
+                                                    <p className={styles['player-card-stat-value']}>
+                                                        <PlayerChange change={player.change} indicatorType="sign" />
                                                     </p>
                                                 </div>
                                             </div>

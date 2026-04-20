@@ -8,6 +8,7 @@ import { getPortfolio, getPlayerById, getPlayerHistory, getPlayerTradeHistory, m
 import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/PlayerMarket.module.css';
 
 
@@ -378,7 +379,14 @@ export default function PlayerMarketDesktop() {
                         <div className={styles.card}>
                             <h2 className={styles['card-title']}>
                                 {currentPlayer ? `${currentPlayer.name} Chart` : 'Loading Chart...'}
-                                <span className={`${styles['current-price-tag']} ${isUpdated ? styles['price-pulse'] : ''}`}>Current: {currentPlayer?.price?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0,00'} €</span>
+                                <span className={styles['current-price-tag']}>
+                                    <PlayerPrice price={currentPlayer?.price} isUpdated={isUpdated} />
+                                    {currentPlayer && currentPlayer.change !== undefined && (
+                                        <span style={{ marginLeft: '10px' }}>
+                                            <PlayerChange change={currentPlayer.change} indicatorType="sign" />
+                                        </span>
+                                    )}
+                                </span>
                             </h2>
                             <div className={styles['chart-container']}>
                                 <ResponsiveContainer width="100%" height="100%">

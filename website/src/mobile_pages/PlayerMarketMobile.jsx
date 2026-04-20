@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { getPortfolio, getPlayerById, getMe, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell } from '../services/api';
 import fsLogo from '../assets/fs-logo.png';
 import { useSocket } from '../context/SocketContext';
+import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/PlayerMarket.module.css';
 
 const playSuccessSound = () => {
@@ -325,9 +326,11 @@ const PlayerMarketMobile = () => {
                                 <p className={styles['mobile-player-team']}>{currentPlayer?.team || '---'}</p>
                             </div>
                             <div className={styles['mobile-price-display']}>
-                                <p className={`${styles['mobile-current-price']} ${isUpdated ? styles['mobile-price-pulse'] : ''}`}>€{currentPlayer?.price?.toFixed(2) || '0.00'}</p>
-                                <span className={`${styles['mobile-price-change']} ${(currentPlayer?.change || 0) >= 0 ? styles['mobile-price-change-positive'] : styles['mobile-price-change-negative']}`}>
-                                    {(currentPlayer?.change || 0) >= 0 ? '+' : ''}{(currentPlayer?.change || 0).toFixed(2)}%
+                                <p className={styles['mobile-current-price']}>
+                                    <PlayerPrice price={currentPlayer?.price} isUpdated={isUpdated} />
+                                </p>
+                                <span className={styles['mobile-price-change']}>
+                                    <PlayerChange change={currentPlayer?.change} indicatorType="sign" />
                                 </span>
                             </div>
                         </div>
