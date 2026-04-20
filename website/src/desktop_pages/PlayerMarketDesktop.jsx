@@ -136,7 +136,10 @@ export default function PlayerMarketDesktop() {
         const handlePriceUpdate = (data) => {
             if (data.playerId === parseInt(playerId)) {
                 // Update specific player state
-                setCurrentPlayer(prev => prev ? { ...prev, price: data.price, change: parseFloat(data.change || 0) } : null);
+                setCurrentPlayer(prev => {
+                    if (!prev) return null;
+                    return { ...prev, price: data.price, change: parseFloat(data.change || 0) };
+                });
                 
                 // Update price history (add new point)
                 setPriceHistory(prev => {
@@ -234,7 +237,7 @@ export default function PlayerMarketDesktop() {
     const handleMarketBuy = async () => {
         if (!marketBuyTotal || !marketBuyQty || !playerId) return;
 
-        if (portfolio && parseFloat(marketBuyTotal) > portfolio.walletBalance) {
+        if (portfolio && parseEU(marketBuyTotal) > portfolio.walletBalance) {
             setError("Insufficient wallet balance for this purchase.");
             return;
         }
@@ -297,7 +300,7 @@ export default function PlayerMarketDesktop() {
 
     const handleMarketSell = async () => {
         const holding = portfolio?.holdings?.find(h => h.player_id === parseInt(playerId));
-        if (!holding || parseFloat(marketSellQty) > holding.shares_owned) {
+        if (!holding || parseEU(marketSellQty) > holding.shares_owned) {
             setError("Insufficient shares held for this sale.");
             return;
         }

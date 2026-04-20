@@ -4,7 +4,7 @@ import {
     LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer
 } from 'recharts';
 import { toast } from 'react-toastify';
-import { getPortfolio, getPlayers, getMe, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell } from '../services/api';
+import { getPortfolio, getPlayerById, getMe, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell } from '../services/api';
 import fsLogo from '../assets/fs-logo.png';
 
 const playSuccessSound = () => {
@@ -16,7 +16,7 @@ const playSuccessSound = () => {
         const gainNode = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(400, ctx.currentTime);
-        osc.frequency.exponential_rampToValueAtTime(300, ctx.currentTime + 0.1);
+        osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.1);
         gainNode.gain.setValueAtTime(0, ctx.currentTime);
         gainNode.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.01);
         gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
@@ -34,7 +34,7 @@ const PlayerMarketMobile = () => {
     const { playerId } = useParams();
     const navigate = useNavigate();
 
-    const [players, setPlayers] = useState([]);
+    const [currentPlayer, setCurrentPlayer] = useState(null);
     const [portfolio, setPortfolio] = useState(null);
     const [priceHistory, setPriceHistory] = useState([]);
     const [tradeHistory, setTradeHistory] = useState([]);
@@ -53,39 +53,35 @@ const PlayerMarketMobile = () => {
 
     const calculateQuantityFromValue = (value, p0) => {
         if (!value || !p0 || p0 <= 0) return '';
-        // Quadratic: V = p0 * Q * (1 + k*Q/2) => (k*p0/2)Q^2 + p0*Q - V = 0
-        const a = (kFactor * p0) / 2;
-        const b = p0;
-        const c = -parseFloat(value);
-        const q = (-b + Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
+        const v = parseFloat(value);
+        // Exponential: Q = ln(V*k/p0 + 1) / k
+        const q = Math.log((v * kFactor / p0) + 1) / kFactor;
         return q.toFixed(4);
     };
 
     const calculateValueFromQuantity = (q, p0) => {
         if (!q || !p0 || p0 <= 0) return '';
         const qty = parseFloat(q);
-        // Integral: V = p0 * Q * (1 + k*Q/2)
-        const v = p0 * qty * (1 + (kFactor * qty) / 2);
+        // Exponential: V = (p0/k) * (e^(kQ) - 1)
+        const v = (p0 / kFactor) * (Math.exp(kFactor * qty) - 1);
         return v.toFixed(2);
     };
 
     const calculateQuantityFromSellValue = (value, p0) => {
         if (!value || !p0 || p0 <= 0) return '';
-        // Quadratic: V = p0 * Q * (1 - k*Q/2) => (-k*p0/2)Q^2 + p0*Q - V = 0
-        const a = (-kFactor * p0) / 2;
-        const b = p0;
-        const c = -parseFloat(value);
-        const discriminant = Math.pow(b, 2) - 4 * a * c;
-        if (discriminant < 0) return '0.00';
-        const q = (-b + Math.sqrt(discriminant)) / (2 * a);
+        const v = parseFloat(value);
+        // Exponential: Q = -ln(1 - V*k/p0) / k
+        const inner = 1 - (v * kFactor / p0);
+        if (inner <= 0) return '0.0000';
+        const q = -Math.log(inner) / kFactor;
         return q.toFixed(4);
     };
 
     const calculateValueFromSellQuantity = (q, p0) => {
         if (!q || !p0 || p0 <= 0) return '';
         const qty = parseFloat(q);
-        // Integral: V = p0 * Q * (1 - k*Q/2)
-        const v = p0 * qty * (1 - (kFactor * qty) / 2);
+        // Exponential: V = (p0/k) * (1 - e^(-kQ))
+        const v = (p0 / kFactor) * (1 - Math.exp(-kFactor * qty));
         return v.toFixed(2);
     };
     const [hoverInfo, setHoverInfo] = useState(null);
@@ -103,7 +99,7 @@ const PlayerMarketMobile = () => {
                 getPlayerHistory(playerId),
                 getPlayerTradeHistory(playerId),
                 getPortfolio(),
-                getPlayers(),
+                getPlayerById(playerId),
                 getMe()
             ]);
 
@@ -119,7 +115,7 @@ const PlayerMarketMobile = () => {
             setPriceHistory(formattedHistory);
             setTradeHistory(trades || []);
             setPortfolio(port);
-            setPlayers(pData.data || []);
+            setCurrentPlayer(pData);
             setUser(userData);
         } catch (err) {
             console.error('Fetch error:', err);
@@ -143,7 +139,6 @@ const PlayerMarketMobile = () => {
         return () => clearInterval(interval);
     }, [fetchData]);
 
-    const currentPlayer = players.find(p => p.id === parseInt(playerId));
 
     const handleMarketBuy = async () => {
         if (!marketBuyTotal || !marketBuyQty || !playerId) return;
