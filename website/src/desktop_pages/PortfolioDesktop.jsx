@@ -376,8 +376,8 @@ const PortfolioDesktop = () => {
                                 </tbody>
                             </table>
                         </div>
-                         )}
-                </div>
+                    </div>
+                )}
 
             </main>
         </div>
