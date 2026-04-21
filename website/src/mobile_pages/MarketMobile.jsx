@@ -173,8 +173,7 @@ const MarketMobile = () => {
 
             {/* Top Header Mobile */}
             <MobileHeader 
-                title={marketType === 'teams' ? 'MERCADO EQUIPOS' : 'MERCADO'}
-                showLogo={false}
+                showLogo={true}
                 showSearchIcon={marketType === 'players'}
                 onSearchClick={() => setShowSearch(true)}
             />

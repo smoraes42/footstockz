@@ -44,7 +44,6 @@ const MobileHeader = ({
                 )}
             </div>
 
-            {title && <h3 className={styles['header-title']}>{title}</h3>}
 
             <div className={styles['right-section']}>
                 {rightContent ? (
