@@ -66,57 +66,7 @@ const ProfileMobile = () => {
                     </div>
                 </div>
                 
-                {/* Portfolio Section */}
-                <div className={styles['mobile-portfolio-section']}>
-                    <div className={styles['mobile-section-header']}>
-                        <h3 className={styles['mobile-section-label']}>Portfolio</h3>
-                        {isOwnProfile && (
-                            <Link to="/portfolio" className={styles['mobile-view-all']}>Ver todo</Link>
-                        )}
-                    </div>
-                    
-                    <div className={styles['mobile-portfolio-list']}>
-                        {holdings.length === 0 ? (
-                            <div className={`${styles['mobile-empty-portfolio']} glass-panel`}>
-                                <p>No hay inversiones para mostrar.</p>
-                            </div>
-                        ) : (
-                            holdings.slice(0, 5).map((holding, idx) => (
-                                <div 
-                                    key={idx} 
-                                    className={`${styles['mobile-portfolio-item']} glass-panel`}
-                                    onClick={() => navigate(holding.type === 'team' ? `/market/team/${holding.team_id}` : `/market/player/${holding.player_id}`)}
-                                >
-                                    <div className={styles['mobile-item-info']}>
-                                        <div className={styles['mobile-item-avatar']}>
-                                            {holding.type === 'team' ? (
-                                                <span className={styles['mobile-avatar-emoji']}>🏟️</span>
-                                            ) : (
-                                                <img 
-                                                    src={getPlayerImageUrl(holding.player_id)} 
-                                                    alt={holding.player_name}
-                                                    onError={(e) => { e.target.style.display = 'none'; }}
-                                                />
-                                            )}
-                                        </div>
-                                        <div className={styles['mobile-item-text']}>
-                                            <p className={styles['mobile-item-name']}>{holding.player_name}</p>
-                                            <p className={styles['mobile-item-shares']}>{parseFloat(holding.shares_owned).toFixed(2)} acciones</p>
-                                        </div>
-                                    </div>
-                                    <div className={styles['mobile-item-stats']}>
-                                        <div className={styles['mobile-item-price']}>
-                                            <PlayerPrice price={holding.current_price} />
-                                        </div>
-                                        <div className={styles['mobile-item-change']}>
-                                            <PlayerChange change={holding.variation_24h} />
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                </div>
+
 
                 {isOwnProfile && (
                     <>
