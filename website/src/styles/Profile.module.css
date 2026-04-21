@@ -208,6 +208,150 @@
     letter-spacing: 1px;
 }
 
+/* Desktop Specific Redesign Styles */
+.container {
+    background-color: var(--bg-main);
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+}
+
+.main-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 2.5rem 4rem;
+    overflow-y: auto;
+}
+
+.header {
+    margin-bottom: 3rem;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 3rem;
+    max-width: 1200px;
+}
+
+.user-card {
+    padding: 2.5rem 2rem;
+    border-radius: 32px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar-container {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: var(--surface-lighter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent-neon);
+    margin-bottom: 1.5rem;
+    border: 4px solid rgba(0, 255, 136, 0.15);
+}
+
+.user-name {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.user-email {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+}
+
+.desktop-referral-card {
+    width: 100%;
+    padding: 1.5rem;
+    border-radius: 24px;
+    margin-top: 1.5rem;
+}
+
+.desktop-menu-section {
+    margin-bottom: 2.5rem;
+}
+
+.desktop-section-label {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-left: 0.5rem;
+    margin-bottom: 1rem;
+    letter-spacing: 1.5px;
+}
+
+.desktop-menu-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.desktop-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.desktop-menu-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 255, 136, 0.2);
+    transform: translateY(-2px);
+}
+
+.desktop-menu-text {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.desktop-logout-btn {
+    margin-top: 3rem;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 82, 82, 0.3);
+    background: rgba(255, 82, 82, 0.05);
+    color: #ff5252;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.desktop-logout-btn:hover {
+    background: rgba(255, 82, 82, 0.1);
+    transform: scale(1.02);
+}
+
+
 /* Mode Switch Mobile (Refined) */
 .mobile-mode-switch-container {
     margin: 0.5rem 0 1.5rem 0;
