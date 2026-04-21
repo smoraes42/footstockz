@@ -195,29 +195,6 @@ const MarketMobile = () => {
                     <>
                 {/* Sort & Filter Bar */}
                 <div className={styles['mobile-filter-bar']}>
-
-                    {/* Horizontal Scroll Sort Buttons */}
-                    <div className={styles['mobile-horizontal-scroll']}>
-                        <button
-                            onClick={() => handleSortToggle('price')}
-                            className={`${styles['mobile-sort-btn']} ${sortConfig.key === 'price' ? styles['mobile-sort-btn-active'] : ''}`}
-                        >
-                            Precio {sortConfig.key === 'price' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '') : '↕'}
-                        </button>
-                        <button
-                            onClick={() => handleSortToggle('change')}
-                            className={`${styles['mobile-sort-btn']} ${sortConfig.key === 'change' ? styles['mobile-sort-btn-active'] : ''}`}
-                        >
-                            Cambio 24h {sortConfig.key === 'change' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '') : '↕'}
-                        </button>
-                        <button
-                            onClick={() => handleSortToggle('name')}
-                            className={`${styles['mobile-sort-btn']} ${sortConfig.key === 'name' ? styles['mobile-sort-btn-active'] : ''}`}
-                        >
-                            Nombre {sortConfig.key === 'name' ? (sortConfig.direction === 'asc' ? '↑' : sortConfig.direction === 'desc' ? '↓' : '') : '↕'}
-                        </button>
-                    </div>
-
                     {/* League Filter (Horizontal Scroll) */}
                     <div className={`${styles['mobile-horizontal-scroll']} ${styles['mobile-league-filter-row']}`}>
                         <button
@@ -259,6 +236,28 @@ const MarketMobile = () => {
                     )}
                 </div>
 
+                {/* List Header */}
+                <div className={styles['mobile-list-header']}>
+                    <button 
+                        onClick={() => handleSortToggle('name')}
+                        className={`${styles['mobile-header-item']} ${styles['mobile-header-item-name']} ${sortConfig.key === 'name' ? styles['mobile-header-item-active'] : ''}`}
+                    >
+                        Nombre {sortConfig.key === 'name' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                    </button>
+                    <button 
+                        onClick={() => handleSortToggle('change')}
+                        className={`${styles['mobile-header-item']} ${styles['mobile-header-item-24h']} ${sortConfig.key === 'change' ? styles['mobile-header-item-active'] : ''}`}
+                    >
+                        24h {sortConfig.key === 'change' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                    </button>
+                    <button 
+                        onClick={() => handleSortToggle('price')}
+                        className={`${styles['mobile-header-item']} ${styles['mobile-header-item-price']} ${sortConfig.key === 'price' ? styles['mobile-header-item-active'] : ''}`}
+                    >
+                        Precio {sortConfig.key === 'price' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                    </button>
+                </div>
+
                     <div className={styles['mobile-player-list']}>
 
                         {loadingPlayers ? (
@@ -286,24 +285,12 @@ const MarketMobile = () => {
                                         </div>
                                     </div>
 
-                                    <div className={styles['mobile-player-right']}>
-                                        <div className={styles['mobile-sparkline-wrapper']}>
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <LineChart data={(player.sparkline || []).map((v, i) => ({ v, i }))}>
-                                                    <Line
-                                                        type="monotone"
-                                                        dataKey="v"
-                                                        stroke={player.change >= 0 ? 'var(--accent-neon)' : 'var(--error-red)'}
-                                                        strokeWidth={2}
-                                                        dot={false}
-                                                    />
-                                                </LineChart>
-                                            </ResponsiveContainer>
-                                        </div>
-                                        <div className={styles['mobile-player-price-box']}>
-                                            <PlayerPrice price={player.price} isUpdated={updatedPlayerId === player.id} className={styles['mobile-player-price']} />
-                                            <PlayerChange change={player.change} indicatorType="sign" className={styles['mobile-player-change']} />
-                                        </div>
+                                    <div className={styles['mobile-player-change-center']}>
+                                        <PlayerChange change={player.change} indicatorType="sign" />
+                                    </div>
+
+                                    <div className={styles['mobile-player-price-right']}>
+                                        <PlayerPrice price={player.price} isUpdated={updatedPlayerId === player.id} className={styles['mobile-player-price']} />
                                     </div>
                                 </Link>
                             ))
