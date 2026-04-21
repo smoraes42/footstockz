@@ -182,19 +182,81 @@ const PortfolioDesktop = () => {
                 </div>
 
                 {/* Tab Selection Toggle */}
-                <div className={styles['tabs-container']}>
-                    <button
-                        onClick={() => setActiveTab('players')}
-                        className={`${styles['tab-btn']} ${activeTab === 'players' ? styles['tab-btn-active'] : ''}`}
+                <div className={styles['tabs-row']}>
+                    <div className={styles['tabs-container']}>
+                        <button
+                            onClick={() => setActiveTab('players')}
+                            className={`${styles['tab-btn']} ${activeTab === 'players' ? styles['tab-btn-active'] : ''}`}
+                        >
+                            Jugadores
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('teams')}
+                            className={`${styles['tab-btn']} ${activeTab === 'teams' ? styles['tab-btn-active'] : ''}`}
+                        >
+                            Índices
+                        </button>
+                    </div>
+
+                    <button 
+                        className={`${styles['activity-toggle-btn']} ${showActivity ? styles['activity-toggle-btn-active'] : ''}`}
+                        onClick={() => setShowActivity(!showActivity)}
+                        title="Actividad Reciente"
                     >
-                        Jugadores
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     </button>
-                    <button
-                        onClick={() => setActiveTab('teams')}
-                        className={`${styles['tab-btn']} ${activeTab === 'teams' ? styles['tab-btn-active'] : ''}`}
-                    >
-                        Índices
-                    </button>
+
+                    {showActivity && (
+                        <div className={styles['activity-overlay']}>
+                            <div className={`glass-panel ${styles['table-panel']}`}>
+                                <div className={styles['activity-header']} style={{ padding: '1.5rem', paddingBottom: '0' }}>
+                                    <h3 className={styles['activity-title']} style={{ fontSize: '1.1rem' }}>Actividad Reciente</h3>
+                                </div>
+                                {loadingTrades ? (
+                                    <div className={styles.loading} style={{ padding: '2rem' }}>Cargando actividad...</div>
+                                ) : (
+                                    <table className={styles.table}>
+                                        <thead>
+                                            <tr className={styles['table-head-row']}>
+                                                <th className={styles['table-header-cell']}>Activo</th>
+                                                <th className={styles['table-header-cell']}>Tipo</th>
+                                                <th className={styles['table-header-cell']}>Valor</th>
+                                                <th className={styles['table-header-cell']}>Fecha</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {tradeHistory.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan="4" className={styles['no-data-cell']}>
+                                                        No hay actividad reciente.
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                tradeHistory.slice(0, 10).map((trade, idx) => (
+                                                    <tr key={idx} className={styles['table-head-row']}>
+                                                        <td className={`${styles['table-cell']} ${styles['asset-name']}`}>
+                                                            {trade.player_name || 'Desconocido'}
+                                                        </td>
+                                                        <td className={styles['table-cell']}>
+                                                            <span className={`${styles['side-badge']} ${trade.side === 'buy' ? styles['side-buy'] : styles['side-sell']}`}>
+                                                                {trade.side === 'buy' ? 'COMPRA' : 'VENTA'}
+                                                            </span>
+                                                        </td>
+                                                        <td className={`${styles['table-cell']} ${styles['value-bold']}`}>
+                                                            {parseFloat(trade.total_value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+                                                        </td>
+                                                        <td className={`${styles['table-cell']} ${styles['date-cell']}`}>
+                                                            {new Date(trade.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' })}
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            )}
+                                        </tbody>
+                                    </table>
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Tab Content */}
@@ -314,72 +376,7 @@ const PortfolioDesktop = () => {
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                )}
-
-                {/* Recent Activity Section */}
-                <div className={styles['activity-section']}>
-                    <div className={styles['activity-header']}>
-                        <h2 className={styles['activity-title']}>Actividad Reciente</h2>
-                        <button 
-                            onClick={() => setShowActivity(!showActivity)}
-                            className={styles['toggle-btn']}
-                        >
-                            {showActivity ? 'Ocultar' : 'Mostrar'}
-                            <span className={`${styles['toggle-arrow']} ${showActivity ? styles['toggle-arrow-open'] : ''}`}>▼</span>
-                        </button>
-                    </div>
-
-                    {showActivity && (
-                        <div className={`glass-panel ${styles['table-panel']}`}>
-                            {loadingTrades ? (
-                                <div className={styles.loading}>Cargando actividad...</div>
-                            ) : (
-                                <table className={styles.table}>
-                                    <thead>
-                                        <tr className={styles['table-head-row']}>
-                                            <th className={styles['table-header-cell']}>Activo</th>
-                                            <th className={styles['table-header-cell']}>Tipo</th>
-                                            <th className={styles['table-header-cell']}>Cantidad</th>
-                                            <th className={styles['table-header-cell']}>Valor Total</th>
-                                            <th className={styles['table-header-cell']}>Fecha</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {tradeHistory.length === 0 ? (
-                                            <tr>
-                                                <td colSpan="5" className={styles['no-data-cell']}>
-                                                    No hay actividad reciente para mostrar.
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            tradeHistory.slice(0, 10).map((trade, idx) => (
-                                                <tr key={idx} className={styles['table-head-row']}>
-                                                    <td className={`${styles['table-cell']} ${styles['asset-name']}`}>
-                                                        {trade.player_name || 'Desconocido'}
-                                                    </td>
-                                                    <td className={styles['table-cell']}>
-                                                        <span className={`${styles['side-badge']} ${trade.side === 'buy' ? styles['side-buy'] : styles['side-sell']}`}>
-                                                            {trade.side === 'buy' ? 'COMPRA' : 'VENTA'}
-                                                        </span>
-                                                    </td>
-                                                    <td className={styles['table-cell']}>
-                                                        {parseFloat(trade.quantity).toFixed(4)}
-                                                    </td>
-                                                    <td className={`${styles['table-cell']} ${styles['value-bold']}`}>
-                                                        {parseFloat(trade.total_value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
-                                                    </td>
-                                                    <td className={`${styles['table-cell']} ${styles['date-cell']}`}>
-                                                        {new Date(trade.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        )}
-                                    </tbody>
-                                </table>
-                            )}
-                        </div>
-                    )}
+                         )}
                 </div>
 
             </main>

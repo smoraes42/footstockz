@@ -42,6 +42,14 @@
     color: var(--accent-neon);
 }
 
+.tabs-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+}
+
 .tabs-container {
     display: flex;
     background-color: var(--surface-dark);
@@ -49,7 +57,6 @@
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     width: fit-content;
-    margin-bottom: 2.5rem;
 }
 
 .tab-btn {
@@ -69,6 +76,47 @@
 .tab-btn-active {
     background: var(--bg-main);
     color: var(--text-main);
+}
+
+.activity-toggle-btn {
+    background: var(--surface-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.activity-toggle-btn:hover {
+    color: var(--accent-neon);
+    border-color: var(--accent-neon);
+    background-color: rgba(57, 255, 20, 0.05);
+}
+
+.activity-toggle-btn-active {
+    color: var(--accent-neon);
+    border-color: var(--accent-neon);
+    background-color: rgba(57, 255, 20, 0.1);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+}
+
+.activity-overlay {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 700px;
+    z-index: 500;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .table-panel {
