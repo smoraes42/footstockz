@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import { getPortfolio, getMe, getUserTradeHistory } from '../services/api';
 import { useSocket } from '../context/SocketContext';
@@ -19,6 +19,7 @@ const formatCompactNumber = (number) => {
 };
 
 const PortfolioMobile = () => {
+    const navigate = useNavigate();
     const [portfolio, setPortfolio] = useState(null);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
