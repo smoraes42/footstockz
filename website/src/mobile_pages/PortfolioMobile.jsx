@@ -4,6 +4,8 @@ import fsLogo from '../assets/fs-logo.png';
 import { getPortfolio, getMe, getUserTradeHistory } from '../services/api';
 import { useSocket } from '../context/SocketContext';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
+import MobileHeader from '../components/MobileHeader';
+import MobileNavbar from '../components/MobileNavbar';
 import styles from '../styles/Portfolio.module.css';
 
 const formatCompactNumber = (number) => {
@@ -130,11 +132,7 @@ const PortfolioMobile = () => {
     return (
         <div className={styles['mobile-container']}>
             
-            {/* Top Header */}
-            <header className={styles['mobile-header']}>
-                <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-logo']} />
-                <div className={styles['mobile-nav-spacer']} />
-            </header>
+            <MobileHeader />
 
             <main className={styles['mobile-main']}>
                 <h2 className={styles['mobile-section-title']}>Tu Portfolio</h2>
@@ -313,27 +311,7 @@ const PortfolioMobile = () => {
                 </div>
             </main>
 
-            {/* Bottom Navigation */}
-            <nav className={styles['mobile-bottom-nav']}>
-                <Link to="/home" className={styles['mobile-nav-link']}>
-                    <span className={styles['mobile-nav-text']}>Inicio</span>
-                </Link>
-                <Link to="/portfolio" className={`${styles['mobile-nav-link']} ${styles['mobile-nav-link-active']}`}>
-                    <div className={styles['mobile-nav-link-active-bar']}></div>
-                    <span className={`${styles['mobile-nav-text']} ${styles['mobile-nav-text-active']}`}>Portfolio</span>
-                </Link>
-                <Link to="/market" className={styles['mobile-nav-link']}>
-                    <span className={styles['mobile-nav-text']}>Mercado</span>
-                </Link>
-                <div 
-                    onClick={() => window.location.href = '/profile'}
-                    className={styles['mobile-nav-link']}
-                >
-                    <div className={styles['mobile-nav-avatar']}>
-                        {user?.username?.charAt(0).toUpperCase() || 'U'}
-                    </div>
-                </div>
-            </nav>
+            <MobileNavbar />
         </div>
     );
 };

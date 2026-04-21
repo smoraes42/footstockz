@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
+import MobileHeader from '../components/MobileHeader';
 import { verifyEmail } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import styles from '../styles/Verify.module.css';
@@ -77,11 +78,7 @@ const VerifyMobile = () => {
 
     return (
         <div className={styles['mobile-container']}>
-            <nav className={styles['mobile-nav']}>
-                <Link to="/">
-                    <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-logo']} />
-                </Link>
-            </nav>
+            <MobileHeader backLink="/" />
             <main className={styles['mobile-main']}>
                 <div className={styles['mobile-glow']}></div>
                 <div className={`${styles['mobile-glass-panel']} glass-panel fade-in-up`}>

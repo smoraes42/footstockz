@@ -4,7 +4,11 @@ import {
     LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer
 } from 'recharts';
 import { toast } from 'react-toastify';
-import { getPortfolio, getPlayerById, getMe, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell } from '../services/api';
+import { 
+    getPortfolio, getPlayerById, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell, getMe 
+} from '../services/api';
+import MobileHeader from '../components/MobileHeader';
+import MobileNavbar from '../components/MobileNavbar';
 import fsLogo from '../assets/fs-logo.png';
 import { useSocket } from '../context/SocketContext';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
@@ -298,13 +302,10 @@ const PlayerMarketMobile = () => {
 
     return (
         <div className={styles['mobile-container']}>
-            {/* Header */}
-            <header className={styles['mobile-header']}>
-                <img src={fsLogo} alt="Logo" className={styles['mobile-logo']} />
-                <div className={styles['mobile-wallet-box']}>
-                    <p className={styles['mobile-wallet-value']}>€{portfolio?.walletBalance?.toFixed(2) || '0.00'}</p>
-                </div>
-            </header>
+            <MobileHeader 
+                backLink="/market" 
+                walletBalance={portfolio?.walletBalance} 
+            />
 
             <div className={styles['mobile-position-bar']}>
                 <span className={styles['mobile-pos-label']}>Posición: <span className={styles['mobile-pos-value']}>{portfolio?.holdings?.find(h => h.player_id === parseInt(playerId))?.shares_owned?.toFixed(4) || '0.0000'}</span></span>
@@ -550,27 +551,7 @@ const PlayerMarketMobile = () => {
                 <div className={styles['mobile-spacer']} />
             </main>
 
-            {/* Bottom Navigation Mobile */}
-            <nav className={styles['mobile-bottom-nav']}>
-                <Link to="/home" className={styles['mobile-nav-link']}>
-                    <span className={styles['mobile-nav-text']}>Inicio</span>
-                </Link>
-                <Link to="/portfolio" className={styles['mobile-nav-link']}>
-                    <span className={styles['mobile-nav-text']}>Portfolio</span>
-                </Link>
-                <Link to="/market" className={`${styles['mobile-nav-link']} ${styles['mobile-nav-link-active']}`}>
-                    <div className={styles['mobile-nav-link-active-bar']}></div>
-                    <span className={`${styles['mobile-nav-text']} ${styles['mobile-nav-text-active']}`}>Mercado</span>
-                </Link>
-                <div
-                    onClick={() => window.location.href = '/profile'}
-                    className={styles['mobile-nav-profile']}
-                >
-                    <div className={styles['mobile-nav-avatar']}>
-                        {user?.username?.charAt(0).toUpperCase() || 'U'}
-                    </div>
-                </div>
-            </nav>
+            <MobileNavbar />
         </div>
     );
 };

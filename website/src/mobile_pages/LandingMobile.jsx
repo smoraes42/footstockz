@@ -13,7 +13,9 @@ const LandingMobile = () => {
                 {/* Navbar Mobile */}
                 <nav className={styles['mobile-nav']}>
                     <div className={styles['mobile-nav-logo-box']}>
+                        <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
                         <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-nav-logo']} />
+                    </Link>
                     </div>
                     <Link to="/login" className={`${styles['mobile-nav-btn']} neon-button`}>Entrar</Link>
                 </nav>
@@ -48,7 +50,9 @@ const LandingMobile = () => {
             {/* Footer Mobile */}
             <footer className={styles['mobile-footer']}>
                 <div className={styles['mobile-footer-left']}>
-                    <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-footer-logo']} />
+                    <Link to="/" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-footer-logo']} />
+                    </Link>
                     <span className={styles['mobile-copyright']}>© 2026 Futstocks.</span>
                 </div>
                 <div className={styles['mobile-footer-right']}>

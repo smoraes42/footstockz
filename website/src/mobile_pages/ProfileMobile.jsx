@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import { getMe, getPortfolio, getPublicProfile } from '../services/api';
+import MobileHeader from '../components/MobileHeader';
+import MobileNavbar from '../components/MobileNavbar';
 import styles from '../styles/Profile.module.css';
 
 const ProfileMobile = () => {
@@ -36,23 +38,16 @@ const ProfileMobile = () => {
     return (
         <div className={styles['mobile-container']}>
             
-            {/* Header */}
-            <header className={styles['mobile-header']}>
-                {isOwnProfile ? (
-                    <img src={fsLogo} alt="Logo" className={styles['mobile-logo']} />
-                ) : (
-                    <button onClick={() => navigate(-1)} className={styles['mobile-back-btn']}>VOLVER</button>
-                )}
-                <h3 className={styles['mobile-header-title']}>
-                    {isOwnProfile ? 'MI PERFIL' : 'PERFIL'}
-                </h3>
-                {isOwnProfile ? (
-                    <button onClick={() => {
-                        document.cookie = "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                        window.location.href = "/login";
-                    }} className={styles['mobile-logout-btn']}>SALIR</button>
-                ) : <div className={styles['mobile-header-spacer']} />}
-            </header>
+            <MobileHeader 
+                title={isOwnProfile ? 'MI PERFIL' : 'PERFIL'}
+                showLogo={isOwnProfile}
+                onBack={!isOwnProfile ? () => navigate(-1) : null}
+                showLogout={isOwnProfile}
+                onLogout={() => {
+                    document.cookie = "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    window.location.href = "/login";
+                }}
+            />
 
             <main className={styles['mobile-main']}>
                 
@@ -71,26 +66,7 @@ const ProfileMobile = () => {
 
             </main>
 
-            {/* Bottom Navigation */}
-            {isOwnProfile && (
-                <nav className={styles['mobile-bottom-nav']}>
-                    <Link to="/home" className={styles['mobile-nav-link']}>
-                        <span className={styles['mobile-nav-text']}>Inicio</span>
-                    </Link>
-                    <Link to="/portfolio" className={styles['mobile-nav-link']}>
-                        <span className={styles['mobile-nav-text']}>Portfolio</span>
-                    </Link>
-                    <Link to="/market" className={styles['mobile-nav-link']}>
-                        <span className={styles['mobile-nav-text']}>Mercado</span>
-                    </Link>
-                    <Link to="/profile" className={`${styles['mobile-nav-link']} ${styles['mobile-nav-link-active']}`}>
-                        <div className={styles['mobile-nav-link-active-bar']}></div>
-                        <div className={styles['mobile-nav-avatar']}>
-                            {user?.username?.charAt(0).toUpperCase() || 'U'}
-                        </div>
-                    </Link>
-                </nav>
-            )}
+            {isOwnProfile && <MobileNavbar />}
         </div>
     );
 };

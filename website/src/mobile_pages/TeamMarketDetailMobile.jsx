@@ -6,6 +6,8 @@ import {
 import { toast } from 'react-toastify';
 import { getPortfolio, getTeamById, getTeamHistory, teamMarketBuy, teamMarketSell, getTradeConfig } from '../services/api';
 import { useSocket } from '../context/SocketContext';
+import MobileHeader from '../components/MobileHeader';
+import MobileNavbar from '../components/MobileNavbar';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Market.module.css';
 
@@ -181,10 +183,11 @@ export default function TeamMarketDetailMobile() {
 
     return (
         <div className={styles['mobile-detail-container']}>
-            <div className={styles['mobile-detail-header']}>
-                <button onClick={() => navigate(-1)} className={styles['mobile-back-btn']}>← Volver</button>
-                <h1 className={styles['mobile-detail-title']}>{team?.name || 'Cargando...'}</h1>
-            </div>
+            <MobileHeader 
+                backLink="/market" 
+                title={team?.name || 'Cargando...'}
+                showLogo={false}
+            />
 
             <div className={styles['mobile-chart-card']}>
                 <div className={styles['mobile-chart-header']}>
@@ -353,6 +356,7 @@ export default function TeamMarketDetailMobile() {
                     </div>
                 ))}
             </div>
+            <MobileNavbar />
         </div>
     );
 }

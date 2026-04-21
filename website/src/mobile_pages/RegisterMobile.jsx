@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import fsLogo from '../assets/fs-logo.png';
 import fsLogoBlack from '../assets/fs-logo-black.png';
+import MobileHeader from '../components/MobileHeader';
 import { registerUser, googleLogin, initGoogleSignIn } from '../services/api';
 import styles from '../styles/Register.module.css';
 
@@ -64,11 +65,7 @@ const RegisterMobile = () => {
 
     return (
         <div className={styles['mobile-container']}>
-            <nav className={styles['mobile-nav']}>
-                <Link to="/">
-                    <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-logo']} />
-                </Link>
-            </nav>
+            <MobileHeader backLink="/" />
             <main className={styles['mobile-main']}>
                 <div className={styles['mobile-glow']}></div>
                 <div className={`${styles['mobile-glass-panel']} glass-panel fade-in-up`}>
