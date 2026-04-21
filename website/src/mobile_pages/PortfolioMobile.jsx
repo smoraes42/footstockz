@@ -136,15 +136,15 @@ const PortfolioMobile = () => {
 
             <main className={styles['mobile-main']}>
                 <div className={styles['mobile-title-row']}>
+                    <h2 className={styles['mobile-section-title']}>
+                        {activeTab === 'activity' ? 'Actividad Reciente' : 'Tu Portfolio'}
+                    </h2>
                     <button 
                         className={`${styles['mobile-activity-btn']} ${activeTab === 'activity' ? styles['mobile-activity-btn-active'] : ''}`}
                         onClick={() => setActiveTab(activeTab === 'activity' ? 'players' : 'activity')}
                     >
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     </button>
-                    <h2 className={styles['mobile-section-title']}>
-                        {activeTab === 'activity' ? 'Actividad Reciente' : 'Tu Portfolio'}
-                    </h2>
                 </div>
 
                 {activeTab !== 'activity' && (
@@ -194,7 +194,11 @@ const PortfolioMobile = () => {
                         ) : (
                             <div className={styles['mobile-activity-list-full']}>
                                 {tradeHistory.slice(0, 20).map((trade, idx) => (
-                                    <div key={idx} className={`${styles['mobile-activity-card-full']} glass-panel`}>
+                                    <div 
+                                        key={idx} 
+                                        className={`${styles['mobile-activity-card-full']} glass-panel`}
+                                        onClick={() => navigate(`/trades/${trade.id}`)}
+                                    >
                                         <div className={styles['mobile-asset-info']}>
                                             <div className={`${styles['mobile-activity-icon-box']} ${trade.side === 'buy' ? styles['mobile-activity-buy'] : styles['mobile-activity-sell']}`}>
                                                 {trade.side === 'buy' ? 'COMPRA' : 'VENTA'}

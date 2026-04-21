@@ -428,8 +428,13 @@ export default function PlayerMarketDesktop() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {tradeHistory.slice(0, 15).map((trade, idx) => (
-                                                <tr key={idx} className={styles['trade-table-row']}>
+                                             {tradeHistory.slice(0, 15).map((trade, idx) => (
+                                                <tr 
+                                                    key={idx} 
+                                                    className={styles['trade-table-row']}
+                                                    onClick={() => navigate(`/trades/${trade.id || trade.tradeId}`)}
+                                                    style={{ cursor: 'pointer' }}
+                                                >
                                                     <td className={`${styles['trade-table-cell']} ${trade.side === 'buy' ? styles['trade-type-buy'] : styles['trade-type-sell']}`}>
                                                         {trade.side === 'buy' ? 'BUY' : 'SELL'}
                                                     </td>

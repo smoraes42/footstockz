@@ -525,7 +525,12 @@ const PlayerMarketMobile = () => {
                                 </thead>
                                 <tbody>
                                     {tradeHistory.slice(0, 10).map((trade, idx) => (
-                                        <tr key={idx} className={styles['mobile-trade-row']}>
+                                        <tr 
+                                            key={idx} 
+                                            className={styles['mobile-trade-row']}
+                                            onClick={() => navigate(`/trades/${trade.id || trade.tradeId}`)}
+                                            style={{ cursor: 'pointer' }}
+                                        >
                                             <td className={`${styles['mobile-trade-side']} ${trade.side === 'buy' ? styles['mobile-trade-side-buy'] : styles['mobile-trade-side-sell']}`}>
                                                 {trade.side === 'buy' ? 'COMPRA' : 'VENTA'}
                                             </td>

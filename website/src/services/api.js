@@ -254,3 +254,12 @@ export const placeOrder = async (playerId, side, price, quantity) => {
         throw new Error(error.response?.data?.error || 'Error placing order');
     }
 };
+
+export const getTradeById = async (id) => {
+    try {
+        const response = await api.get(`/v1/trades/${id}`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.error || 'Error fetching trade details');
+    }
+};

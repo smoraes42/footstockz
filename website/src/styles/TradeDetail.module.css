@@ -1,0 +1,350 @@
+/* Desktop Styles */
+.container {
+    background-color: var(--bg-main);
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+}
+
+.main-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 2.5rem 4rem;
+    overflow-y: auto;
+}
+
+.header {
+    margin-bottom: 2.5rem;
+}
+
+.back-link {
+    background: none;
+    border: none;
+    color: var(--accent-neon);
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    transition: opacity 0.2s;
+}
+
+.back-link:hover {
+    opacity: 0.8;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+    max-width: 1100px;
+}
+
+.info-card {
+    padding: 2.5rem;
+    border-radius: 32px;
+}
+
+.asset-preview {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.player-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    object-fit: cover;
+    background: var(--surface-lighter);
+}
+
+.team-icon {
+    font-size: 3rem;
+}
+
+.asset-name {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.asset-type {
+    color: var(--accent-neon);
+    font-weight: 700;
+    margin: 4px 0 0 0;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+.stats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.stat-value {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.buy-text {
+    color: var(--accent-neon);
+}
+
+.sell-text {
+    color: #ff5252;
+}
+
+.stat-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.05);
+    margin: 0.5rem 0;
+}
+
+.total-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.blockchain-card {
+    padding: 2.5rem;
+    border-radius: 32px;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+}
+
+.system-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.info-row span:last-child {
+    color: #fff;
+    font-weight: 700;
+}
+
+.status-badge {
+    background: rgba(0, 255, 136, 0.1);
+    color: var(--accent-neon) !important;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.loading-state, .error-state {
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+}
+
+.back-btn {
+    margin-top: 1.5rem;
+    padding: 1rem 2rem;
+    background: var(--accent-neon);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+/* Mobile Styles */
+.mobile-container {
+    background-color: var(--bg-main);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-main {
+    flex: 1;
+    padding: 1.5rem;
+    padding-bottom: 100px;
+    overflow-y: auto;
+}
+
+.mobile-detail-header {
+    margin-bottom: 1.5rem;
+}
+
+.mobile-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.mobile-trade-id {
+    color: var(--accent-neon);
+    font-family: monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+.mobile-asset-card {
+    padding: 1.25rem;
+    border-radius: 24px;
+    margin-bottom: 1rem;
+}
+
+.mobile-asset-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.mobile-asset-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: var(--surface-lighter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.mobile-player-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mobile-team-icon {
+    font-size: 2rem;
+}
+
+.mobile-asset-name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.mobile-asset-type {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin: 2px 0 0 0;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.mobile-stats-card {
+    padding: 1.5rem;
+    border-radius: 24px;
+    margin-bottom: 1rem;
+}
+
+.mobile-stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.mobile-stat-row:last-child {
+    margin-bottom: 0;
+}
+
+.mobile-stat-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.mobile-stat-value {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.mobile-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.05);
+    margin: 1rem 0;
+}
+
+.mobile-stat-label-total {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.mobile-stat-value-total {
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--accent-neon);
+}
+
+.mobile-time-card {
+    padding: 1.5rem;
+    border-radius: 24px;
+}
+
+.mobile-status-badge {
+    color: var(--accent-neon);
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
+.mobile-loading, .mobile-error {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-muted);
+}
+
+.mobile-back-btn {
+    margin-top: 1rem;
+    padding: 0.75rem 2rem;
+    background: var(--accent-neon);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+}

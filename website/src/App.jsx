@@ -23,6 +23,8 @@ import LeaderboardMobile from './mobile_pages/LeaderboardMobile';
 import ProfileDesktop from './desktop_pages/ProfileDesktop';
 import ProfileMobile from './mobile_pages/ProfileMobile';
 import UserProfileDesktop from './desktop_pages/UserProfileDesktop';
+import TradeDetailDesktop from './desktop_pages/TradeDetailDesktop';
+import TradeDetailMobile from './mobile_pages/TradeDetailMobile';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import fsLogo from './assets/fs-logo.png';
@@ -99,6 +101,7 @@ function App() {
                   <Route path="/leaderboard" element={<ProtectedRoute>{isMobile ? <LeaderboardMobile /> : <LeaderboardDesktop />}</ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute>{isMobile ? <ProfileMobile /> : <ProfileDesktop />}</ProtectedRoute>} />
                   <Route path="/profile/:userId" element={<ProtectedRoute>{isMobile ? <ProfileMobile /> : <UserProfileDesktop />}</ProtectedRoute>} />
+                  <Route path="/trades/:tradeId" element={<ProtectedRoute>{isMobile ? <TradeDetailMobile /> : <TradeDetailDesktop />}</ProtectedRoute>} />
 
                   {/* 404 fallback */}
                   <Route path="*" element={<Navigate to="/home" replace />} />

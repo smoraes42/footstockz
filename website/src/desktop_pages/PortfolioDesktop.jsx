@@ -240,7 +240,11 @@ const PortfolioDesktop = () => {
                                                 </tr>
                                             ) : (
                                                 tradeHistory.slice(0, 20).map((trade, idx) => (
-                                                    <tr key={idx} className={styles['table-row']}>
+                                                    <tr 
+                                                        key={idx} 
+                                                        className={styles['table-row']}
+                                                        onClick={() => navigate(`/trades/${trade.id}`)}
+                                                    >
                                                         <td className={`${styles['table-cell']} ${styles['asset-name']}`}>
                                                             {trade.player_name || 'Desconocido'}
                                                         </td>
