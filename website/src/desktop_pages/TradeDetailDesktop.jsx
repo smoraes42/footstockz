@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getTradeById, getPlayerImageUrl } from '../services/api';
-import SidebarComponent from '../components/SidebarComponent';
+import Navbar from '../components/Navbar';
 import styles from '../styles/TradeDetail.module.css';
 
 const TradeDetailDesktop = () => {
@@ -29,7 +29,7 @@ const TradeDetailDesktop = () => {
     if (loading) {
         return (
             <div className={styles['container']}>
-                <SidebarComponent activePage="portfolio" />
+                <Navbar />
                 <main className={styles['main-content']}>
                     <div className={styles['loading-state']}>Cargando detalles de la operación...</div>
                 </main>
@@ -40,7 +40,7 @@ const TradeDetailDesktop = () => {
     if (error || !trade) {
         return (
             <div className={styles['container']}>
-                <SidebarComponent activePage="portfolio" />
+                <Navbar />
                 <main className={styles['main-content']}>
                     <div className={styles['error-state']}>
                         <p>{error || 'Operación no encontrada'}</p>
@@ -53,7 +53,7 @@ const TradeDetailDesktop = () => {
 
     return (
         <div className={styles['container']}>
-            <SidebarComponent activePage="portfolio" />
+            <Navbar />
             <main className={styles['main-content']}>
                 <header className={styles['header']}>
                     <button onClick={() => navigate(-1)} className={styles['back-link']}>
