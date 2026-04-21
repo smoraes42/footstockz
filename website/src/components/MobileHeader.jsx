@@ -11,7 +11,9 @@ const MobileHeader = ({
     rightContent, 
     showLogout,
     onLogout,
-    walletBalance
+    walletBalance,
+    showSearchIcon,
+    onSearchClick
 }) => {
     const navigate = useNavigate();
 
@@ -53,6 +55,10 @@ const MobileHeader = ({
                     </div>
                 ) : showLogout ? (
                     <button onClick={onLogout} className={styles['logout-btn']}>SALIR</button>
+                ) : showSearchIcon ? (
+                    <button onClick={onSearchClick} className={styles['search-btn']}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    </button>
                 ) : (
                     <div className={styles['nav-spacer']} />
                 )}

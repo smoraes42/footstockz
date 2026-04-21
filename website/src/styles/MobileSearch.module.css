@@ -1,0 +1,68 @@
+.mobile-search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+}
+
+.mobile-search-input-box {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.mobile-search-icon-box {
+    flex: 1;
+    position: relative;
+}
+
+.mobile-search-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+}
+
+.mobile-search-input:focus {
+    border-color: var(--accent-neon);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+}
+
+.mobile-search-close-btn {
+    background: var(--accent-neon);
+    color: #000;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.mobile-search-subtext {
+    margin-top: 15px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.mobile-search-overlay-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}

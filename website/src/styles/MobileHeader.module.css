@@ -75,6 +75,22 @@
     cursor: pointer;
 }
 
+.search-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.search-btn:active {
+    color: var(--accent-neon);
+}
+
+
 .wallet-box {
     text-align: right;
 }

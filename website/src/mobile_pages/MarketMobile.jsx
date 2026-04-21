@@ -7,6 +7,7 @@ import { useSocket } from '../context/SocketContext';
 import TeamsMarketMobile from './TeamsMarketMobile';
 import MobileHeader from '../components/MobileHeader';
 import MobileNavbar from '../components/MobileNavbar';
+import MobileSearch from '../components/MobileSearch';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Market.module.css';
 
@@ -171,7 +172,12 @@ const MarketMobile = () => {
         <div className={styles['mobile-container']}>
 
             {/* Top Header Mobile */}
-            <MobileHeader />
+            <MobileHeader 
+                title={marketType === 'teams' ? 'MERCADO EQUIPOS' : 'MERCADO'}
+                showLogo={false}
+                showSearchIcon={marketType === 'players'}
+                onSearchClick={() => setShowSearch(true)}
+            />
 
             <main className={styles['mobile-main']}>
                 <div className={styles['mobile-market-tabs']}>
@@ -321,46 +327,13 @@ const MarketMobile = () => {
 
             <MobileNavbar />
 
-            {/* Floating Search Button (FAB) */}
-            {!showSearch && (
-                <button
-                    onClick={() => setShowSearch(true)}
-                    className={`${styles['mobile-fab']} glass-panel`}
-                >
-                    <span className={styles['mobile-fab-icon']}>🔍</span>
-                </button>
-            )}
-
-            {/* Search Overlay */}
-            {showSearch && (
-                <div className={styles['mobile-search-overlay']}>
-                    <div className={styles['mobile-search-input-box']}>
-                        <div className={styles['mobile-search-icon-box']}>
-                            <input
-                                autoFocus
-                                type="text"
-                                placeholder="Nombre del jugador..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className={styles['mobile-search-input']}
-                            />
-                        </div>
-                        <button
-                            onClick={() => { setShowSearch(false); if (searchTerm) fetchPlayers(1); }}
-                            className={styles['mobile-search-close-btn']}
-                        >
-                            LISTO
-                        </button>
-                    </div>
-                    <p className={styles['mobile-search-subtext']}>
-                        Presiona "LISTO" o toca fuera para cerrar.
-                    </p>
-                    <div
-                        onClick={() => setShowSearch(false)}
-                        className={styles['mobile-search-overlay-backdrop']}
-                    />
-                </div>
-            )}
+            <MobileSearch 
+                isOpen={showSearch} 
+                onClose={() => setShowSearch(false)}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                onSearch={() => fetchPlayers(1)}
+            />
         </div>
     );
 };
