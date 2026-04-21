@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import fsLogo from '../assets/fs-logo.png';
-import { getMe, getPortfolio, getPublicProfile } from '../services/api';
+import { getMe, getPublicProfile } from '../services/api';
 import MobileHeader from '../components/MobileHeader';
 import MobileNavbar from '../components/MobileNavbar';
 import styles from '../styles/Profile.module.css';
@@ -33,51 +32,138 @@ const ProfileMobile = () => {
         fetchData();
     }, [userId, isOwnProfile]);
 
+    const handleLogout = () => {
+        document.cookie = "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.href = "/login";
+    };
+
     if (loading) return <div className={styles['loading-container']}>Cargando...</div>;
 
     return (
         <div className={styles['mobile-container']}>
             
             <MobileHeader 
-                title={isOwnProfile ? 'MI PERFIL' : 'PERFIL'}
-                showLogo={isOwnProfile}
+                showLogo={true}
                 onBack={!isOwnProfile ? () => navigate(-1) : null}
-                showLogout={isOwnProfile}
-                onLogout={() => {
-                    document.cookie = "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                    window.location.href = "/login";
-                }}
             />
 
             <main className={styles['mobile-main']}>
                 
-                {/* User Info */}
-                <div className={styles['mobile-user-info']}>
+                {/* User Info Card */}
+                <div className={`${styles['mobile-profile-card']} glass-panel`}>
                     <div className={styles['mobile-avatar']}>
                         {user?.username?.charAt(0).toUpperCase() || 'U'}
                     </div>
-                    <h2 className={styles['mobile-user-name']}>{user?.username}</h2>
-                    <p className={styles['mobile-user-meta']}>Miembro desde {new Date(user?.created_at).toLocaleDateString()}</p>
-                    <div style={{ marginTop: '2rem', padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>ID DE USUARIO</p>
-                        <p style={{ color: 'var(--accent-neon)', fontSize: '1.2rem', fontWeight: '900' }}>#{user?.id}</p>
+                    <div className={styles['mobile-user-details']}>
+                        <h2 className={styles['mobile-user-name']}>{user?.username}</h2>
+                        <span className={styles['mobile-user-id']}>#{user?.id}</span>
                     </div>
+                </div>
 
-                    {isOwnProfile && (
+                {isOwnProfile && (
+                    <>
+                        {/* Demo/Real Switch */}
                         <div className={styles['mobile-mode-switch-container']}>
                             <div className={styles['mobile-mode-switch']}>
                                 <button className={`${styles['mobile-mode-btn']} ${styles['mobile-mode-btn-active']}`}>
                                     DEMO
                                 </button>
-                                <button className={`${styles['mobile-mode-btn']} ${styles['mobile-mode-btn-disabled']}`} disabled>
+                                <button className={styles['mobile-mode-btn']} disabled>
                                     REAL
                                     <span className={styles['mobile-coming-soon']}>Próximamente</span>
                                 </button>
                                 <div className={styles['mobile-mode-slider']}></div>
                             </div>
                         </div>
-                    )}
-                </div>
+
+                        {/* Referral / Level Card */}
+                        <div className={`${styles['mobile-referral-card']} glass-panel`}>
+                            <div className={styles['mobile-card-header']}>
+                                <span className={styles['mobile-card-title']}>Programa de Referidos</span>
+                                <span className={styles['mobile-level-badge']}>Nivel 1</span>
+                            </div>
+                            <div className={styles['mobile-exp-container']}>
+                                <div className={styles['mobile-exp-bar']}>
+                                    <div className={styles['mobile-exp-fill']} style={{ width: '35%' }}></div>
+                                </div>
+                                <div className={styles['mobile-exp-text']}>
+                                    <span>350 / 1000 EXP</span>
+                                    <span>Próximo Nivel: Bronce</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* History Section */}
+                        <div className={styles['mobile-menu-section']}>
+                            <h3 className={styles['mobile-section-label']}>Actividad</h3>
+                            <div className={styles['mobile-menu-list']}>
+                                <Link to="/portfolio" className={styles['mobile-menu-item']}>
+                                    <div className={styles['mobile-menu-item-left']}>
+                                        <span className={styles['mobile-menu-text']}>Historial de Operaciones</span>
+                                    </div>
+                                    <span className={styles['mobile-menu-arrow']}>›</span>
+                                </Link>
+                                <div className={styles['mobile-menu-item']}>
+                                    <div className={styles['mobile-menu-item-left']}>
+                                        <span className={styles['mobile-menu-text']}>Historial de Depósitos</span>
+                                    </div>
+                                    <span className={styles['mobile-menu-arrow']}>›</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Security Section */}
+                        <div className={styles['mobile-menu-section']}>
+                            <h3 className={styles['mobile-section-label']}>Seguridad</h3>
+                            <div className={styles['mobile-menu-list']}>
+                                <div className={styles['mobile-menu-item']}>
+                                    <div className={styles['mobile-menu-item-left']}>
+                                        <span className={styles['mobile-menu-text']}>Cambiar Contraseña</span>
+                                    </div>
+                                    <span className={styles['mobile-menu-arrow']}>›</span>
+                                </div>
+                                <div className={styles['mobile-menu-item']}>
+                                    <div className={styles['mobile-menu-item-left']}>
+                                        <span className={styles['mobile-menu-text']}>Autenticación en Dos Pasos</span>
+                                    </div>
+                                    <span className={styles['mobile-menu-arrow']}>›</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Settings Section */}
+                        <div className={styles['mobile-menu-section']}>
+                            <h3 className={styles['mobile-section-label']}>Ajustes</h3>
+                            <div className={styles['mobile-menu-list']}>
+                                <div className={styles['mobile-menu-item']}>
+                                    <div className={styles['mobile-menu-item-left']}>
+                                        <span className={styles['mobile-menu-text']}>Idioma y Moneda</span>
+                                    </div>
+                                    <span className={styles['mobile-menu-arrow']}>›</span>
+                                </div>
+                                <div className={styles['mobile-menu-item']}>
+                                    <div className={styles['mobile-menu-item-left']}>
+                                        <span className={styles['mobile-menu-text']}>Notificaciones</span>
+                                    </div>
+                                    <span className={styles['mobile-menu-arrow']}>›</span>
+                                </div>
+                                <div className={styles['mobile-menu-item']}>
+                                    <div className={styles['mobile-menu-item-left']}>
+                                        <span className={styles['mobile-menu-text']}>Apariencia</span>
+                                    </div>
+                                    <span className={styles['mobile-menu-arrow']}>›</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Logout Button */}
+                        <div className={styles['mobile-logout-btn-container']}>
+                            <button onClick={handleLogout} className={styles['mobile-logout-full-btn']}>
+                                Cerrar Sesión
+                            </button>
+                        </div>
+                    </>
+                )}
 
             </main>
 
