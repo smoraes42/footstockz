@@ -62,6 +62,21 @@ const ProfileMobile = () => {
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>ID DE USUARIO</p>
                         <p style={{ color: 'var(--accent-neon)', fontSize: '1.2rem', fontWeight: '900' }}>#{user?.id}</p>
                     </div>
+
+                    {isOwnProfile && (
+                        <div className={styles['mobile-mode-switch-container']}>
+                            <div className={styles['mobile-mode-switch']}>
+                                <button className={`${styles['mobile-mode-btn']} ${styles['mobile-mode-btn-active']}`}>
+                                    DEMO
+                                </button>
+                                <button className={`${styles['mobile-mode-btn']} ${styles['mobile-mode-btn-disabled']}`} disabled>
+                                    REAL
+                                    <span className={styles['mobile-coming-soon']}>Próximamente</span>
+                                </button>
+                                <div className={styles['mobile-mode-slider']}></div>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
             </main>
