@@ -22,6 +22,14 @@ const MobileSearch = ({ isOpen, onClose, searchTerm, setSearchTerm, onSearch }) 
                         onKeyPress={(e) => e.key === 'Enter' && handleDone()}
                         className={styles['mobile-search-input']}
                     />
+                    {searchTerm && (
+                        <button 
+                            className={styles['mobile-search-clear-btn']}
+                            onClick={() => setSearchTerm('')}
+                        >
+                            ✕
+                        </button>
+                    )}
                 </div>
                 <button
                     onClick={handleDone}

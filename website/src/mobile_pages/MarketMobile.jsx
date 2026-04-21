@@ -200,45 +200,40 @@ const MarketMobile = () => {
                     <>
                 {/* Sort & Filter Bar */}
                 <div className={styles['mobile-filter-bar']}>
-                    {/* League Filter (Horizontal Scroll) */}
-                    <div className={`${styles['mobile-horizontal-scroll']} ${styles['mobile-league-filter-row']}`}>
-                        <button
-                            onClick={() => { setSelectedLeague(null); setSelectedTeam(null); }}
-                            className={`${styles['mobile-filter-btn']} ${!selectedLeague ? styles['mobile-filter-btn-active'] : ''}`}
-                        >
-                            TODAS LAS LIGAS
-                        </button>
-                        {leagues.map(league => (
-                            <button
-                                key={league.id}
-                                onClick={() => { setSelectedLeague(league); setSelectedTeam(null); }}
-                                className={`${styles['mobile-filter-btn']} ${selectedLeague?.id === league.id ? styles['mobile-filter-btn-active'] : ''}`}
+                    <div className={styles['mobile-dropdown-grid']}>
+                        <div className={styles['mobile-select-wrapper']}>
+                            <select 
+                                className={styles['mobile-select']}
+                                value={selectedLeague?.id || ''}
+                                onChange={(e) => {
+                                    const league = leagues.find(l => l.id === parseInt(e.target.value));
+                                    setSelectedLeague(league || null);
+                                    setSelectedTeam(null);
+                                }}
                             >
-                                {league.name.toUpperCase()}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Team Filter (Horizontal Scroll) */}
-                    {selectedLeague && (
-                        <div className={styles['mobile-horizontal-scroll']}>
-                            <button
-                                onClick={() => setSelectedTeam(null)}
-                                className={`${styles['mobile-filter-btn']} ${!selectedTeam ? styles['mobile-filter-btn-active'] : ''}`}
-                            >
-                                TODOS
-                            </button>
-                            {selectedLeague.teams?.map(team => (
-                                <button
-                                    key={team.id}
-                                    onClick={() => setSelectedTeam(team)}
-                                    className={`${styles['mobile-filter-btn']} ${selectedTeam?.id === team.id ? styles['mobile-filter-btn-active'] : ''}`}
-                                >
-                                    {team.name.toUpperCase()}
-                                </button>
-                            ))}
+                                <option value="">LIGAS (TODAS)</option>
+                                {leagues.map(l => (
+                                    <option key={l.id} value={l.id}>{l.name.toUpperCase()}</option>
+                                ))}
+                            </select>
                         </div>
-                    )}
+                        <div className={styles['mobile-select-wrapper']}>
+                            <select 
+                                className={styles['mobile-select']}
+                                value={selectedTeam?.id || ''}
+                                onChange={(e) => {
+                                    const team = selectedLeague?.teams?.find(t => t.id === parseInt(e.target.value));
+                                    setSelectedTeam(team || null);
+                                }}
+                                disabled={!selectedLeague}
+                            >
+                                <option value="">EQUIPOS (TODOS)</option>
+                                {selectedLeague?.teams?.map(t => (
+                                    <option key={t.id} value={t.id}>{t.name.toUpperCase()}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 {/* List Header */}

@@ -38,7 +38,10 @@ const MobileHeader = ({
                 ) : (
                     showLogo && (
                         <Link to="/home" className={styles['logo-link']}>
-                            <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-logo']} />
+                            <div className={styles['logo-container']}>
+                                <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-logo']} />
+                                <span className={styles['beta-badge']}>BETA</span>
+                            </div>
                         </Link>
                     )
                 )}

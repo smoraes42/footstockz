@@ -639,11 +639,56 @@
     color: var(--accent-neon);
 }
 
+.mobile-dropdown-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 0.5rem;
+}
+
+.mobile-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.mobile-select {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 10px 12px;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.mobile-select:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.mobile-select-wrapper::after {
+    content: '▼';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
 .mobile-player-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
+
 
 .mobile-player-card {
     padding: 1rem;

@@ -12,7 +12,10 @@ const Navbar = ({ type = 'sidebar' }) => {
         return (
             <nav className={css['top-navbar']}>
                 <Link to="/">
-                    <img src={fsLogo} alt="Futstocks Logo" className={css['top-nav-logo']} />
+                    <div className={css['top-logo-container']}>
+                        <img src={fsLogo} alt="Futstocks Logo" className={css['top-nav-logo']} />
+                        <span className={css['beta-badge']}>BETA</span>
+                    </div>
                 </Link>
                 <div className={css['top-nav-links']}>
                     <Link to="/login" className={`neon-button ${css['top-nav-login-btn']}`}>Iniciar Sesión</Link>
@@ -29,7 +32,10 @@ const Navbar = ({ type = 'sidebar' }) => {
         <aside className={css.sidebar}>
             <div className={css['logo-container']}>
                 <Link to="/home">
-                    <img src={fsLogo} alt="Futstocks Logo" className={css.logo} />
+                    <div className={css['sidebar-logo-box']}>
+                        <img src={fsLogo} alt="Futstocks Logo" className={css.logo} />
+                        <span className={css['beta-badge']}>BETA</span>
+                    </div>
                 </Link>
             </div>
 
