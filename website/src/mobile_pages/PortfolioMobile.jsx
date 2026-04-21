@@ -135,178 +135,178 @@ const PortfolioMobile = () => {
             <MobileHeader />
 
             <main className={styles['mobile-main']}>
-                <h2 className={styles['mobile-section-title']}>Tu Portfolio</h2>
-
-                {/* Equity Header */}
-                <div className={styles['mobile-equity-header']}>
-                    <span className={styles['mobile-equity-label']}>Capital Total</span>
-                    <span className={styles['mobile-equity-value']}>
-                        €{loading ? '---' : formatCompactNumber(totalEquity)}
-                    </span>
+            <main className={styles['mobile-main']}>
+                <div className={styles['mobile-title-row']}>
+                    <button 
+                        className={`${styles['mobile-activity-btn']} ${activeTab === 'activity' ? styles['mobile-activity-btn-active'] : ''}`}
+                        onClick={() => setActiveTab(activeTab === 'activity' ? 'players' : 'activity')}
+                    >
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </button>
+                    <h2 className={styles['mobile-section-title']}>
+                        {activeTab === 'activity' ? 'Actividad Reciente' : 'Tu Portfolio'}
+                    </h2>
                 </div>
 
-                {/* Wallet Breakdown Cards */}
-                <div className={styles['mobile-breakdown-grid']}>
-                    <div className={`${styles['mobile-breakdown-card']} glass-panel`}>
-                        <p className={styles['mobile-breakdown-label']}>Cash</p>
-                        <p className={styles['mobile-breakdown-value']}>€{loading ? '---' : formatCompactNumber(walletBalance)}</p>
+                {activeTab !== 'activity' && (
+                    <>
+                    {/* Equity Header */}
+                    <div className={styles['mobile-equity-header']}>
+                        <span className={styles['mobile-equity-label']}>Capital Total</span>
+                        <span className={styles['mobile-equity-value']}>
+                            €{loading ? '---' : formatCompactNumber(totalEquity)}
+                        </span>
                     </div>
-                    <div className={`${styles['mobile-breakdown-card']} glass-panel`}>
-                        <p className={styles['mobile-breakdown-label']}>Invertido</p>
-                        <p className={styles['mobile-breakdown-value']}>€{loading ? '---' : formatCompactNumber(holdingsValue)}</p>
-                    </div>
-                </div>
-                {/* Tab Selection Toggle */}
-                <div className={styles['mobile-tab-switcher']}>
-                    <button
-                        onClick={() => setActiveTab('players')}
-                        className={`${styles['mobile-tab-btn']} ${activeTab === 'players' ? styles['mobile-tab-btn-active'] : ''}`}
-                    >Jugadores</button>
-                    <button
-                        onClick={() => setActiveTab('teams')}
-                        className={`${styles['mobile-tab-btn']} ${activeTab === 'teams' ? styles['mobile-tab-btn-active'] : ''}`}
-                    >Índices</button>
-                </div>
 
-                {/* Holdings List */}
-                <div>
-                    <div className={styles['mobile-holdings-header']}>
-                        <h3 className={styles['mobile-holdings-title']}>
-                            {activeTab === 'teams' ? 'Mis Índices' : 'Mis Jugadores'}
-                        </h3>
-                    </div>
-                    
-                    {/* Sorting Chips */}
-                    {!loading && rawHoldings.length > 1 && (
-                        <div className={styles['mobile-sort-chips']}>
-                            {[
-                                { key: 'player_name', label: 'Nombre' },
-                                { key: 'shares_owned', label: 'Acciones' },
-                                { key: 'current_price', label: 'Precio' },
-                                { key: 'position_value', label: 'Valor' }
-                            ].map(chip => (
-                                <button
-                                    key={chip.key}
-                                    onClick={() => requestSort(chip.key)}
-                                    className={`${styles['mobile-sort-chip']} ${sortConfig.key === chip.key ? styles['mobile-sort-chip-active'] : ''}`}
-                                >
-                                    {chip.label}{getSortIndicator(chip.key)}
-                                </button>
-                            ))}
+                    {/* Wallet Breakdown Cards */}
+                    <div className={styles['mobile-breakdown-grid']}>
+                        <div className={`${styles['mobile-breakdown-card']} glass-panel`}>
+                            <p className={styles['mobile-breakdown-label']}>Cash</p>
+                            <p className={styles['mobile-breakdown-value']}>€{loading ? '---' : formatCompactNumber(walletBalance)}</p>
                         </div>
-                    )}
-                    
-                    {loading ? (
-                        <div className={styles.loading}>Cargando activos...</div>
-                    ) : (() => {
-                        const displayData = holdings.filter(h => {
-                            if (activeTab === 'teams') return h.type === 'team';
-                            return h.type !== 'team';
-                        });
-
-
-                        if (displayData.length === 0) {
-                            return (
-                                <div className={styles['mobile-no-data']}>
-                                    <p className={styles['mobile-no-data-text']}>
-                                        No tienes inversiones en este mercado.
-                                    </p>
-                                    <Link to="/market" className={styles['mobile-go-to-market']}>Ir al Mercado</Link>
-                                </div>
-                            );
-                        }
-
-                        return (
-                            <div className={styles['mobile-asset-list']}>
-                                {displayData.map(item => (
-                                    <Link 
-                                        to={item.type === 'team' ? `/market/team/${item.team_id}` : `/market/player/${item.player_id}`}
-                                        key={item.type === 'team' ? `team-${item.team_id}` : `player-${item.player_id}`} 
-                                        className={`${styles['mobile-asset-card']} glass-panel`}
-                                    >
-                                        <div className={styles['mobile-asset-info']}>
-                                            <div className={styles['mobile-asset-icon-box']}>
-                                                {item.type === 'team' ? '🏟️' : '👤'}
-                                            </div>
-                                            <div>
-                                                <p className={styles['mobile-asset-name']}>
-                                                    {item.player_name}
-                                                </p>
-                                                <p className={styles['mobile-asset-shares']}>
-                                                    {item.type === 'team' ? parseFloat(item.shares_owned).toFixed(4) : parseFloat(item.shares_owned).toFixed(2)} acciones
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div className={styles['mobile-asset-value-box']}>
-                                            <PlayerPrice 
-                                                price={item.position_value} 
-                                                isUpdated={updatedPlayerId === item.player_id} 
-                                                className={styles['mobile-asset-price']} 
-                                            />
-                                            <p className={styles['mobile-asset-price-sub']}>
-                                                {item.current_price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €/u
-                                            </p>
-                                            {item.variation_24h !== undefined && (
-                                                <PlayerChange 
-                                                    change={item.variation_24h} 
-                                                    indicatorType="sign" 
-                                                    className={styles['mobile-asset-change']} 
-                                                />
-                                            )}
-                                        </div>
-                                    </Link>
-                                ))}
-                            </div>
-                        );
-                    })()}
-                </div>
-
-                {/* Recent Activity Section */}
-                <div className={styles['mobile-activity-container']}>
-                    <div className={styles['mobile-activity-header']}>
-                        <h3 className={styles['mobile-activity-title']}>
-                            Actividad Reciente
-                        </h3>
-                        <button 
-                            onClick={() => setShowActivity(!showActivity)}
-                            className={styles['mobile-activity-toggle']}
-                        >
-                            {showActivity ? 'Ocultar' : 'Ver'}
-                            <span className={`${styles['mobile-activity-arrow']} ${showActivity ? styles['mobile-activity-arrow-open'] : ''}`}>▼</span>
-                        </button>
+                        <div className={`${styles['mobile-breakdown-card']} glass-panel`}>
+                            <p className={styles['mobile-breakdown-label']}>Invertido</p>
+                            <p className={styles['mobile-breakdown-value']}>€{loading ? '---' : formatCompactNumber(holdingsValue)}</p>
+                        </div>
                     </div>
-                    
-                    {showActivity && (
+                    {/* Tab Selection Toggle */}
+                    <div className={styles['mobile-tab-switcher']}>
+                        <button
+                            onClick={() => setActiveTab('players')}
+                            className={`${styles['mobile-tab-btn']} ${activeTab === 'players' ? styles['mobile-tab-btn-active'] : ''}`}
+                        >Jugadores</button>
+                        <button
+                            onClick={() => setActiveTab('teams')}
+                            className={`${styles['mobile-tab-btn']} ${activeTab === 'teams' ? styles['mobile-tab-btn-active'] : ''}`}
+                        >Índices</button>
+                    </div>
+                    </>
+                )}
+
+                {/* Main Content Area */}
+                <div className={styles['mobile-content-area']}>
+                    {activeTab === 'activity' ? (
                         loadingTrades ? (
-                            <div className={styles['mobile-loading-activity']}>Cargando actividad...</div>
+                            <div className={styles.loading}>Cargando actividad...</div>
                         ) : tradeHistory.length === 0 ? (
                             <div className={styles['mobile-no-data']}>
                                 <p className={styles['mobile-no-data-text']}>No hay actividad reciente.</p>
                             </div>
                         ) : (
-                            <div className={styles['mobile-activity-list']}>
-                                {tradeHistory.slice(0, 10).map((trade, idx) => (
-                                    <div key={idx} className={`${styles['mobile-activity-card']} glass-panel`}>
+                            <div className={styles['mobile-activity-list-full']}>
+                                {tradeHistory.slice(0, 20).map((trade, idx) => (
+                                    <div key={idx} className={`${styles['mobile-activity-card-full']} glass-panel`}>
                                         <div className={styles['mobile-asset-info']}>
                                             <div className={`${styles['mobile-activity-icon-box']} ${trade.side === 'buy' ? styles['mobile-activity-buy'] : styles['mobile-activity-sell']}`}>
-                                                {trade.side === 'buy' ? '↙' : '↗'}
+                                                {trade.side === 'buy' ? 'COMPRA' : 'VENTA'}
                                             </div>
                                             <div>
                                                 <p className={styles['mobile-activity-name']}>{trade.player_name || 'Desconocido'}</p>
                                                 <p className={styles['mobile-activity-meta']}>
-                                                    {new Date(trade.created_at).toLocaleDateString()} • {trade.side === 'buy' ? 'Compra' : 'Venta'}
+                                                    {new Date(trade.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
                                                 </p>
                                             </div>
                                         </div>
-                                    <div className={styles['mobile-asset-value-box']}>
-                                        <p className={styles['mobile-activity-value']}>{parseFloat(trade.total_value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                                        <p className={styles['mobile-activity-shares']}>{parseFloat(trade.quantity).toFixed(4)} Acc.</p>
-                                    </div>
+                                        <div className={styles['mobile-asset-value-box']}>
+                                            <p className={styles['mobile-activity-value']}>{parseFloat(trade.total_value).toLocaleString('es-ES', { minimumFractionDigits: 2 })} €</p>
+                                            <p className={styles['mobile-activity-shares']}>{parseFloat(trade.quantity).toFixed(4)} Acc.</p>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         )
+                    ) : (
+                        <>
+                        <div className={styles['mobile-holdings-header']}>
+                            <h3 className={styles['mobile-holdings-title']}>
+                                {activeTab === 'teams' ? 'Mis Índices' : 'Mis Jugadores'}
+                            </h3>
+                        </div>
+                        
+                        {/* Sorting Chips */}
+                        {!loading && rawHoldings.length > 1 && (
+                            <div className={styles['mobile-sort-chips']}>
+                                {[
+                                    { key: 'player_name', label: 'Nombre' },
+                                    { key: 'shares_owned', label: 'Acciones' },
+                                    { key: 'current_price', label: 'Precio' },
+                                    { key: 'position_value', label: 'Valor' }
+                                ].map(chip => (
+                                    <button
+                                        key={chip.key}
+                                        onClick={() => requestSort(chip.key)}
+                                        className={`${styles['mobile-sort-chip']} ${sortConfig.key === chip.key ? styles['mobile-sort-chip-active'] : ''}`}
+                                    >
+                                        {chip.label}{getSortIndicator(chip.key)}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                        
+                        {loading ? (
+                            <div className={styles.loading}>Cargando activos...</div>
+                        ) : (() => {
+                            const displayData = holdings.filter(h => {
+                                if (activeTab === 'teams') return h.type === 'team';
+                                return h.type !== 'team';
+                            });
+
+                            if (displayData.length === 0) {
+                                return (
+                                    <div className={styles['mobile-no-data']}>
+                                        <p className={styles['mobile-no-data-text']}>
+                                            No tienes inversiones en este mercado.
+                                        </p>
+                                        <Link to="/market" className={styles['mobile-go-to-market']}>Ir al Mercado</Link>
+                                    </div>
+                                );
+                            }
+
+                            return (
+                                <div className={styles['mobile-asset-list']}>
+                                    {displayData.map(item => (
+                                        <Link 
+                                            to={item.type === 'team' ? `/market/team/${item.team_id}` : `/market/player/${item.player_id}`}
+                                            key={item.type === 'team' ? `team-${item.team_id}` : `player-${item.player_id}`} 
+                                            className={`${styles['mobile-asset-card']} glass-panel`}
+                                        >
+                                            <div className={styles['mobile-asset-info']}>
+                                                <div className={styles['mobile-asset-icon-box']}>
+                                                    {item.type === 'team' ? '🏟️' : '👤'}
+                                                </div>
+                                                <div>
+                                                    <p className={styles['mobile-asset-name']}>
+                                                        {item.player_name}
+                                                    </p>
+                                                    <p className={styles['mobile-asset-shares']}>
+                                                        {item.type === 'team' ? parseFloat(item.shares_owned).toFixed(4) : parseFloat(item.shares_owned).toFixed(2)} acciones
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className={styles['mobile-asset-value-box']}>
+                                                <PlayerPrice 
+                                                    price={item.position_value} 
+                                                    isUpdated={updatedPlayerId === item.player_id} 
+                                                    className={styles['mobile-asset-price']} 
+                                                />
+                                                <p className={styles['mobile-asset-price-sub']}>
+                                                    {item.current_price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €/u
+                                                </p>
+                                                {item.variation_24h !== undefined && (
+                                                    <PlayerChange 
+                                                        change={item.variation_24h} 
+                                                        indicatorType="sign" 
+                                                        className={styles['mobile-asset-change']} 
+                                                    />
+                                                )}
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            );
+                        })()}
+                        </>
                     )}
                 </div>
             </main>
