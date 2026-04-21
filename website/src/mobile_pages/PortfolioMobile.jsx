@@ -135,7 +135,6 @@ const PortfolioMobile = () => {
             <MobileHeader />
 
             <main className={styles['mobile-main']}>
-            <main className={styles['mobile-main']}>
                 <div className={styles['mobile-title-row']}>
                     <button 
                         className={`${styles['mobile-activity-btn']} ${activeTab === 'activity' ? styles['mobile-activity-btn-active'] : ''}`}
