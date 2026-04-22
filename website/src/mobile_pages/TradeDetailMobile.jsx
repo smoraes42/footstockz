@@ -3,11 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getTradeById, getPlayerImageUrl } from '../services/api';
 import MobileHeader from '../components/MobileHeader';
 import MobileNavbar from '../components/MobileNavbar';
+import { useSettings } from '../context/SettingsContext';
 import styles from '../styles/TradeDetail.module.css';
 
 const TradeDetailMobile = () => {
     const { tradeId } = useParams();
     const navigate = useNavigate();
+    const { timezone } = useSettings();
     const [trade, setTrade] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -112,13 +114,13 @@ const TradeDetailMobile = () => {
                     <div className={styles['mobile-stat-row']}>
                         <span className={styles['mobile-stat-label']}>Fecha</span>
                         <span className={styles['mobile-stat-value']}>
-                            {new Date(trade.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
+                            {new Date(trade.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', timeZone: timezone })}
                         </span>
                     </div>
                     <div className={styles['mobile-stat-row']}>
                         <span className={styles['mobile-stat-label']}>Hora</span>
                         <span className={styles['mobile-stat-value']}>
-                            {new Date(trade.created_at).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                            {new Date(trade.created_at).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone, hour12: false })}
                         </span>
                     </div>
                     <div className={styles['mobile-stat-row']}>

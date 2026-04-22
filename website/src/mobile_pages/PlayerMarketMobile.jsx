@@ -555,7 +555,7 @@ const PlayerMarketMobile = () => {
                                                 {parseFloat(trade.quantity).toFixed(2)}
                                             </td>
                                             <td className={styles['mobile-trade-time']}>
-                                                {new Date(trade.timestamp || trade.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone })}
+                                                {new Date(trade.timestamp || trade.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })}
                                             </td>
                                         </tr>
                                     ))}

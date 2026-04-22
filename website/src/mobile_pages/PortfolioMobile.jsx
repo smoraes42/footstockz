@@ -6,6 +6,7 @@ import { useSocket } from '../context/SocketContext';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import MobileHeader from '../components/MobileHeader';
 import MobileNavbar from '../components/MobileNavbar';
+import { useSettings } from '../context/SettingsContext';
 import styles from '../styles/Portfolio.module.css';
 
 const formatCompactNumber = (number) => {
@@ -20,6 +21,7 @@ const formatCompactNumber = (number) => {
 
 const PortfolioMobile = () => {
     const navigate = useNavigate();
+    const { timezone } = useSettings();
     const [portfolio, setPortfolio] = useState(null);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
@@ -207,7 +209,12 @@ const PortfolioMobile = () => {
                                             <div>
                                                 <p className={styles['mobile-activity-name']}>{trade.player_name || 'Desconocido'}</p>
                                                 <p className={styles['mobile-activity-meta']}>
-                                                    {new Date(trade.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                                                    {new Date(trade.created_at).toLocaleDateString('es-ES', { 
+                                                        day: '2-digit', month: '2-digit', 
+                                                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                                                        timeZone: timezone,
+                                                        hour12: false
+                                                    })}
                                                 </p>
                                             </div>
                                         </div>

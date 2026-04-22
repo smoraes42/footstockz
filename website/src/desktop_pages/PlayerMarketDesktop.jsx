@@ -113,7 +113,7 @@ export default function PlayerMarketDesktop() {
                     const t = new Date(h.time);
                     return {
                         price: parseFloat(h.price) || 0,
-                        time: isNaN(t.getTime()) ? '' : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone })
+                        time: isNaN(t.getTime()) ? '' : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone, hour12: false })
                     };
                 });
             } else {
@@ -121,8 +121,8 @@ export default function PlayerMarketDesktop() {
                 formattedHistory = (history || []).map(h => {
                     const t = new Date(h.bucket_time);
                     const label = tf === '2h'
-                        ? t.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone })
-                        : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone });
+                        ? t.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
+                        : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
                     return {
                         price: parseFloat(h.close) || 0,
                         open: parseFloat(h.open) || 0,
@@ -178,7 +178,7 @@ export default function PlayerMarketDesktop() {
                     // Append raw tick
                     const newPoint = {
                         price: data.price,
-                        time: new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone })
+                        time: new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone, hour12: false })
                     };
                     return [...prev, newPoint].slice(-100);
                 }
@@ -201,8 +201,8 @@ export default function PlayerMarketDesktop() {
                 } else {
                     // New bucket
                     const label = timeframe === '2h'
-                        ? new Date(thisBucket).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone })
-                        : new Date(thisBucket).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone });
+                        ? new Date(thisBucket).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
+                        : new Date(thisBucket).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
                     updated.push({
                         price: data.price,
                         open: data.price,
@@ -479,7 +479,7 @@ export default function PlayerMarketDesktop() {
                                                     <td className={`${styles['trade-table-cell']} ${styles['trade-cell-muted']}`}>{parseFloat(trade.quantity).toLocaleString('es-ES', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}</td>
                                                     <td className={`${styles['trade-table-cell']} ${styles['trade-cell-white']}`}>{parseFloat(trade.total_value || trade.totalValue).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
                                                     <td className={`${styles['trade-table-cell']} ${styles['trade-time']}`}>
-                                                        {new Date(trade.timestamp || trade.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone })}
+                                                        {new Date(trade.timestamp || trade.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone, hour12: false })}
                                                     </td>
                                                 </tr>
                                             ))}

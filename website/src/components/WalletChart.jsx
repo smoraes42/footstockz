@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useSettings } from '../context/SettingsContext';
 import styles from '../styles/WalletChart.module.css';
 
 const WalletChart = ({ 
@@ -11,6 +12,7 @@ const WalletChart = ({
   loading 
 }) => {
   const [hoverInfo, setHoverInfo] = useState(null);
+  const { timezone } = useSettings();
 
   const formatCompactNumber = (number) => {
     if (number >= 1000000) {
@@ -26,15 +28,15 @@ const WalletChart = ({
     if (!ts) return '';
     const d = new Date(ts);
     if (activeTimeframe === 'D') {
-      return d.toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false });
+      return d.toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: timezone });
     }
     if (activeTimeframe === 'W' || activeTimeframe === 'M') {
-      return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+      return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', timeZone: timezone });
     }
     if (activeTimeframe === 'Y' || activeTimeframe === 'Max') {
-      return d.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
+      return d.toLocaleDateString('es-ES', { month: 'short', year: 'numeric', timeZone: timezone });
     }
-    return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+    return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', timeZone: timezone });
   };
 
   const handleChartMouseMove = (e) => {
@@ -95,15 +97,15 @@ const WalletChart = ({
               tickFormatter={(unixTime) => {
                 const date = new Date(unixTime);
                 if (activeTimeframe === 'D') {
-                  return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
+                  return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: timezone });
                 } else if (activeTimeframe === 'W') {
-                  return date.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' });
+                  return date.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', timeZone: timezone });
                 } else if (activeTimeframe === 'Y') {
-                  return date.toLocaleDateString('es-ES', { month: 'short' });
+                  return date.toLocaleDateString('es-ES', { month: 'short', timeZone: timezone });
                 } else if (activeTimeframe === 'Max') {
-                  return date.toLocaleDateString('es-ES', { month: 'short', year: '2-digit' });
+                  return date.toLocaleDateString('es-ES', { month: 'short', year: '2-digit', timeZone: timezone });
                 }
-                return date.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' });
+                return date.toLocaleDateString('es-ES', { month: 'short', day: 'numeric', timeZone: timezone });
               }}
               ticks={(() => {
                 if (activeTimeframe === 'D') {

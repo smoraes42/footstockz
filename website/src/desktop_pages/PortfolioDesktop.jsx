@@ -4,6 +4,7 @@ import { getPortfolio, getUserTradeHistory } from '../services/api';
 import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Portfolio.module.css';
 
@@ -20,6 +21,7 @@ const formatCompactNumber = (number) => {
 
 const PortfolioDesktop = () => {
     const navigate = useNavigate();
+    const { timezone } = useSettings();
     const [portfolio, setPortfolio] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('players'); // 'players' | 'teams'
@@ -260,7 +262,12 @@ const PortfolioDesktop = () => {
                                                             {parseFloat(trade.total_value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                                                         </td>
                                                         <td className={`${styles['table-cell']} ${styles['date-cell']}`}>
-                                                            {new Date(trade.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                            {new Date(trade.created_at).toLocaleDateString('es-ES', { 
+                                                                day: '2-digit', month: '2-digit', year: 'numeric', 
+                                                                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                                                                timeZone: timezone,
+                                                                hour12: false
+                                                            })}
                                                         </td>
                                                     </tr>
                                                 ))

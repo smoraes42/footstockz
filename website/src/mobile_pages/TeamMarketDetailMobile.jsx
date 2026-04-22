@@ -8,6 +8,7 @@ import { getPortfolio, getTeamById, getTeamHistory, teamMarketBuy, teamMarketSel
 import { useSocket } from '../context/SocketContext';
 import MobileHeader from '../components/MobileHeader';
 import MobileNavbar from '../components/MobileNavbar';
+import { useSettings } from '../context/SettingsContext';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/Market.module.css';
 
@@ -51,6 +52,7 @@ export default function TeamMarketDetailMobile() {
     const [marketSellQty, setMarketSellQty] = useState('');
     const [marketSellTotal, setMarketSellTotal] = useState('');
     const [activeTab, setActiveTab] = useState('buy');
+    const { timezone } = useSettings();
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -69,7 +71,7 @@ export default function TeamMarketDetailMobile() {
                 return {
                     ...h,
                     price: parseFloat(h.price) || 0,
-                    time: isNaN(time.getTime()) ? 'Invalid' : time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    time: isNaN(time.getTime()) ? 'Invalid' : time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
                 };
             }));
             setPortfolio(port);

@@ -5,6 +5,7 @@ import fsLogo from '../assets/fs-logo.png';
 
 import { getPlayers, getPortfolio, getPortfolioHistory, getMe } from '../services/api';
 import { useSocket } from '../context/SocketContext';
+import { useSettings } from '../context/SettingsContext';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import MobileHeader from '../components/MobileHeader';
 import MobileNavbar from '../components/MobileNavbar';
@@ -32,6 +33,7 @@ const HomeMobile = () => {
     const [variation24h, setVariation24h] = useState({ amount: 0, percent: 0 });
     const [user, setUser] = useState(null);
     const { socket, connected } = useSocket();
+    const { timezone } = useSettings();
 
 
     const timeframes = ['D', 'W', 'M', 'Y', 'Max'];
@@ -376,15 +378,15 @@ const HomeMobile = () => {
                                 tickFormatter={(unixTime) => {
                                     const date = new Date(unixTime);
                                 if (activeTimeframe === 'D') {
-                                    return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
+                                    return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: timezone });
                                 } else if (activeTimeframe === 'W') {
-                                    return date.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' });
+                                    return date.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', timeZone: timezone });
+                                } else if (activeTimeframe === 'M') {
+                                    return date.toLocaleDateString('es-ES', { month: 'short', timeZone: timezone });
                                 } else if (activeTimeframe === 'Y') {
-                                    return date.toLocaleDateString('es-ES', { month: 'short' });
-                                } else if (activeTimeframe === 'Max') {
-                                    return date.toLocaleDateString('es-ES', { month: 'short', year: '2-digit' });
+                                    return date.toLocaleDateString('es-ES', { month: 'short', year: '2-digit', timeZone: timezone });
                                 }
-                                    return date.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' });
+                                    return date.toLocaleDateString('es-ES', { month: 'short', day: 'numeric', timeZone: timezone });
                                 }}
                                 ticks={(() => {
                                     if (activeTimeframe === 'D') { // Renamed from '1D'
@@ -420,7 +422,7 @@ const HomeMobile = () => {
                                         return (
                                             <div className={styles['mobile-tooltip']}>
                                                 <div className={styles['mobile-tooltip-time']}>
-                                                    {new Date(data.timestamp).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false })}
+                                                    {new Date(data.timestamp).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: timezone })}
                                                 </div>
                                                     {Number(data.value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                                             </div>

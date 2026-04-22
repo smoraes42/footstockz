@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { getPortfolio, getTeamById, getTeamHistory, getMe, teamMarketBuy, teamMarketSell, getTradeConfig } from '../services/api';
 import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
+import { useSettings } from '../context/SettingsContext';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/TeamMarketDetail.module.css';
 
@@ -50,6 +51,7 @@ export default function TeamMarketDetailDesktop() {
     const [marketSellQty, setMarketSellQty] = useState('');
     const [marketSellTotal, setMarketSellTotal] = useState('');
     const [activeTab, setActiveTab] = useState('buy');
+    const { timezone } = useSettings();
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -73,7 +75,7 @@ export default function TeamMarketDetailDesktop() {
                 return {
                     ...h,
                     price: parseFloat(h.price) || 0,
-                    time: isNaN(time.getTime()) ? 'Invalid' : time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    time: isNaN(time.getTime()) ? 'Invalid' : time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
                 };
             });
 

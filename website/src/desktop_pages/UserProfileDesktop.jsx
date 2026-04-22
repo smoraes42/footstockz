@@ -3,11 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getPublicProfile } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import styles from '../styles/UserProfile.module.css';
 
 const UserProfileDesktop = () => {
     const { userId } = useParams();
     const navigate = useNavigate();
+    const { timezone } = useSettings();
     const [profileData, setProfileData] = useState(null);
     const { user: currentUser } = useAuth();  // current logged-in user from global context
     const [loading, setLoading] = useState(true);
@@ -74,7 +76,10 @@ const UserProfileDesktop = () => {
                         </div>
                         <h2 className={styles['profile-name']}>{user.username}</h2>
                         <p className={styles['join-date']} style={{ fontSize: '1.1rem', marginTop: '1rem' }}>
-                            Miembro desde {new Date(user.created_at).toLocaleDateString()}
+                            Miembro desde {new Date(user.created_at).toLocaleDateString('es-ES', { 
+                                day: '2-digit', month: 'long', year: 'numeric',
+                                timeZone: timezone
+                            })}
                         </p>
                         <div className={styles['stats-box']} style={{ marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '2rem' }}>
                             <p className={styles['stats-label']}>ID de Usuario</p>

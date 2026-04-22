@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getTradeById, getPlayerImageUrl } from '../services/api';
 import Navbar from '../components/Navbar';
+import { useSettings } from '../context/SettingsContext';
 import styles from '../styles/TradeDetail.module.css';
 
 const TradeDetailDesktop = () => {
     const { tradeId } = useParams();
     const navigate = useNavigate();
+    const { timezone } = useSettings();
     const [trade, setTrade] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -94,7 +96,9 @@ const TradeDetailDesktop = () => {
                                 <span className={styles['stat-value']}>
                                     {new Date(trade.created_at).toLocaleString('es-ES', { 
                                         day: '2-digit', month: 'long', year: 'numeric',
-                                        hour: '2-digit', minute: '2-digit', second: '2-digit'
+                                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                                        timeZone: timezone,
+                                        hour12: false
                                     })}
                                 </span>
                             </div>
