@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
-} from 'recharts';
+import PlayerMarketChart from '../components/PlayerMarketChart';
 import { toast } from 'react-toastify';
 import { getPortfolio, getPlayerById, getPlayerHistory, getPlayerTradeHistory, marketBuy, marketSell, getTradeConfig, placeOrder } from '../services/api';
 import Navbar from '../components/Navbar';
@@ -77,6 +75,7 @@ export default function PlayerMarketDesktop() {
     const [portfolio, setPortfolio] = useState(null);
     const [priceHistory, setPriceHistory] = useState([]);
     const [tradeHistory, setTradeHistory] = useState([]);
+    const [timeframe, setTimeframe] = useState('line');
 
     // Trade Forms
     const [orderAmount, setOrderAmount] = useState('');
@@ -94,26 +93,44 @@ export default function PlayerMarketDesktop() {
     const { socket, connected, subscribeToPlayer, unsubscribeFromPlayer, subscribeToUser, unsubscribeFromUser } = useSocket();
     const { user } = useAuth();
 
-    const fetchData = useCallback(async () => {
+    const fetchData = useCallback(async (tf = timeframe) => {
         if (!playerId) return;
 
         try {
             const [history, trades, port, pData] = await Promise.all([
-                getPlayerHistory(playerId),
+                getPlayerHistory(playerId, tf),
                 getPlayerTradeHistory(playerId),
                 getPortfolio(),
                 getPlayerById(playerId)
             ]);
 
-            // Format time for Recharts
-            const formattedHistory = (history || []).map(h => {
-                const time = new Date(h.time);
-                return {
-                    ...h,
-                    price: parseFloat(h.price) || 0,
-                    time: isNaN(time.getTime()) ? 'Invalid' : time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-                };
-            });
+            let formattedHistory;
+            if (tf === 'line') {
+                // Raw ticks: format created_at as HH:MM:SS label
+                formattedHistory = (history || []).map(h => {
+                    const t = new Date(h.time);
+                    return {
+                        price: parseFloat(h.price) || 0,
+                        time: isNaN(t.getTime()) ? '' : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+                    };
+                });
+            } else {
+                // Aggregated OHLC: use close as price, format bucket_time
+                formattedHistory = (history || []).map(h => {
+                    const t = new Date(h.bucket_time);
+                    const label = tf === '2h'
+                        ? t.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+                        : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    return {
+                        price:     parseFloat(h.close) || 0,
+                        open:      parseFloat(h.open)  || 0,
+                        high:      parseFloat(h.high)  || 0,
+                        low:       parseFloat(h.low)   || 0,
+                        time:      label,
+                        timestamp: t.getTime()
+                    };
+                });
+            }
 
             setPriceHistory(formattedHistory);
             setTradeHistory(trades || []);
@@ -122,12 +139,18 @@ export default function PlayerMarketDesktop() {
         } catch (err) {
             console.error('Fetch error:', err);
         }
-    }, [playerId]);
+    }, [playerId, timeframe]);
 
     // Initial Fetch
     useEffect(() => {
         fetchData();
     }, [fetchData]);
+
+    // Re-fetch chart data when timeframe changes
+    useEffect(() => {
+        fetchData(timeframe);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [timeframe]);
 
     // WebSocket Listeners
     useEffect(() => {
@@ -135,36 +158,65 @@ export default function PlayerMarketDesktop() {
 
         subscribeToPlayer(playerId);
 
+        const bucketMs = { '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+
         const handlePriceUpdate = (data) => {
-            if (data.playerId === parseInt(playerId)) {
-                // Update specific player state
-                setCurrentPlayer(prev => {
-                    if (!prev) return null;
-                    return { ...prev, price: data.price, change: parseFloat(data.change || 0) };
-                });
+            if (data.playerId !== parseInt(playerId)) return;
 
-                // Visual highlight
-                setIsUpdated(true);
-                setTimeout(() => setIsUpdated(null), 1000);
+            // Always update live price display
+            setCurrentPlayer(prev => {
+                if (!prev) return null;
+                return { ...prev, price: data.price, change: parseFloat(data.change || 0) };
+            });
+            setIsUpdated(true);
+            setTimeout(() => setIsUpdated(null), 1000);
 
-                // Update price history (add new point)
-                setPriceHistory(prev => {
+            setPriceHistory(prev => {
+                if (timeframe === 'line') {
+                    // Append raw tick
                     const newPoint = {
                         price: data.price,
                         time: new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
                     };
-                    const updated = [...prev, newPoint];
-                    return updated.slice(-100); // Keep last 100 points
-                });
-            }
+                    return [...prev, newPoint].slice(-100);
+                }
+
+                // Timeframe mode: update or create current bucket
+                const bMs = bucketMs[timeframe];
+                const newTs = new Date(data.timestamp).getTime();
+                const thisBucket = Math.floor(newTs / bMs) * bMs;
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+
+                if (last && Math.floor((last.timestamp || 0) / bMs) * bMs === thisBucket) {
+                    // Update current bucket close, high, low
+                    updated[updated.length - 1] = {
+                        ...last,
+                        price: data.price,
+                        high:  Math.max(last.high || data.price, data.price),
+                        low:   Math.min(last.low  || data.price, data.price),
+                    };
+                } else {
+                    // New bucket
+                    const label = timeframe === '2h'
+                        ? new Date(thisBucket).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+                        : new Date(thisBucket).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    updated.push({
+                        price:     data.price,
+                        open:      data.price,
+                        high:      data.price,
+                        low:       data.price,
+                        time:      label,
+                        timestamp: thisBucket
+                    });
+                }
+                return updated.slice(-100);
+            });
         };
 
         const handleTradeExecuted = (trade) => {
             if (trade.playerId === parseInt(playerId)) {
-                setTradeHistory(prev => {
-                    const updated = [trade, ...prev];
-                    return updated.slice(0, 100); // Keep last 100 trades
-                });
+                setTradeHistory(prev => [trade, ...prev].slice(0, 100));
             }
         };
 
@@ -182,7 +234,7 @@ export default function PlayerMarketDesktop() {
             socket.off('trade_executed', handleTradeExecuted);
             socket.off('portfolio_update', handlePortfolioUpdate);
         };
-    }, [socket, connected, playerId, subscribeToPlayer, unsubscribeFromPlayer]);
+    }, [socket, connected, playerId, timeframe, subscribeToPlayer, unsubscribeFromPlayer]);
 
 
     useEffect(() => {
@@ -388,28 +440,11 @@ export default function PlayerMarketDesktop() {
                                     )}
                                 </span>
                             </h2>
-                            <div className={styles['chart-container']}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <LineChart data={priceHistory}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#222" />
-                                        <XAxis dataKey="time" stroke="#666" fontSize={12} />
-                                        <YAxis domain={['auto', 'auto']} stroke="#666" fontSize={12} />
-                                        <Tooltip
-                                            contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid #333', borderRadius: '8px' }}
-                                            itemStyle={{ color: 'var(--accent-neon)' }}
-                                        />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="price"
-                                            stroke="var(--accent-neon)"
-                                            strokeWidth={3}
-                                            dot={{ r: 2, fill: 'var(--accent-neon)' }}
-                                            activeDot={{ r: 5 }}
-                                            animationDuration={300}
-                                        />
-                                    </LineChart>
-                                </ResponsiveContainer>
-                            </div>
+                            <PlayerMarketChart
+                                priceHistory={priceHistory}
+                                timeframe={timeframe}
+                                onTimeframeChange={setTimeframe}
+                            />
                         </div>
 
                         {/* Recent Trades Tape */}

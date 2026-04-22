@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import {
-    LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer
-} from 'recharts';
+import PlayerMarketChart from '../components/PlayerMarketChart';
 import { toast } from 'react-toastify';
 import { 
     getPortfolio, getPlayerById, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell, getMe 
@@ -46,6 +44,7 @@ const PlayerMarketMobile = () => {
     const [priceHistory, setPriceHistory] = useState([]);
     const [tradeHistory, setTradeHistory] = useState([]);
     const [user, setUser] = useState(null);
+    const [timeframe, setTimeframe] = useState('line');
 
     const [activeTab, setActiveTab] = useState('buy');
     const [marketBuyTotal, setMarketBuyTotal] = useState('');
@@ -101,12 +100,12 @@ const PlayerMarketMobile = () => {
         setHoverInfo({ timestamp: payload.timestamp, price: payload.price });
     };
 
-    const fetchData = useCallback(async () => {
+    const fetchData = useCallback(async (tf = timeframe) => {
         if (!playerId) return;
         setFetchError(null);
         try {
             const results = await Promise.allSettled([
-                getPlayerHistory(playerId),
+                getPlayerHistory(playerId, tf),
                 getPlayerTradeHistory(playerId),
                 getPortfolio(),
                 getPlayerById(playerId),
@@ -122,25 +121,36 @@ const PlayerMarketMobile = () => {
             }
 
             if (historyRes.status === 'fulfilled') {
-                const formattedHistory = (historyRes.value || []).map(h => {
-                    const time = new Date(h.time);
-                    return {
-                        ...h,
-                        timestamp: isNaN(time.getTime()) ? Date.now() : time.getTime(),
-                        price: parseFloat(h.price) || 0
-                    };
-                });
+                let formattedHistory;
+                if (tf === 'line') {
+                    formattedHistory = (historyRes.value || []).map(h => {
+                        const t = new Date(h.time);
+                        return {
+                            timestamp: isNaN(t.getTime()) ? Date.now() : t.getTime(),
+                            price: parseFloat(h.price) || 0
+                        };
+                    });
+                } else {
+                    formattedHistory = (historyRes.value || []).map(h => {
+                        const t = new Date(h.bucket_time);
+                        return {
+                            price:     parseFloat(h.close) || 0,
+                            open:      parseFloat(h.open)  || 0,
+                            high:      parseFloat(h.high)  || 0,
+                            low:       parseFloat(h.low)   || 0,
+                            timestamp: t.getTime()
+                        };
+                    });
+                }
                 setPriceHistory(formattedHistory);
             }
 
             if (tradesRes.status === 'fulfilled') {
                 setTradeHistory(tradesRes.value || []);
             }
-
             if (portRes.status === 'fulfilled') {
                 setPortfolio(portRes.value);
             }
-
             if (userRes.status === 'fulfilled') {
                 setUser(userRes.value);
             }
@@ -148,7 +158,7 @@ const PlayerMarketMobile = () => {
             console.error('Fetch error:', err);
             setFetchError('Error de conexión.');
         }
-    }, [playerId]);
+    }, [playerId, timeframe]);
 
     useEffect(() => {
         const fetchConfig = async () => {
@@ -166,32 +176,60 @@ const PlayerMarketMobile = () => {
         // Removed polling in favor of WebSockets
     }, [fetchData]);
 
+    // Re-fetch chart data when timeframe changes
+    useEffect(() => {
+        fetchData(timeframe);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [timeframe]);
+
     // WebSocket Price Updates
     useEffect(() => {
         if (!socket || !connected || !playerId) return;
 
         subscribeToPlayer(playerId);
 
+        const bucketMs = { '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+
         const handlePriceUpdate = (data) => {
-            if (data.playerId === parseInt(playerId)) {
-                setCurrentPlayer(prev => {
-                    if (!prev) return null;
-                    return { ...prev, price: data.price, change: parseFloat(data.change || 0) };
-                });
+            if (data.playerId !== parseInt(playerId)) return;
 
-                setIsUpdated(true);
-                setTimeout(() => setIsUpdated(false), 1000);
+            setCurrentPlayer(prev => {
+                if (!prev) return null;
+                return { ...prev, price: data.price, change: parseFloat(data.change || 0) };
+            });
+            setIsUpdated(true);
+            setTimeout(() => setIsUpdated(false), 1000);
 
-                // Update price history (add new point)
-                setPriceHistory(prev => {
-                    const newPoint = {
-                        timestamp: data.timestamp,
-                        price: data.price
+            setPriceHistory(prev => {
+                const newTs = new Date(data.timestamp).getTime();
+
+                if (timeframe === 'line') {
+                    return [...prev, { timestamp: newTs, price: data.price }].slice(-100);
+                }
+
+                const bMs = bucketMs[timeframe];
+                const thisBucket = Math.floor(newTs / bMs) * bMs;
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+
+                if (last && Math.floor((last.timestamp || 0) / bMs) * bMs === thisBucket) {
+                    updated[updated.length - 1] = {
+                        ...last,
+                        price: data.price,
+                        high:  Math.max(last.high || data.price, data.price),
+                        low:   Math.min(last.low  || data.price, data.price),
                     };
-                    const updated = [...prev, newPoint];
-                    return updated.slice(-100);
-                });
-            }
+                } else {
+                    updated.push({
+                        price:     data.price,
+                        open:      data.price,
+                        high:      data.price,
+                        low:       data.price,
+                        timestamp: thisBucket
+                    });
+                }
+                return updated.slice(-100);
+            });
         };
 
         const handleTradeExecuted = (trade) => {
@@ -214,7 +252,7 @@ const PlayerMarketMobile = () => {
             socket.off('trade_executed', handleTradeExecuted);
             socket.off('portfolio_update', handlePortfolioUpdate);
         };
-    }, [socket, connected, playerId, subscribeToPlayer, unsubscribeFromPlayer]);
+    }, [socket, connected, playerId, timeframe, subscribeToPlayer, unsubscribeFromPlayer]);
 
 
     const handleMarketBuy = async () => {
@@ -337,41 +375,15 @@ const PlayerMarketMobile = () => {
                     )}
                 </div>
 
-                {/* Chart Section */}
-                <div className={`${styles['mobile-chart-box']} glass-panel`}>
-                    {hoverInfo && (
-                        <div className={styles['mobile-tooltip']}>
-                            <div className={styles['mobile-tooltip-time']}>
-                                {new Date(hoverInfo.timestamp).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false })}
-                            </div>
-                            <div className={styles['mobile-tooltip-price']}>€{Number(hoverInfo.price).toFixed(2)}</div>
-                        </div>
-                    )}
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={priceHistory} onMouseMove={handleChartMouseMove} onMouseLeave={() => setHoverInfo(null)}>
-                            <XAxis
-                                dataKey="timestamp"
-                                type="number"
-                                domain={['dataMin', 'dataMax']}
-                                hide
-                            />
-                            <YAxis domain={['dataMin - 0.5', 'dataMax + 0.5']} hide />
-                            <Tooltip
-                                content={() => null}
-                                cursor={{ stroke: 'rgba(57,255,20,0.3)', strokeWidth: 1.5, strokeDasharray: '4 2' }}
-                            />
-                            <Line
-                                type="stepAfter"
-                                dataKey="price"
-                                stroke="var(--accent-neon)"
-                                strokeWidth={3}
-                                dot={false}
-                                activeDot={{ r: 5, fill: 'var(--accent-neon)', strokeWidth: 0 }}
-                                isAnimationActive={false}
-                            />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </div>
+                <PlayerMarketChart
+                    variant="mobile"
+                    priceHistory={priceHistory}
+                    hoverInfo={hoverInfo}
+                    onMouseMove={handleChartMouseMove}
+                    onMouseLeave={() => setHoverInfo(null)}
+                    timeframe={timeframe}
+                    onTimeframeChange={setTimeframe}
+                />
 
                 {/* Trade Tabs */}
                 <div className={`${styles['mobile-trade-card']} glass-panel`}>

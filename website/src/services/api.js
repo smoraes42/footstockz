@@ -192,9 +192,11 @@ export const getUserTradeHistory = async () => {
     }
 };
 
-export const getPlayerHistory = async (id) => {
+export const getPlayerHistory = async (id, timeframe = 'line') => {
     try {
-        const response = await api.get(`/v1/players/${id}/history`);
+        const response = await api.get(`/v1/players/${id}/history`, {
+            params: { timeframe }
+        });
         return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.error || 'Error fetching player history');

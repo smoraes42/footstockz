@@ -167,13 +167,48 @@ export const getPlayerById = async (req, res) => {
 export const getPlayerPriceHistory = async (req, res) => {
     try {
         const playerId = req.params.id;
-        const [history] = await db.query(
-            'SELECT price, created_at as time FROM player_prices WHERE player_id = ? ORDER BY created_at ASC LIMIT 100',
-            [playerId]
-        );
-        res.status(200).json(history);
+        const timeframe = req.query.timeframe || 'line';
+
+        // Map timeframe label to bucket size in seconds
+        const bucketSeconds = {
+            '5m':  300,
+            '30m': 1800,
+            '1h':  3600,
+            '2h':  7200,
+        };
+
+        if (timeframe === 'line') {
+            // Raw tick data — original behavior
+            const [history] = await db.query(
+                'SELECT price, created_at AS time FROM player_prices WHERE player_id = ? ORDER BY created_at ASC LIMIT 100',
+                [playerId]
+            );
+            return res.status(200).json(history);
+        }
+
+        const bucket = bucketSeconds[timeframe];
+        if (!bucket) {
+            return res.status(400).json({ message: 'Invalid timeframe. Use: line, 5m, 30m, 1h, 2h' });
+        }
+
+        // Aggregate into OHLC buckets using GROUP_CONCAT for open (first) and close (last)
+        const [history] = await db.query(`
+            SELECT
+                FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(created_at) / ?) * ?) AS bucket_time,
+                CAST(SUBSTRING_INDEX(GROUP_CONCAT(price ORDER BY created_at ASC  SEPARATOR ','), ',', 1) AS DECIMAL(15,6)) AS open,
+                MAX(price)  AS high,
+                MIN(price)  AS low,
+                CAST(SUBSTRING_INDEX(GROUP_CONCAT(price ORDER BY created_at DESC SEPARATOR ','), ',', 1) AS DECIMAL(15,6)) AS close
+            FROM player_prices
+            WHERE player_id = ?
+            GROUP BY FLOOR(UNIX_TIMESTAMP(created_at) / ?)
+            ORDER BY bucket_time ASC
+            LIMIT 100
+        `, [bucket, bucket, playerId, bucket]);
+
+        return res.status(200).json(history);
     } catch (error) {
         console.error('Error fetching player history:', error);
-        res.status(500).json({ message: "Internal server error", error: error.message });
+        res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };

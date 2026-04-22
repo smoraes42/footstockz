@@ -886,3 +886,75 @@
     color: var(--text-muted);
     font-size: 0.85rem;
 }
+
+/* ── Timeframe Selector (Desktop) ─────────────────────── */
+.chart-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tf-selector-row {
+    display: flex;
+    gap: 4px;
+    padding-bottom: 10px;
+    justify-content: flex-start;
+}
+
+.tf-btn {
+    background: transparent;
+    border: 1px solid #2a2a2a;
+    color: #555;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    letter-spacing: 0.05em;
+}
+
+.tf-btn:hover {
+    border-color: var(--accent-neon);
+    color: var(--accent-neon);
+}
+
+.tf-btn-active {
+    background: rgba(57, 255, 20, 0.1);
+    border-color: var(--accent-neon);
+    color: var(--accent-neon);
+}
+
+/* ── Timeframe Selector (Mobile) ──────────────────────── */
+.mobile-tf-selector-row {
+    display: flex;
+    gap: 4px;
+    padding: 0 0 8px 0;
+    justify-content: flex-start;
+    flex-shrink: 0;
+}
+
+.mobile-tf-btn {
+    background: transparent;
+    border: 1px solid #2a2a2a;
+    color: #555;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    letter-spacing: 0.05em;
+}
+
+.mobile-tf-btn:hover {
+    border-color: var(--accent-neon);
+    color: var(--accent-neon);
+}
+
+.mobile-tf-btn-active {
+    background: rgba(57, 255, 20, 0.12);
+    border-color: var(--accent-neon);
+    color: var(--accent-neon);
+}
+
