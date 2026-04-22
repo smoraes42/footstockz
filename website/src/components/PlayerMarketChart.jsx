@@ -2,6 +2,7 @@ import React from 'react';
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
+import { useSettings } from '../context/SettingsContext';
 import styles from '../styles/PlayerMarket.module.css';
 
 const TIMEFRAMES = ['line', '5m', '30m', '1h', '2h'];
@@ -33,6 +34,8 @@ export default function PlayerMarketChart({
     timeframe = 'line',
     onTimeframeChange,
 }) {
+    const { timezone } = useSettings();
+
     // Compute Y axis domain from data with 2% padding
     const prices = priceHistory.map(p => p.price).filter(v => v != null && !isNaN(v));
     let yDomain = ['auto', 'auto'];
@@ -80,6 +83,7 @@ export default function PlayerMarketChart({
                                 hour: '2-digit',
                                 minute: '2-digit',
                                 hour12: false,
+                                timeZone: timezone
                             })}
                         </div>
                         <div className={styles['mobile-tooltip-price']}>

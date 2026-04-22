@@ -4,13 +4,15 @@ import { getMe, getPublicProfile, getPortfolio, getPlayerImageUrl } from '../ser
 import MobileHeader from '../components/MobileHeader';
 import MobileNavbar from '../components/MobileNavbar';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
+import { useSettings } from '../context/SettingsContext';
 import styles from '../styles/Profile.module.css';
 
 const ProfileMobile = () => {
     const { userId } = useParams();
     const navigate = useNavigate();
     const isOwnProfile = !userId;
-    
+    const { timezone, setTimezone, defaultTimezone } = useSettings();
+
     const [user, setUser] = useState(null);
     const [holdings, setHoldings] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -21,7 +23,7 @@ const ProfileMobile = () => {
                 if (isOwnProfile) {
                     const userData = await getMe();
                     setUser(userData);
-                    
+
                     const portfolioData = await getPortfolio();
                     setHoldings(portfolioData.holdings || []);
                 } else {
@@ -47,14 +49,14 @@ const ProfileMobile = () => {
 
     return (
         <div className={styles['mobile-container']}>
-            
-            <MobileHeader 
+
+            <MobileHeader
                 showLogo={true}
                 onBack={!isOwnProfile ? () => navigate(-1) : null}
             />
 
             <main className={styles['mobile-main']}>
-                
+
                 {/* User Info Card */}
                 <div className={`${styles['mobile-profile-card']} glass-panel`}>
                     <div className={styles['mobile-avatar']}>
@@ -65,7 +67,7 @@ const ProfileMobile = () => {
                         <span className={styles['mobile-user-id']}>#{user?.id}</span>
                     </div>
                 </div>
-                
+
 
 
                 {isOwnProfile && (
@@ -143,11 +145,23 @@ const ProfileMobile = () => {
                         <div className={styles['mobile-menu-section']}>
                             <h3 className={styles['mobile-section-label']}>Ajustes</h3>
                             <div className={styles['mobile-menu-list']}>
-                                <div className={styles['mobile-menu-item']}>
+                                <div className={styles['mobile-menu-item']} style={{ paddingRight: '1rem' }}>
                                     <div className={styles['mobile-menu-item-left']}>
-                                        <span className={styles['mobile-menu-text']}>Idioma y Moneda</span>
+                                        <span className={styles['mobile-menu-text']}>Zona Horaria</span>
                                     </div>
-                                    <span className={styles['mobile-menu-arrow']}>›</span>
+                                    <select 
+                                        value={timezone} 
+                                        onChange={(e) => setTimezone(e.target.value)}
+                                        style={{ backgroundColor: '#0a0a0a', color: '#fff', border: '1px solid #333', padding: '4px 8px', borderRadius: '4px', maxWidth: '140px', fontSize: '0.8rem' }}
+                                    >
+                                        <option value={defaultTimezone}>Local ({defaultTimezone})</option>
+                                        <option value="UTC">UTC</option>
+                                        <option value="America/New_York">New York (EST/EDT)</option>
+                                        <option value="Europe/London">London (GMT/BST)</option>
+                                        <option value="Europe/Paris">Paris (CET/CEST)</option>
+                                        <option value="Asia/Tokyo">Tokyo (JST)</option>
+                                        <option value="Australia/Sydney">Sydney (AEST/AEDT)</option>
+                                    </select>
                                 </div>
                                 <div className={styles['mobile-menu-item']}>
                                     <div className={styles['mobile-menu-item-left']}>

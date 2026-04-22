@@ -6,6 +6,7 @@ import { getPortfolio, getPlayerById, getPlayerHistory, getPlayerTradeHistory, m
 import Navbar from '../components/Navbar';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/PlayerMarket.module.css';
 
@@ -92,6 +93,7 @@ export default function PlayerMarketDesktop() {
     const [error, setError] = useState(null);
     const { socket, connected, subscribeToPlayer, unsubscribeFromPlayer, subscribeToUser, unsubscribeFromUser } = useSocket();
     const { user } = useAuth();
+    const { timezone } = useSettings();
 
     const fetchData = useCallback(async (tf = timeframe) => {
         if (!playerId) return;
@@ -106,27 +108,27 @@ export default function PlayerMarketDesktop() {
 
             let formattedHistory;
             if (tf === 'line') {
-                // Raw ticks: use timestamp (sec) from backend
+                // Raw ticks: format created_at as HH:MM:SS label
                 formattedHistory = (history || []).map(h => {
-                    const t = new Date(h.timestamp * 1000);
+                    const t = new Date(h.time);
                     return {
                         price: parseFloat(h.price) || 0,
-                        time: isNaN(t.getTime()) ? '' : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+                        time: isNaN(t.getTime()) ? '' : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone })
                     };
                 });
             } else {
-                // Aggregated OHLC: use bucket_timestamp (sec)
+                // Aggregated OHLC: use close as price, format bucket_time
                 formattedHistory = (history || []).map(h => {
-                    const t = new Date(h.bucket_timestamp * 1000);
+                    const t = new Date(h.bucket_time);
                     const label = tf === '2h'
-                        ? t.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
-                        : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        ? t.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone })
+                        : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone });
                     return {
-                        price:     parseFloat(h.close) || 0,
-                        open:      parseFloat(h.open)  || 0,
-                        high:      parseFloat(h.high)  || 0,
-                        low:       parseFloat(h.low)   || 0,
-                        time:      label,
+                        price: parseFloat(h.close) || 0,
+                        open: parseFloat(h.open) || 0,
+                        high: parseFloat(h.high) || 0,
+                        low: parseFloat(h.low) || 0,
+                        time: label,
                         timestamp: t.getTime()
                     };
                 });
@@ -139,7 +141,7 @@ export default function PlayerMarketDesktop() {
         } catch (err) {
             console.error('Fetch error:', err);
         }
-    }, [playerId, timeframe]);
+    }, [playerId, timeframe, timezone]);
 
     // Initial Fetch
     useEffect(() => {
@@ -149,8 +151,8 @@ export default function PlayerMarketDesktop() {
     // Re-fetch chart data when timeframe changes
     useEffect(() => {
         fetchData(timeframe);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [timeframe]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [timeframe, timezone]);
 
     // WebSocket Listeners
     useEffect(() => {
@@ -176,7 +178,7 @@ export default function PlayerMarketDesktop() {
                     // Append raw tick
                     const newPoint = {
                         price: data.price,
-                        time: new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+                        time: new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone })
                     };
                     return [...prev, newPoint].slice(-100);
                 }
@@ -193,20 +195,20 @@ export default function PlayerMarketDesktop() {
                     updated[updated.length - 1] = {
                         ...last,
                         price: data.price,
-                        high:  Math.max(last.high || data.price, data.price),
-                        low:   Math.min(last.low  || data.price, data.price),
+                        high: Math.max(last.high || data.price, data.price),
+                        low: Math.min(last.low || data.price, data.price),
                     };
                 } else {
                     // New bucket
                     const label = timeframe === '2h'
-                        ? new Date(thisBucket).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
-                        : new Date(thisBucket).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        ? new Date(thisBucket).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone })
+                        : new Date(thisBucket).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone });
                     updated.push({
-                        price:     data.price,
-                        open:      data.price,
-                        high:      data.price,
-                        low:       data.price,
-                        time:      label,
+                        price: data.price,
+                        open: data.price,
+                        high: data.price,
+                        low: data.price,
+                        time: label,
                         timestamp: thisBucket
                     });
                 }
@@ -234,7 +236,7 @@ export default function PlayerMarketDesktop() {
             socket.off('trade_executed', handleTradeExecuted);
             socket.off('portfolio_update', handlePortfolioUpdate);
         };
-    }, [socket, connected, playerId, timeframe, subscribeToPlayer, unsubscribeFromPlayer]);
+    }, [socket, connected, playerId, timeframe, timezone, subscribeToPlayer, unsubscribeFromPlayer]);
 
 
     useEffect(() => {
@@ -463,9 +465,9 @@ export default function PlayerMarketDesktop() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                             {tradeHistory.slice(0, 15).map((trade, idx) => (
-                                                <tr 
-                                                    key={idx} 
+                                            {tradeHistory.slice(0, 15).map((trade, idx) => (
+                                                <tr
+                                                    key={idx}
                                                     className={styles['trade-table-row']}
                                                     onClick={() => navigate(`/trades/${trade.id || trade.tradeId}`)}
                                                     style={{ cursor: 'pointer' }}
@@ -477,7 +479,7 @@ export default function PlayerMarketDesktop() {
                                                     <td className={`${styles['trade-table-cell']} ${styles['trade-cell-muted']}`}>{parseFloat(trade.quantity).toLocaleString('es-ES', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}</td>
                                                     <td className={`${styles['trade-table-cell']} ${styles['trade-cell-white']}`}>{parseFloat(trade.total_value || trade.totalValue).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
                                                     <td className={`${styles['trade-table-cell']} ${styles['trade-time']}`}>
-                                                        {new Date(trade.timestamp || trade.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                                                        {new Date(trade.timestamp || trade.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone })}
                                                     </td>
                                                 </tr>
                                             ))}

@@ -31,6 +31,7 @@ import fsLogo from './assets/fs-logo.png';
 
 import { SocketProvider } from './context/SocketContext';
 import { AuthProvider } from './context/AuthContext';
+import { SettingsProvider } from './context/SettingsContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -72,42 +73,44 @@ function App() {
       {!loading && (
         <AuthProvider>
           <SocketProvider>
-            <Router>
-              <div className="landing-appear">
-                <ToastContainer
-                  position="top-center"
-                  autoClose={3000}
-                  hideProgressBar={true}
-                  closeButton={false}
-                  closeOnClick={true}
-                  pauseOnHover={true}
-                  draggable={false}
-                  theme="dark"
-                  icon={false}
-                />
-                <Routes>
-                  {/* Public routes */}
-                  <Route path="/" element={isMobile ? <LandingMobile /> : <LandingDesktop />} />
-                  <Route path="/login" element={isMobile ? <LoginMobile /> : <LoginDesktop />} />
-                  <Route path="/register" element={isMobile ? <RegisterMobile /> : <RegisterDesktop />} />
-                  <Route path="/verify" element={isMobile ? <VerifyMobile /> : <VerifyDesktop />} />
+            <SettingsProvider>
+              <Router>
+                <div className="landing-appear">
+                  <ToastContainer
+                    position="top-center"
+                    autoClose={3000}
+                    hideProgressBar={true}
+                    closeButton={false}
+                    closeOnClick={true}
+                    pauseOnHover={true}
+                    draggable={false}
+                    theme="dark"
+                    icon={false}
+                  />
+                  <Routes>
+                    {/* Public routes */}
+                    <Route path="/" element={isMobile ? <LandingMobile /> : <LandingDesktop />} />
+                    <Route path="/login" element={isMobile ? <LoginMobile /> : <LoginDesktop />} />
+                    <Route path="/register" element={isMobile ? <RegisterMobile /> : <RegisterDesktop />} />
+                    <Route path="/verify" element={isMobile ? <VerifyMobile /> : <VerifyDesktop />} />
 
-                  {/* Protected routes */}
-                  <Route path="/home" element={<ProtectedRoute>{isMobile ? <HomeMobile /> : <HomeDesktop />}</ProtectedRoute>} />
-                  <Route path="/market" element={<ProtectedRoute>{isMobile ? <MarketMobile /> : <MarketDesktop />}</ProtectedRoute>} />
-                  <Route path="/market/player/:playerId" element={<ProtectedRoute>{isMobile ? <PlayerMarketMobile /> : <PlayerMarketDesktop />}</ProtectedRoute>} />
-                  <Route path="/market/team/:teamId" element={<ProtectedRoute>{isMobile ? <TeamMarketDetailMobile /> : <TeamMarketDetailDesktop />}</ProtectedRoute>} />
-                  <Route path="/portfolio" element={<ProtectedRoute>{isMobile ? <PortfolioMobile /> : <PortfolioDesktop />}</ProtectedRoute>} />
-                  <Route path="/leaderboard" element={<ProtectedRoute>{isMobile ? <LeaderboardMobile /> : <LeaderboardDesktop />}</ProtectedRoute>} />
-                  <Route path="/profile" element={<ProtectedRoute>{isMobile ? <ProfileMobile /> : <ProfileDesktop />}</ProtectedRoute>} />
-                  <Route path="/profile/:userId" element={<ProtectedRoute>{isMobile ? <ProfileMobile /> : <UserProfileDesktop />}</ProtectedRoute>} />
-                  <Route path="/trades/:tradeId" element={<ProtectedRoute>{isMobile ? <TradeDetailMobile /> : <TradeDetailDesktop />}</ProtectedRoute>} />
+                    {/* Protected routes */}
+                    <Route path="/home" element={<ProtectedRoute>{isMobile ? <HomeMobile /> : <HomeDesktop />}</ProtectedRoute>} />
+                    <Route path="/market" element={<ProtectedRoute>{isMobile ? <MarketMobile /> : <MarketDesktop />}</ProtectedRoute>} />
+                    <Route path="/market/player/:playerId" element={<ProtectedRoute>{isMobile ? <PlayerMarketMobile /> : <PlayerMarketDesktop />}</ProtectedRoute>} />
+                    <Route path="/market/team/:teamId" element={<ProtectedRoute>{isMobile ? <TeamMarketDetailMobile /> : <TeamMarketDetailDesktop />}</ProtectedRoute>} />
+                    <Route path="/portfolio" element={<ProtectedRoute>{isMobile ? <PortfolioMobile /> : <PortfolioDesktop />}</ProtectedRoute>} />
+                    <Route path="/leaderboard" element={<ProtectedRoute>{isMobile ? <LeaderboardMobile /> : <LeaderboardDesktop />}</ProtectedRoute>} />
+                    <Route path="/profile" element={<ProtectedRoute>{isMobile ? <ProfileMobile /> : <ProfileDesktop />}</ProtectedRoute>} />
+                    <Route path="/profile/:userId" element={<ProtectedRoute>{isMobile ? <ProfileMobile /> : <UserProfileDesktop />}</ProtectedRoute>} />
+                    <Route path="/trades/:tradeId" element={<ProtectedRoute>{isMobile ? <TradeDetailMobile /> : <TradeDetailDesktop />}</ProtectedRoute>} />
 
-                  {/* 404 fallback */}
-                  <Route path="*" element={<Navigate to="/home" replace />} />
-                </Routes>
-              </div>
-            </Router>
+                    {/* 404 fallback */}
+                    <Route path="*" element={<Navigate to="/home" replace />} />
+                  </Routes>
+                </div>
+              </Router>
+            </SettingsProvider>
           </SocketProvider>
         </AuthProvider>
       )}

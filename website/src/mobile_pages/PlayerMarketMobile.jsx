@@ -2,13 +2,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import PlayerMarketChart from '../components/PlayerMarketChart';
 import { toast } from 'react-toastify';
-import { 
-    getPortfolio, getPlayerById, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell, getMe 
+import {
+    getPortfolio, getPlayerById, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell, getMe
 } from '../services/api';
 import MobileHeader from '../components/MobileHeader';
 import MobileNavbar from '../components/MobileNavbar';
 import fsLogo from '../assets/fs-logo.png';
 import { useSocket } from '../context/SocketContext';
+import { useSettings } from '../context/SettingsContext';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/PlayerMarket.module.css';
 
@@ -58,6 +59,7 @@ const PlayerMarketMobile = () => {
     const [kFactor, setKFactor] = useState(0.0001);
     const [isUpdated, setIsUpdated] = useState(false);
     const { socket, connected, subscribeToPlayer, unsubscribeFromPlayer } = useSocket();
+    const { timezone } = useSettings();
 
     const calculateQuantityFromValue = (value, p0) => {
         if (!value || !p0 || p0 <= 0) return '';
@@ -124,7 +126,7 @@ const PlayerMarketMobile = () => {
                 let formattedHistory;
                 if (tf === 'line') {
                     formattedHistory = (historyRes.value || []).map(h => {
-                        const t = new Date(h.timestamp * 1000);
+                        const t = new Date(h.time);
                         return {
                             timestamp: isNaN(t.getTime()) ? Date.now() : t.getTime(),
                             price: parseFloat(h.price) || 0
@@ -132,12 +134,12 @@ const PlayerMarketMobile = () => {
                     });
                 } else {
                     formattedHistory = (historyRes.value || []).map(h => {
-                        const t = new Date(h.bucket_timestamp * 1000);
+                        const t = new Date(h.bucket_time);
                         return {
-                            price:     parseFloat(h.close) || 0,
-                            open:      parseFloat(h.open)  || 0,
-                            high:      parseFloat(h.high)  || 0,
-                            low:       parseFloat(h.low)   || 0,
+                            price: parseFloat(h.close) || 0,
+                            open: parseFloat(h.open) || 0,
+                            high: parseFloat(h.high) || 0,
+                            low: parseFloat(h.low) || 0,
                             timestamp: t.getTime()
                         };
                     });
@@ -158,7 +160,7 @@ const PlayerMarketMobile = () => {
             console.error('Fetch error:', err);
             setFetchError('Error de conexión.');
         }
-    }, [playerId, timeframe]);
+    }, [playerId, timeframe, timezone]);
 
     useEffect(() => {
         const fetchConfig = async () => {
@@ -179,8 +181,8 @@ const PlayerMarketMobile = () => {
     // Re-fetch chart data when timeframe changes
     useEffect(() => {
         fetchData(timeframe);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [timeframe]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [timeframe, timezone]);
 
     // WebSocket Price Updates
     useEffect(() => {
@@ -216,15 +218,15 @@ const PlayerMarketMobile = () => {
                     updated[updated.length - 1] = {
                         ...last,
                         price: data.price,
-                        high:  Math.max(last.high || data.price, data.price),
-                        low:   Math.min(last.low  || data.price, data.price),
+                        high: Math.max(last.high || data.price, data.price),
+                        low: Math.min(last.low || data.price, data.price),
                     };
                 } else {
                     updated.push({
-                        price:     data.price,
-                        open:      data.price,
-                        high:      data.price,
-                        low:       data.price,
+                        price: data.price,
+                        open: data.price,
+                        high: data.price,
+                        low: data.price,
                         timestamp: thisBucket
                     });
                 }
@@ -252,7 +254,7 @@ const PlayerMarketMobile = () => {
             socket.off('trade_executed', handleTradeExecuted);
             socket.off('portfolio_update', handlePortfolioUpdate);
         };
-    }, [socket, connected, playerId, timeframe, subscribeToPlayer, unsubscribeFromPlayer]);
+    }, [socket, connected, playerId, timeframe, timezone, subscribeToPlayer, unsubscribeFromPlayer]);
 
 
     const handleMarketBuy = async () => {
@@ -340,9 +342,9 @@ const PlayerMarketMobile = () => {
 
     return (
         <div className={styles['mobile-container']}>
-            <MobileHeader 
-                backLink="/market" 
-                walletBalance={portfolio?.walletBalance} 
+            <MobileHeader
+                backLink="/market"
+                walletBalance={portfolio?.walletBalance}
             />
 
             <div className={styles['mobile-position-bar']}>
@@ -450,7 +452,7 @@ const PlayerMarketMobile = () => {
                                 ))}
                             </div>
 
-                    {error && <p className={styles['mobile-error-msg']}>{error}</p>}
+                            {error && <p className={styles['mobile-error-msg']}>{error}</p>}
                             <button
                                 onClick={handleMarketBuy}
                                 disabled={loading || !marketBuyQty}
@@ -537,8 +539,8 @@ const PlayerMarketMobile = () => {
                                 </thead>
                                 <tbody>
                                     {tradeHistory.slice(0, 10).map((trade, idx) => (
-                                        <tr 
-                                            key={idx} 
+                                        <tr
+                                            key={idx}
                                             className={styles['mobile-trade-row']}
                                             onClick={() => navigate(`/trades/${trade.id || trade.tradeId}`)}
                                             style={{ cursor: 'pointer' }}
@@ -553,7 +555,7 @@ const PlayerMarketMobile = () => {
                                                 {parseFloat(trade.quantity).toFixed(2)}
                                             </td>
                                             <td className={styles['mobile-trade-time']}>
-                                                {new Date(trade.timestamp || trade.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                {new Date(trade.timestamp || trade.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone })}
                                             </td>
                                         </tr>
                                     ))}

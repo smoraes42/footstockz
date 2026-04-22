@@ -3,11 +3,13 @@ import { useNavigate, Link } from 'react-router-dom';
 import { logout } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
+import { useSettings } from '../context/SettingsContext';
 import styles from '../styles/Profile.module.css';
 
 const ProfileDesktop = () => {
     const navigate = useNavigate();
     const { user, clearUser } = useAuth();
+    const { timezone, setTimezone, defaultTimezone } = useSettings();
     const [loading, setLoading] = useState(false);
 
     const handleLogout = async () => {
@@ -31,7 +33,7 @@ const ProfileDesktop = () => {
                 </header>
 
                 <div className={styles['content-grid']}>
-                    
+
                     {/* Left Column: Profile & Referral */}
                     <div className={styles['left-col']}>
                         <div className={`${styles['user-card']} glass-panel`}>
@@ -61,7 +63,7 @@ const ProfileDesktop = () => {
 
                     {/* Right Column: Menu Sections */}
                     <div className={styles['right-col']}>
-                        
+
                         {/* History Section */}
                         <div className={styles['desktop-menu-section']}>
                             <h3 className={styles['desktop-section-label']}>Actividad y Transacciones</h3>
@@ -104,9 +106,21 @@ const ProfileDesktop = () => {
                         <div className={styles['desktop-menu-section']}>
                             <h3 className={styles['desktop-section-label']}>Preferencias del Sistema</h3>
                             <div className={styles['desktop-menu-list']}>
-                                <div className={styles['desktop-menu-item']}>
-                                    <span className={styles['desktop-menu-text']}>Idioma y Región</span>
-                                    <span className={styles['mobile-menu-arrow']}>›</span>
+                                <div className={styles['desktop-menu-item']} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span className={styles['desktop-menu-text']}>Zona Horaria</span>
+                                    <select 
+                                        value={timezone} 
+                                        onChange={(e) => setTimezone(e.target.value)}
+                                        style={{ backgroundColor: '#0a0a0a', color: '#fff', border: '1px solid #333', padding: '4px 8px', borderRadius: '4px' }}
+                                    >
+                                        <option value={defaultTimezone}>Local ({defaultTimezone})</option>
+                                        <option value="UTC">UTC</option>
+                                        <option value="America/New_York">New York (EST/EDT)</option>
+                                        <option value="Europe/London">London (GMT/BST)</option>
+                                        <option value="Europe/Paris">Paris (CET/CEST)</option>
+                                        <option value="Asia/Tokyo">Tokyo (JST)</option>
+                                        <option value="Australia/Sydney">Sydney (AEST/AEDT)</option>
+                                    </select>
                                 </div>
                                 <div className={styles['desktop-menu-item']}>
                                     <span className={styles['desktop-menu-text']}>Configuración de Notificaciones</span>
