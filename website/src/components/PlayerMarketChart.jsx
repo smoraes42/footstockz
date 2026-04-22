@@ -106,6 +106,7 @@ export default function PlayerMarketChart({
                         />
                         <YAxis domain={yDomain} hide />
                         <Tooltip
+                            animationDuration={0}
                             content={() => null}
                             cursor={{ stroke: 'rgba(57,255,20,0.3)', strokeWidth: 1.5, strokeDasharray: '4 2' }}
                         />
@@ -149,6 +150,7 @@ export default function PlayerMarketChart({
                             width={60}
                         />
                         <Tooltip
+                            animationDuration={0}
                             contentStyle={{
                                 backgroundColor: '#0a0a0a',
                                 border: '1px solid #333',
@@ -166,8 +168,7 @@ export default function PlayerMarketChart({
                             strokeWidth={2.5}
                             dot={false}
                             activeDot={{ r: 5, fill: 'var(--accent-neon)', strokeWidth: 0 }}
-                            isAnimationActive={timeframe === 'line'}
-                            animationDuration={300}
+                            isAnimationActive={false}
                         />
                     </LineChart>
                 </ResponsiveContainer>

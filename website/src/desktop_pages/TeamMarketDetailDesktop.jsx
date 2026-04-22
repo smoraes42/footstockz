@@ -298,8 +298,8 @@ export default function TeamMarketDetailDesktop() {
                                         <CartesianGrid strokeDasharray="3 3" stroke="#222" />
                                         <XAxis dataKey="time" stroke="#666" fontSize={12} />
                                         <YAxis domain={['auto', 'auto']} stroke="#666" fontSize={12} />
-                                        <Tooltip contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid #333' }} />
-                                        <Line type="monotone" dataKey="price" stroke="var(--accent-neon)" strokeWidth={3} dot={false} />
+                                        <Tooltip animationDuration={0} contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid #333' }} />
+                                        <Line type="monotone" dataKey="price" stroke="var(--accent-neon)" strokeWidth={3} dot={false} isAnimationActive={false} />
                                     </LineChart>
                                 </ResponsiveContainer>
                             </div>

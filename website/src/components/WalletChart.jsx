@@ -137,6 +137,7 @@ const WalletChart = ({
               dx={-10}
             />
             <Tooltip
+              animationDuration={0}
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;

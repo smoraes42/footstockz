@@ -203,8 +203,8 @@ export default function TeamMarketDetailMobile() {
                         <LineChart data={priceHistory}>
                             <XAxis dataKey="time" hide />
                             <YAxis domain={['auto', 'auto']} hide />
-                            <Tooltip contentStyle={{ backgroundColor: '#000', border: 'none', borderRadius: '8px', fontSize: '12px' }} />
-                            <Line type="monotone" dataKey="price" stroke="var(--accent-neon)" strokeWidth={2} dot={false} />
+                            <Tooltip animationDuration={0} contentStyle={{ backgroundColor: '#000', border: 'none', borderRadius: '8px', fontSize: '12px' }} />
+                            <Line type="monotone" dataKey="price" stroke="var(--accent-neon)" strokeWidth={2} dot={false} isAnimationActive={false} />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>

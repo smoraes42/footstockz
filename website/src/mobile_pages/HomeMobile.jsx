@@ -416,6 +416,7 @@ const HomeMobile = () => {
                                 hide={true}
                             />
                             <Tooltip
+                                animationDuration={0}
                                 content={({ active, payload }) => {
                                     if (active && payload && payload.length) {
                                         const data = payload[0].payload;
