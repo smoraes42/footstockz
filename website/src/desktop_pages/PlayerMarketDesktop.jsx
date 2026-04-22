@@ -106,18 +106,18 @@ export default function PlayerMarketDesktop() {
 
             let formattedHistory;
             if (tf === 'line') {
-                // Raw ticks: format created_at as HH:MM:SS label
+                // Raw ticks: use timestamp (sec) from backend
                 formattedHistory = (history || []).map(h => {
-                    const t = new Date(h.time);
+                    const t = new Date(h.timestamp * 1000);
                     return {
                         price: parseFloat(h.price) || 0,
                         time: isNaN(t.getTime()) ? '' : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
                     };
                 });
             } else {
-                // Aggregated OHLC: use close as price, format bucket_time
+                // Aggregated OHLC: use bucket_timestamp (sec)
                 formattedHistory = (history || []).map(h => {
-                    const t = new Date(h.bucket_time);
+                    const t = new Date(h.bucket_timestamp * 1000);
                     const label = tf === '2h'
                         ? t.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
                         : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

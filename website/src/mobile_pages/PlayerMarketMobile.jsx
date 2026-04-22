@@ -124,7 +124,7 @@ const PlayerMarketMobile = () => {
                 let formattedHistory;
                 if (tf === 'line') {
                     formattedHistory = (historyRes.value || []).map(h => {
-                        const t = new Date(h.time);
+                        const t = new Date(h.timestamp * 1000);
                         return {
                             timestamp: isNaN(t.getTime()) ? Date.now() : t.getTime(),
                             price: parseFloat(h.price) || 0
@@ -132,7 +132,7 @@ const PlayerMarketMobile = () => {
                     });
                 } else {
                     formattedHistory = (historyRes.value || []).map(h => {
-                        const t = new Date(h.bucket_time);
+                        const t = new Date(h.bucket_timestamp * 1000);
                         return {
                             price:     parseFloat(h.close) || 0,
                             open:      parseFloat(h.open)  || 0,

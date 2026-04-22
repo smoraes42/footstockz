@@ -178,9 +178,9 @@ export const getPlayerPriceHistory = async (req, res) => {
         };
 
         if (timeframe === 'line') {
-            // Raw tick data — original behavior
+            // Raw tick data: Return unix timestamp
             const [history] = await db.query(
-                'SELECT price, created_at AS time FROM player_prices WHERE player_id = ? ORDER BY created_at ASC LIMIT 100',
+                'SELECT price, UNIX_TIMESTAMP(created_at) AS timestamp FROM player_prices WHERE player_id = ? ORDER BY created_at ASC LIMIT 100',
                 [playerId]
             );
             return res.status(200).json(history);
@@ -191,10 +191,10 @@ export const getPlayerPriceHistory = async (req, res) => {
             return res.status(400).json({ message: 'Invalid timeframe. Use: line, 5m, 30m, 1h, 2h' });
         }
 
-        // Aggregate into OHLC buckets using GROUP_CONCAT for open (first) and close (last)
+        // Aggregate into OHLC buckets: Return unix timestamp of the bucket start
         const [history] = await db.query(`
             SELECT
-                FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(created_at) / ?) * ?) AS bucket_time,
+                FLOOR(UNIX_TIMESTAMP(created_at) / ?) * ? AS bucket_timestamp,
                 CAST(SUBSTRING_INDEX(GROUP_CONCAT(price ORDER BY created_at ASC  SEPARATOR ','), ',', 1) AS DECIMAL(15,6)) AS open,
                 MAX(price)  AS high,
                 MIN(price)  AS low,
@@ -202,7 +202,7 @@ export const getPlayerPriceHistory = async (req, res) => {
             FROM player_prices
             WHERE player_id = ?
             GROUP BY FLOOR(UNIX_TIMESTAMP(created_at) / ?)
-            ORDER BY bucket_time ASC
+            ORDER BY bucket_timestamp ASC
             LIMIT 100
         `, [bucket, bucket, playerId, bucket]);
 
