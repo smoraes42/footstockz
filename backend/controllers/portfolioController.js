@@ -5,9 +5,11 @@ export const getPortfolio = async (req, res) => {
     try {
         const userId = req.user.id;
         const connection = await pool.getConnection();
+        await connection.query('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        await connection.beginTransaction();
 
         try {
-            const [walletRows] = await connection.query('SELECT value, created_at FROM wallets WHERE user_id = ?', [userId]);
+            const [walletRows] = await connection.query('SELECT value, created_at FROM wallets WHERE user_id = ? FOR SHARE', [userId]);
             const balance = walletRows.length > 0 ? parseFloat(walletRows[0].value) || 0 : 0;
             const createdAt = walletRows.length > 0 ? walletRows[0].created_at : null;
 
@@ -77,6 +79,8 @@ export const getPortfolio = async (req, res) => {
                 WHERE o.user_id = ?
             `, [userId]);
 
+            await connection.commit();
+
             res.status(200).json({
                 userId,
                 walletBalance: balance,
@@ -84,6 +88,9 @@ export const getPortfolio = async (req, res) => {
                 holdings: holdingsWithVariation,
                 openOrders: orderRows
             });
+        } catch (error) {
+            await connection.rollback();
+            throw error;
         } finally {
             connection.release();
         }
@@ -98,6 +105,8 @@ export const getPortfolioHistory = async (req, res) => {
         const userId = req.user.id;
         const { timeframe } = req.query;
         const connection = await pool.getConnection();
+        await connection.query('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+        await connection.beginTransaction();
 
         try {
             let timeFilterQuery = '';
@@ -126,7 +135,7 @@ export const getPortfolioHistory = async (req, res) => {
                 ORDER BY created_at ASC
             `, [userId]);
 
-            const [walletRows] = await connection.query('SELECT value FROM wallets WHERE user_id = ?', [userId]);
+            const [walletRows] = await connection.query('SELECT value FROM wallets WHERE user_id = ? FOR SHARE', [userId]);
             const walletValue = parseFloat(walletRows[0]?.value) || 0;
             
             const [holdingsRows] = await connection.query(`
@@ -159,12 +168,17 @@ export const getPortfolioHistory = async (req, res) => {
             }
 
             const liveValue = walletValue + holdingsValue;
+            await connection.commit();
+
             const result = [
                 ...historyRows,
                 { value: liveValue, time: new Date().toISOString() }
             ];
 
             res.status(200).json(result);
+        } catch (error) {
+            await connection.rollback();
+            throw error;
         } finally {
             connection.release();
         }

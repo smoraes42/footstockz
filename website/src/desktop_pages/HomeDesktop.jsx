@@ -23,6 +23,8 @@ const HomeDesktop = () => {
 
   const { socket, connected, subscribeToUser, unsubscribeFromUser } = useSocket();
   const { user } = useAuth();
+  const lastFetchRef = React.useRef(0);
+  const throttleTimeoutRef = React.useRef(null);
 
 
 
@@ -53,6 +55,28 @@ const HomeDesktop = () => {
     if (!socket || !connected) return;
 
     let debounceTimer;
+    const throttledFetch = () => {
+      const now = Date.now();
+      const timeSinceLastFetch = now - lastFetchRef.current;
+      const THROTTLE_INTERVAL = 5000; // 5 seconds
+
+      if (timeSinceLastFetch >= THROTTLE_INTERVAL) {
+        lastFetchRef.current = now;
+        fetchPortfolioData();
+        fetchHistory();
+      } else {
+        // If an update comes in during the cooldown, schedule one at the end of the interval
+        if (!throttleTimeoutRef.current) {
+          throttleTimeoutRef.current = setTimeout(() => {
+            lastFetchRef.current = Date.now();
+            fetchPortfolioData();
+            fetchHistory();
+            throttleTimeoutRef.current = null;
+          }, THROTTLE_INTERVAL - timeSinceLastFetch);
+        }
+      }
+    };
+
     const handlePriceUpdate = (data) => {
       // 1. Update existing players in state if found
       setPlayers(prev => {
@@ -68,31 +92,18 @@ const HomeDesktop = () => {
       setTimeout(() => setUpdatedPlayerId(null), 1000);
 
       // 3. Debounced re-fetch of the full top players list from API
-      // This catches players that move into the top 10 from outside the current top 50 pool
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
         fetchPlayers();
       }, 3000);
 
-      // 4. Recalculate portfolio value in real-time if the player is in holdings
-      setPortfolio(prevPortfolio => {
-        if (!prevPortfolio || !prevPortfolio.holdings) return prevPortfolio;
-        
-        const updatedHoldings = prevPortfolio.holdings.map(h => {
-          if (h.player_id === data.playerId) {
-            return { ...h, current_price: data.price, position_value: h.shares * data.price };
-          }
-          return h;
-        });
-
-        return { ...prevPortfolio, holdings: updatedHoldings };
-      });
+      // Note: We removed the real-time portfolio recalculation here 
+      // to stabilize the main display value on the home page.
     };
 
     const handlePortfolioUpdate = (data) => {
-      // When a trade happens, fetch fresh portfolio data to update balances and history
-      fetchPortfolioData();
-      fetchHistory();
+      // Use throttled fetch for trade updates
+      throttledFetch();
     };
 
     socket.on('price_update', handlePriceUpdate);
@@ -100,6 +111,7 @@ const HomeDesktop = () => {
 
     return () => {
       clearTimeout(debounceTimer);
+      if (throttleTimeoutRef.current) clearTimeout(throttleTimeoutRef.current);
       socket.off('price_update', handlePriceUpdate);
       socket.off('portfolio_update', handlePortfolioUpdate);
     };
