@@ -288,6 +288,8 @@ const HomeDesktop = () => {
 
   const [variation, setVariation] = useState({ amount: 0, percent: 0 });
 
+  const displayValue = portfolio ? portfolio.walletBalance + (portfolio.holdings?.reduce((acc, h) => acc + h.position_value, 0) || 0) : 0;
+
   useEffect(() => {
     if (chartData && chartData.length > 0) {
       const baselineValue = chartData[0].value;
@@ -304,8 +306,6 @@ const HomeDesktop = () => {
   useEffect(() => {
     setVariation({ amount: 0, percent: 0 });
   }, [activeTimeframe]);
-
-  const displayValue = portfolio ? portfolio.walletBalance + (portfolio.holdings?.reduce((acc, h) => acc + h.position_value, 0) || 0) : 0;
 
 
   return (
