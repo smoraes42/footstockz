@@ -309,6 +309,7 @@ export default function PlayerMarketChart({
                             {new Date(hoverInfo.timestamp).toLocaleString('es-ES', {
                                 day: '2-digit',
                                 month: 'short',
+                                year: 'numeric',
                                 hour: '2-digit',
                                 minute: '2-digit',
                                 hour12: false,
@@ -403,6 +404,24 @@ export default function PlayerMarketChart({
                         />
                         <Tooltip
                             animationDuration={0}
+                            labelFormatter={(value, payload) => {
+                                if (payload && payload.length > 0) {
+                                    const data = payload[0].payload;
+                                    if (data.timestamp) {
+                                        return new Date(data.timestamp).toLocaleString('es-ES', {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            second: timeframe === 'line' ? '2-digit' : undefined,
+                                            timeZone: timezone,
+                                            hour12: false
+                                        });
+                                    }
+                                }
+                                return value;
+                            }}
                             contentStyle={{
                                 backgroundColor: '#0a0a0a',
                                 border: '1px solid #333',
