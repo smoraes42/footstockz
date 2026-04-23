@@ -157,7 +157,7 @@ const ProfileMobile = () => {
                                             <div className={styles['mobile-exp-fill']} style={{ width: '35%' }}></div>
                                         </div>
                                         <div className={styles['mobile-exp-text']}>
-                                            <span>350 / 1000 EXP</span>
+                                            <span>2 / 5</span>
                                             <span>Próximo Nivel: Bronce</span>
                                         </div>
                                     </div>

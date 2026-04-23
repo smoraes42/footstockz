@@ -19,9 +19,8 @@ const ProfileDesktop = () => {
         navigate('/login');
     };
 
+  /* Iconos SVG de las secciones */
     const sections = [
-        { id: 'operaciones', label: 'Operaciones', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>, link: '/portfolio' },
-        { id: 'transacciones', label: 'Transacciones', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg> },
         { id: 'referidos', label: 'Referidos', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> },
         { id: 'seguridad', label: 'Seguridad', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> },
         { id: 'privacidad', label: 'Privacidad', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> },
@@ -124,15 +123,16 @@ const ProfileDesktop = () => {
 
                             <div className={`${styles['desktop-referral-card']} glass-panel`}>
                                 <div className={styles['mobile-card-header']}>
-                                    <span className={styles['mobile-card-title']}>Nivel de Cuenta</span>
-                                    <span className={styles['mobile-level-badge']}>35%</span>
+                                    <span className={styles['mobile-card-title']}>Programa de Referidos</span>
+                                    <span className={styles['mobile-level-badge']}>Nivel 1</span>
                                 </div>
                                 <div className={styles['mobile-exp-container']}>
                                     <div className={styles['mobile-exp-bar']}>
                                         <div className={styles['mobile-exp-fill']} style={{ width: '35%' }}></div>
                                     </div>
                                     <div className={styles['mobile-exp-text']}>
-                                        <span>350 / 1000 EXP</span>
+                                        <span>2 / 5</span>
+                                        <span>Próximo Nivel: Bronce</span>
                                     </div>
                                 </div>
                             </div>
