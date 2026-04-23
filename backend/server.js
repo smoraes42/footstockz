@@ -98,6 +98,6 @@ server.listen(PORT, async () => {
   socketService.init(server);
   await testDbConnection(db1, process.env.DB_NAME);
   startSnapshotJob();
-  startSimulation();
+  //startSimulation();
 });
 
