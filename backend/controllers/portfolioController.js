@@ -9,7 +9,7 @@ export const getPortfolio = async (req, res) => {
         await connection.beginTransaction();
 
         try {
-            const [walletRows] = await connection.query('SELECT value, created_at FROM wallets WHERE user_id = ? FOR SHARE', [userId]);
+            const [walletRows] = await connection.query('SELECT value, created_at FROM wallets WHERE user_id = ? LOCK IN SHARE MODE', [userId]);
             const balance = walletRows.length > 0 ? parseFloat(walletRows[0].value) || 0 : 0;
             const createdAt = walletRows.length > 0 ? walletRows[0].created_at : null;
 
@@ -135,7 +135,7 @@ export const getPortfolioHistory = async (req, res) => {
                 ORDER BY created_at ASC
             `, [userId]);
 
-            const [walletRows] = await connection.query('SELECT value FROM wallets WHERE user_id = ? FOR SHARE', [userId]);
+            const [walletRows] = await connection.query('SELECT value FROM wallets WHERE user_id = ? LOCK IN SHARE MODE', [userId]);
             const walletValue = parseFloat(walletRows[0]?.value) || 0;
             
             const [holdingsRows] = await connection.query(`
