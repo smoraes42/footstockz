@@ -193,7 +193,7 @@ export default function PlayerMarketChart({
         const dx = e.clientX - dragRef.current.startX;
         // dx > 0 = dragging right = showing older data (increase offset)
         // dx < 0 = dragging left = going toward present (decrease offset)
-        const delta = Math.round(-dx * dragRef.current.pointsPerPx * 2);
+        const delta = Math.round(dx * dragRef.current.pointsPerPx * 2);
         const maxOffset = Math.max(0, allData.length - windowSize);
         const newOffset = Math.max(0, Math.min(maxOffset, dragRef.current.startOffset + delta));
 
@@ -220,7 +220,7 @@ export default function PlayerMarketChart({
     const onTouchMoveChart = useCallback((e) => {
         const t = e.touches[0];
         const dx = t.clientX - touchStartRef.current.x;
-        const delta = Math.round(-dx * dragRef.current.pointsPerPx * 2);
+        const delta = Math.round(dx * dragRef.current.pointsPerPx * 2);
         const maxOffset = Math.max(0, allData.length - windowSize);
         const newOffset = Math.max(0, Math.min(maxOffset, touchStartRef.current.offset + delta));
         setViewOffset(newOffset);
