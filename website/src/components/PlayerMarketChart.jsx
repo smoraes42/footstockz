@@ -45,8 +45,8 @@ export default function PlayerMarketChart({
     const [allData, setAllData] = useState([]);
 
     // viewOffset: how many points from the right-end we have shifted
-    // 0 = showing latest N points; increases as user drags left
-    const [viewOffset, setViewOffset] = useState(0);
+    // -2 = showing latest data with 2 slots of right padding
+    const [viewOffset, setViewOffset] = useState(-2);
 
     // Y-axis zoom: 1.0 = default, >1 zooms in (tighter range), <1 zooms out
     const [yZoom, setYZoom] = useState(1.0);
@@ -62,34 +62,30 @@ export default function PlayerMarketChart({
     const dragRef = useRef({ active: false, startX: 0, startOffset: 0, pointsPerPx: 1 });
     const containerRef = useRef(null);
 
-    // ── Sync priceHistory prop → allData when timeframe changes ────────────
+    // ── Reset view when timeframe changes ─────────────────────────────────
     useEffect(() => {
         setAllData(priceHistory);
-        setViewOffset(0);
+        setViewOffset(-2);
         setYZoom(1.0);
         noMoreHistoryRef.current = false;
         isLoadingMoreRef.current = false;
         setIsLoadingMore(false);
-    }, [priceHistory]);
+    }, [timeframe]);
 
     // ── Append new live data points from parent ────────────────────────────
-    // When priceHistory grows (live WS updates), merge new tail into allData
-    // but only if we're already viewing the latest data (viewOffset === 0)
     useEffect(() => {
         if (priceHistory.length === 0) return;
         setAllData(prev => {
             if (prev.length === 0) return priceHistory;
             const lastPrev = prev[prev.length - 1];
             const lastNew = priceHistory[priceHistory.length - 1];
-            // Detect if a new point was appended
             const prevKey = lastPrev?.timestamp ?? lastPrev?.time;
             const newKey = lastNew?.timestamp ?? lastNew?.time;
-            if (prevKey === newKey) return prev; // No change
-            // Merge: keep prev buffer, append only genuinely new tail points
-            // Find where priceHistory diverges from the end of prev
+            if (prevKey === newKey) return prev; 
+
             const tail = priceHistory.filter(p => {
                 const k = p?.timestamp ?? p?.time;
-                return k !== prevKey && k > prevKey;
+                return k > prevKey;
             });
             if (tail.length === 0) return prev;
             return [...prev, ...tail];
@@ -100,9 +96,31 @@ export default function PlayerMarketChart({
     const windowSize = DEFAULT_WINDOW;
     const visibleData = useMemo(() => {
         if (allData.length === 0) return [];
-        const end = Math.max(0, allData.length - viewOffset);
-        const start = Math.max(0, end - windowSize);
-        return allData.slice(start, end);
+        // 'viewOffset' of 0 means the latest point is at the right edge.
+        // We allow it to go down to -2 to create 'padding' slots at the right.
+        const end = allData.length - viewOffset;
+        const start = end - windowSize;
+
+        const slice = allData.slice(Math.max(0, start), Math.min(allData.length, end));
+        const result = [...slice];
+
+        // Pad right (empty slots)
+        if (end > allData.length) {
+            const padCount = Math.floor(end - allData.length);
+            for (let i = 0; i < padCount; i++) {
+                result.push({ isPadding: true, price: null });
+            }
+        }
+        // Pad left (if we pan past the beginning, which shouldn't happen due to constraints)
+        if (start < 0) {
+            const padCount = Math.floor(-start);
+            for (let i = 0; i < padCount; i++) {
+                result.unshift({ isPadding: true, price: null });
+            }
+        }
+
+        // Ensure we always return exactly windowSize points for consistency
+        return result.slice(0, windowSize);
     }, [allData, viewOffset, windowSize]);
 
     // ── Y-axis domain with zoom ────────────────────────────────────────────
@@ -123,8 +141,9 @@ export default function PlayerMarketChart({
 
     // ── Format X labels for visible data ──────────────────────────────────
     const formattedVisible = useMemo(() => {
-        return visibleData.map(p => {
-            if (p.time) return p; // already has formatted label (desktop line mode)
+        return visibleData.map((p, idx) => {
+            if (p.isPadding) return { ...p, time: ` ` }; // Invisible label for padding
+            if (p.time) return p;
             if (!p.timestamp) return p;
             const t = new Date(p.timestamp);
             const label = timeframe === 'line' || timeframe === '5m' || timeframe === '30m' || timeframe === '1h'
@@ -195,7 +214,8 @@ export default function PlayerMarketChart({
         // dx < 0 = dragging left = going toward present (decrease offset)
         const delta = Math.round(dx * dragRef.current.pointsPerPx * 2);
         const maxOffset = Math.max(0, allData.length - windowSize);
-        const newOffset = Math.max(0, Math.min(maxOffset, dragRef.current.startOffset + delta));
+        // Allow offset to go down to -2 for right-side padding
+        const newOffset = Math.max(-2, Math.min(maxOffset, dragRef.current.startOffset + delta));
 
         setViewOffset(newOffset);
 
@@ -222,7 +242,7 @@ export default function PlayerMarketChart({
         const dx = t.clientX - touchStartRef.current.x;
         const delta = Math.round(dx * dragRef.current.pointsPerPx * 2);
         const maxOffset = Math.max(0, allData.length - windowSize);
-        const newOffset = Math.max(0, Math.min(maxOffset, touchStartRef.current.offset + delta));
+        const newOffset = Math.max(-2, Math.min(maxOffset, touchStartRef.current.offset + delta));
         setViewOffset(newOffset);
         if (newOffset >= maxOffset - 5 && !isLoadingMoreRef.current && !noMoreHistoryRef.current) {
             loadMoreHistory();
@@ -306,7 +326,7 @@ export default function PlayerMarketChart({
                 {hoverInfo && (
                     <div className={styles['mobile-tooltip']}>
                         <div className={styles['mobile-tooltip-time']}>
-                            {new Date(hoverInfo.timestamp).toLocaleString('es-ES', {
+                            {hoverInfo.timestamp ? new Date(hoverInfo.timestamp).toLocaleString('es-ES', {
                                 day: '2-digit',
                                 month: 'short',
                                 year: 'numeric',
@@ -314,7 +334,7 @@ export default function PlayerMarketChart({
                                 minute: '2-digit',
                                 hour12: false,
                                 timeZone: timezone
-                            })}
+                            }) : ' '}
                         </div>
                         <div className={styles['mobile-tooltip-price']}>
                             €{Number(hoverInfo.price).toFixed(2)}
@@ -363,10 +383,10 @@ export default function PlayerMarketChart({
                     <span className={styles['chart-zoom-badge']}>
                         Y {yZoom > 1 ? `${yZoom.toFixed(1)}×` : `${(1/yZoom).toFixed(1)}× out`}
                     </span>
-                    {viewOffset > 0 && (
+                    {viewOffset > -2 && (
                         <button
                             className={styles['chart-reset-btn']}
-                            onClick={() => { setViewOffset(0); setYZoom(1.0); }}
+                            onClick={() => { setViewOffset(-2); setYZoom(1.0); }}
                         >
                             Reset View
                         </button>
@@ -407,6 +427,7 @@ export default function PlayerMarketChart({
                             labelFormatter={(value, payload) => {
                                 if (payload && payload.length > 0) {
                                     const data = payload[0].payload;
+                                    if (data.isPadding) return ""; 
                                     if (data.timestamp) {
                                         return new Date(data.timestamp).toLocaleString('es-ES', {
                                             day: '2-digit',
@@ -421,6 +442,12 @@ export default function PlayerMarketChart({
                                     }
                                 }
                                 return value;
+                            }}
+                            // Only show tooltip if there's actually a price (don't show for padding)
+                            itemSorter={(item) => (item.value === null ? -1 : 1)}
+                            formatter={(v, name, props) => {
+                                if (v === null || props.payload.isPadding) return [null, null];
+                                return [`€${Number(v).toFixed(2)}`, 'Price'];
                             }}
                             contentStyle={{
                                 backgroundColor: '#0a0a0a',
