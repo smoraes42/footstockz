@@ -17,8 +17,95 @@ export default function PlayerMarketChart({
     priceHistory = [],
     timeframe = 'line',
     onTimeframeChange,
+    onLoadMore,
 }) {
     const { timezone } = useSettings();
+    const [viewOffset, setViewOffset] = React.useState(0);
+    const [yZoom, setYZoom] = React.useState(1.0);
+    const containerRef = React.useRef(null);
+    const dragRef = React.useRef({ active: false, startX: 0, startOffset: 0 });
+
+    const WINDOW_SIZE = 60;
+
+    // Reset view when timeframe changes
+    React.useEffect(() => {
+        setViewOffset(0);
+        setYZoom(1.0);
+    }, [timeframe]);
+
+    // ── Interaction Handlers ──────────────────────────────────────────
+    const onMouseDown = (e) => {
+        if (e.button !== 0) return; // Left click only
+        dragRef.current = {
+            active: true,
+            startX: e.clientX,
+            startOffset: viewOffset
+        };
+    };
+
+    const onMouseMove = (e) => {
+        if (!dragRef.current.active) return;
+        const dx = e.clientX - dragRef.current.startX;
+        const pointsPerPx = WINDOW_SIZE / (containerRef.current?.clientWidth || 1);
+        const delta = Math.round(dx * pointsPerPx * 1.5);
+        
+        const maxOffset = Math.max(0, priceHistory.length - WINDOW_SIZE);
+        const newOffset = Math.max(0, Math.min(maxOffset, dragRef.current.startOffset + delta));
+        
+        if (newOffset !== viewOffset) {
+            setViewOffset(newOffset);
+        }
+
+        // Trigger load more if we reach the end
+        if (newOffset >= maxOffset - 5 && onLoadMore) {
+            // This would need more parent logic, but we keep the hook ready
+        }
+    };
+
+    const onMouseUp = () => {
+        dragRef.current.active = false;
+    };
+
+    // Attach wheel listener for Y-axis zoom
+    React.useEffect(() => {
+        const el = containerRef.current;
+        if (!el) return;
+        const handleWheel = (e) => {
+            e.preventDefault();
+            const factor = e.deltaY < 0 ? 1.1 : 0.9;
+            setYZoom(prev => Math.min(20, Math.max(0.2, prev * factor)));
+        };
+        el.addEventListener('wheel', handleWheel, { passive: false });
+        return () => el.removeEventListener('wheel', handleWheel);
+    }, []);
+
+    // Global mouseup to catch releases outside the chart
+    React.useEffect(() => {
+        window.addEventListener('mouseup', onMouseUp);
+        return () => window.removeEventListener('mouseup', onMouseUp);
+    }, []);
+
+    // ── Compute Slice ──────────────────────────────────────────────
+    const visibleData = React.useMemo(() => {
+        if (priceHistory.length === 0) return [];
+        const end = priceHistory.length - viewOffset;
+        const start = Math.max(0, end - WINDOW_SIZE);
+        return priceHistory.slice(start, end);
+    }, [priceHistory, viewOffset]);
+
+    // Calculate Y-axis domain based on visible data
+    const yDomain = React.useMemo(() => {
+        const prices = visibleData.map(p => p.price).filter(v => v != null && !isNaN(v));
+        if (prices.length === 0) return ['auto', 'auto'];
+        const dMin = Math.min(...prices);
+        const dMax = Math.max(...prices);
+        const center = (dMax + dMin) / 2;
+        const half = ((dMax - dMin) / 2 || 0.1) / yZoom;
+        return [
+            parseFloat((center - half).toFixed(4)),
+            parseFloat((center + half).toFixed(4)),
+        ];
+    }, [visibleData, yZoom]);
 
     // ── Timeframe selector ──────────────────────────────────────────
     const TimeframeSelector = () => (
@@ -35,26 +122,27 @@ export default function PlayerMarketChart({
         </div>
     );
 
-    // Calculate Y-axis domain based on visible data
-    const prices = priceHistory.map(p => p.price).filter(v => v != null && !isNaN(v));
-    const dataMin = prices.length > 0 ? Math.min(...prices) : 0;
-    const dataMax = prices.length > 0 ? Math.max(...prices) : 100;
-    const padding = (dataMax - dataMin) * 0.1 || 1;
-    const yDomain = [
-        parseFloat((dataMin - padding).toFixed(2)),
-        parseFloat((dataMax + padding).toFixed(2))
-    ];
-
     return (
         <div className={styles['chart-wrapper']}>
             <div className={styles['chart-controls-row']}>
                 <TimeframeSelector />
+                {viewOffset > 0 && (
+                    <button className={styles['chart-reset-btn']} onClick={() => { setViewOffset(0); setYZoom(1.0); }}>
+                        Reset View
+                    </button>
+                )}
             </div>
 
-            <div className={styles['chart-container']}>
+            <div 
+                ref={containerRef}
+                className={styles['chart-container']}
+                onMouseDown={onMouseDown}
+                onMouseMove={onMouseMove}
+                style={{ cursor: dragRef.current.active ? 'grabbing' : 'grab', userSelect: 'none' }}
+            >
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart 
-                        data={priceHistory}
+                        data={visibleData}
                         margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                     >
                         <CartesianGrid strokeDasharray="3 3" stroke="#1a1a1a" vertical={false} />
@@ -85,6 +173,7 @@ export default function PlayerMarketChart({
                             axisLine={false}
                             tickLine={false}
                             width={50}
+                            allowDataOverflow
                         />
                         <Tooltip
                             animationDuration={0}
