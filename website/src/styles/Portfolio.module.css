@@ -797,3 +797,9 @@
 .search-input::placeholder {
     color: rgba(255, 255, 255, 0.3);
 }
+
+.right-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
