@@ -115,75 +115,65 @@ export default function PlayerMarketDesktop() {
         }
     }, [playerId, timeframe, timezone]);
 
-    // Format raw API history into chart-ready data points
+    // Format raw API history into a fixed-size normalized grid
     const formatHistory = useCallback((history, tf) => {
-        if (!history || history.length === 0) return [];
-
-        if (tf === 'line') {
-            return history.map(h => {
-                const t = new Date(h.time);
-                return {
-                    price: parseFloat(h.price) || 0,
-                    timestamp: isNaN(t.getTime()) ? Date.now() : t.getTime(),
-                    time: isNaN(t.getTime()) ? '' : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone, hour12: false })
-                };
-            });
-        } else {
-            const bucketMs = { '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
-            const bMs = bucketMs[tf];
-            const formatted = [];
+        const GRID_SIZE = 100;
+        const bucketMs = { 'line': 10000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+        const bMs = bucketMs[tf] || 300000;
+        
+        // 1. Initialize a perfect grid ending at 'now'
+        const now = Date.now();
+        const endTs = Math.floor(now / bMs) * bMs;
+        const grid = [];
+        for (let i = 0; i < GRID_SIZE; i++) {
+            const ts = endTs - (GRID_SIZE - 1 - i) * bMs;
+            const date = new Date(ts);
+            const label = tf === '2h'
+                ? date.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
+                : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
             
-            // Sort by bucket_time to be safe
-            const sorted = [...history].sort((a, b) => new Date(a.bucket_time).getTime() - new Date(b.bucket_time).getTime());
-
-            for (let i = 0; i < sorted.length; i++) {
-                const current = sorted[i];
-                const t = new Date(current.bucket_time);
-                const currentTs = Math.floor(t.getTime() / bMs) * bMs;
-
-                // If not the first point, check for gaps
-                if (formatted.length > 0) {
-                    const last = formatted[formatted.length - 1];
-                    let nextTs = last.timestamp + bMs;
-
-                    // Fill gaps with last known close price
-                    while (nextTs < currentTs) {
-                        const gapDate = new Date(nextTs);
-                        const label = tf === '2h'
-                            ? gapDate.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
-                            : gapDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
-
-                        formatted.push({
-                            price: last.price,
-                            open: last.price,
-                            high: last.price,
-                            low: last.price,
-                            time: label,
-                            timestamp: nextTs,
-                            isFiller: true
-                        });
-                        nextTs += bMs;
-                    }
-                }
-
-                const label = tf === '2h'
-                    ? t.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
-                    : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
-
-                formatted.push({
-                    price: parseFloat(current.close) || 0,
-                    open: parseFloat(current.open) || 0,
-                    high: parseFloat(current.high) || 0,
-                    low: parseFloat(current.low) || 0,
-                    time: label,
-                    timestamp: currentTs
-                });
-            }
-            return formatted;
+            grid.push({
+                timestamp: ts,
+                time: label,
+                price: null, // To be filled
+                isFiller: true
+            });
         }
+
+        if (!history || history.length === 0) return grid;
+
+        // 2. Map history to grid slots
+        const sortedHistory = [...history].sort((a, b) => new Date(a.time || a.bucket_time).getTime() - new Date(b.time || b.bucket_time).getTime());
+        
+        let lastKnownPrice = sortedHistory[0] ? (parseFloat(sortedHistory[0].price || sortedHistory[0].close) || 0) : 0;
+
+        sortedHistory.forEach(h => {
+            const hTs = new Date(h.time || h.bucket_time).getTime();
+            const roundedTs = Math.floor(hTs / bMs) * bMs;
+            
+            // Find corresponding slot in grid
+            const slotIndex = grid.findIndex(g => g.timestamp === roundedTs);
+            if (slotIndex !== -1) {
+                const price = parseFloat(h.price || h.close) || 0;
+                grid[slotIndex].price = price;
+                grid[slotIndex].isFiller = false;
+                lastKnownPrice = price;
+            }
+        });
+
+        // 3. Forward-fill the grid
+        let currentPrice = lastKnownPrice;
+        for (let i = 0; i < grid.length; i++) {
+            if (grid[i].price === null) {
+                grid[i].price = currentPrice;
+            } else {
+                currentPrice = grid[i].price;
+            }
+        }
+
+        return grid;
     }, [timezone]);
 
-    // Load older historical data when user drags left past the buffer
     const handleLoadMore = useCallback(async (beforeIso) => {
         try {
             const older = await getPlayerHistory(playerId, timeframe, beforeIso);
@@ -226,45 +216,38 @@ export default function PlayerMarketDesktop() {
             setTimeout(() => setIsUpdated(null), 1000);
 
             setPriceHistory(prev => {
-                if (timeframe === 'line') {
-                    // Append raw tick
-                    const newPoint = {
-                        price: data.price,
-                        time: new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone, hour12: false })
-                    };
-                    return [...prev, newPoint].slice(-100);
-                }
-
-                // Timeframe mode: update or create current bucket
-                const bMs = bucketMs[timeframe];
+                const bucketMs = { 'line': 10000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+                const bMs = bucketMs[timeframe] || 300000;
                 const newTs = new Date(data.timestamp).getTime();
                 const thisBucket = Math.floor(newTs / bMs) * bMs;
+                
                 const updated = [...prev];
-                const last = updated[updated.length - 1];
+                const slotIndex = updated.findIndex(g => g.timestamp === thisBucket);
 
-                if (last && Math.floor((last.timestamp || 0) / bMs) * bMs === thisBucket) {
-                    // Update current bucket close, high, low
-                    updated[updated.length - 1] = {
-                        ...last,
+                if (slotIndex !== -1) {
+                    // Update existing slot (current candle)
+                    updated[slotIndex] = {
+                        ...updated[slotIndex],
                         price: data.price,
-                        high: Math.max(last.high || data.price, data.price),
-                        low: Math.min(last.low || data.price, data.price),
+                        isFiller: false
                     };
-                } else {
-                    // New bucket
+                } else if (thisBucket > updated[updated.length - 1].timestamp) {
+                    // It's a brand new bucket!
+                    const date = new Date(thisBucket);
                     const label = timeframe === '2h'
-                        ? new Date(thisBucket).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
-                        : new Date(thisBucket).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
+                        ? date.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
+                        : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
+                    
                     updated.push({
-                        price: data.price,
-                        open: data.price,
-                        high: data.price,
-                        low: data.price,
+                        timestamp: thisBucket,
                         time: label,
-                        timestamp: thisBucket
+                        price: data.price,
+                        isFiller: false
                     });
+                    // Keep the grid size constant by shifting
+                    if (updated.length > 100) updated.shift();
                 }
-                return updated.slice(-100);
+                return updated;
             });
         };
 
