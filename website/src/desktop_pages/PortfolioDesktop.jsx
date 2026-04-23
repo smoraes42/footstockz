@@ -162,21 +162,30 @@ const PortfolioDesktop = () => {
 
                     <div className={`glass-panel ${styles['summary-card']}`}>
                         <h3 className={styles['summary-label']}>Capital Total</h3>
-                        <p className={styles['summary-value']}>
+                        <p 
+                            key={`total-${totalEquity}`}
+                            className={`${styles['summary-value']} ${!loading ? styles['animate-pop'] : ''}`}
+                        >
                             {loading ? '---' : totalEquity.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                         </p>
                     </div>
 
                     <div className={`glass-panel ${styles['summary-card']}`}>
                         <h3 className={styles['summary-label']}>Poder de Compra (Cash)</h3>
-                        <p className={`${styles['summary-value']} ${styles['summary-value-highlight']}`}>
+                        <p 
+                            key={`cash-${walletBalance}`}
+                            className={`${styles['summary-value']} ${styles['summary-value-highlight']} ${!loading ? styles['animate-pop'] : ''}`}
+                        >
                             {loading ? '---' : walletBalance.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                         </p>
                     </div>
 
                     <div className={`glass-panel ${styles['summary-card']}`}>
                         <h3 className={styles['summary-label']}>Invertido</h3>
-                        <p className={styles['summary-value']}>
+                        <p 
+                            key={`inv-${holdingsValue}`}
+                            className={`${styles['summary-value']} ${!loading ? styles['animate-pop'] : ''}`}
+                        >
                             {loading ? '---' : holdingsValue.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                         </p>
                     </div>
