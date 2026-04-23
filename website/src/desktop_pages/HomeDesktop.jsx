@@ -286,28 +286,24 @@ const HomeDesktop = () => {
     fetchHistory();
   }, [activeTimeframe, portfolio?.walletCreatedAt]);
 
-  const [variation24h, setVariation24h] = useState({ amount: 0, percent: 0 });
+  const [variation, setVariation] = useState({ amount: 0, percent: 0 });
 
   useEffect(() => {
-    const fetch24hVariation = async () => {
-      try {
-        const history24h = await getPortfolioHistory('1D');
-        if (history24h && history24h.length > 0 && portfolio) {
-          const firstValue = history24h[0].value;
-          const currentValue = portfolio.walletBalance + (portfolio.holdings?.reduce((acc, h) => acc + h.position_value, 0) || 0);
-          const diff = currentValue - firstValue;
-          const percent = firstValue !== 0 ? (diff / firstValue) * 100 : 0;
-          setVariation24h({ amount: diff, percent });
-        }
-      } catch (error) {
-        console.error('Failed to fetch 24h variation:', error);
-      }
-    };
-
-    if (portfolio) {
-      fetch24hVariation();
+    if (chartData && chartData.length > 0) {
+      const baselineValue = chartData[0].value;
+      const currentValue = displayValue;
+      const diff = currentValue - baselineValue;
+      const percent = baselineValue !== 0 ? (diff / baselineValue) * 100 : 0;
+      setVariation({ amount: diff, percent });
+    } else {
+      setVariation({ amount: 0, percent: 0 });
     }
-  }, [portfolio]);
+  }, [chartData, displayValue]);
+
+  // Handle variation reset on timeframe change to avoid showing stale data
+  useEffect(() => {
+    setVariation({ amount: 0, percent: 0 });
+  }, [activeTimeframe]);
 
   const displayValue = portfolio ? portfolio.walletBalance + (portfolio.holdings?.reduce((acc, h) => acc + h.position_value, 0) || 0) : 0;
 
@@ -326,7 +322,7 @@ const HomeDesktop = () => {
           activeTimeframe={activeTimeframe}
           onTimeframeChange={setActiveTimeframe}
           displayValue={displayValue}
-          variation24h={variation24h}
+          variation24h={variation}
           loading={loadingPortfolio}
         />
 

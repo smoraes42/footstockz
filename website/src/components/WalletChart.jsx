@@ -53,10 +53,16 @@ const WalletChart = ({
         <h2 className={styles['section-title']}>Cartera</h2>
         <div className={styles['portfolio-value-container']}>
           <div className={styles['portfolio-value-wrapper']}>
-            <span className={styles['portfolio-value']}>
+            <span 
+              key={`val-${displayValue}`} 
+              className={`${styles['portfolio-value']} ${!loading ? styles['animate-pop'] : ''}`}
+            >
               {loading ? '---' : formatCompactNumber(displayValue)}
             </span>
-            <span className={`${styles['portfolio-variation']} ${variation24h.amount >= 0 ? styles['variation-up'] : styles['variation-down']}`}>
+            <span 
+              key={`var-${variation24h.amount}`}
+              className={`${styles['portfolio-variation']} ${variation24h.amount >= 0 ? styles['variation-up'] : styles['variation-down']} ${!loading ? styles['animate-pop-slow'] : ''}`}
+            >
               {variation24h.amount >= 0 ? '+' : '-'} {Math.abs(variation24h.amount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € ({variation24h.percent.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%)
             </span>
           </div>
