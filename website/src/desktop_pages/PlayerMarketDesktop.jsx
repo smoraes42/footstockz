@@ -117,8 +117,10 @@ export default function PlayerMarketDesktop() {
 
     // Format raw API history into chart-ready data points
     const formatHistory = useCallback((history, tf) => {
+        if (!history || history.length === 0) return [];
+
         if (tf === 'line') {
-            return (history || []).map(h => {
+            return history.map(h => {
                 const t = new Date(h.time);
                 return {
                     price: parseFloat(h.price) || 0,
@@ -127,20 +129,57 @@ export default function PlayerMarketDesktop() {
                 };
             });
         } else {
-            return (history || []).map(h => {
-                const t = new Date(h.bucket_time);
+            const bucketMs = { '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+            const bMs = bucketMs[tf];
+            const formatted = [];
+            
+            // Sort by bucket_time to be safe
+            const sorted = [...history].sort((a, b) => new Date(a.bucket_time).getTime() - new Date(b.bucket_time).getTime());
+
+            for (let i = 0; i < sorted.length; i++) {
+                const current = sorted[i];
+                const t = new Date(current.bucket_time);
+                const currentTs = Math.floor(t.getTime() / bMs) * bMs;
+
+                // If not the first point, check for gaps
+                if (formatted.length > 0) {
+                    const last = formatted[formatted.length - 1];
+                    let nextTs = last.timestamp + bMs;
+
+                    // Fill gaps with last known close price
+                    while (nextTs < currentTs) {
+                        const gapDate = new Date(nextTs);
+                        const label = tf === '2h'
+                            ? gapDate.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
+                            : gapDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
+
+                        formatted.push({
+                            price: last.price,
+                            open: last.price,
+                            high: last.price,
+                            low: last.price,
+                            time: label,
+                            timestamp: nextTs,
+                            isFiller: true
+                        });
+                        nextTs += bMs;
+                    }
+                }
+
                 const label = tf === '2h'
                     ? t.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
                     : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
-                return {
-                    price: parseFloat(h.close) || 0,
-                    open: parseFloat(h.open) || 0,
-                    high: parseFloat(h.high) || 0,
-                    low: parseFloat(h.low) || 0,
+
+                formatted.push({
+                    price: parseFloat(current.close) || 0,
+                    open: parseFloat(current.open) || 0,
+                    high: parseFloat(current.high) || 0,
+                    low: parseFloat(current.low) || 0,
                     time: label,
-                    timestamp: t.getTime()
-                };
-            });
+                    timestamp: currentTs
+                });
+            }
+            return formatted;
         }
     }, [timezone]);
 
