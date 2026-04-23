@@ -168,6 +168,8 @@ export const getPlayerPriceHistory = async (req, res) => {
     try {
         const playerId = req.params.id;
         const timeframe = req.query.timeframe || 'line';
+        // Optional cursor: return data strictly before this ISO timestamp
+        const before = req.query.before || null;
 
         // Map timeframe label to bucket size in seconds
         const bucketSeconds = {
@@ -178,11 +180,36 @@ export const getPlayerPriceHistory = async (req, res) => {
         };
 
         if (timeframe === 'line') {
-            // Raw tick data — original behavior
-            const [history] = await db.query(
-                'SELECT price, created_at AS time FROM player_prices WHERE player_id = ? ORDER BY created_at ASC LIMIT 100',
-                [playerId]
-            );
+            // Raw tick data
+            let query, params;
+            if (before) {
+                // Fetch 100 ticks strictly before the cursor, then return in ASC order
+                query = `
+                    SELECT price, created_at AS time FROM (
+                        SELECT price, created_at
+                        FROM player_prices
+                        WHERE player_id = ? AND created_at < ?
+                        ORDER BY created_at DESC
+                        LIMIT 100
+                    ) sub
+                    ORDER BY created_at ASC
+                `;
+                params = [playerId, before];
+            } else {
+                // Return the newest 100 ticks in ASC order
+                query = `
+                    SELECT price, created_at AS time FROM (
+                        SELECT price, created_at
+                        FROM player_prices
+                        WHERE player_id = ?
+                        ORDER BY created_at DESC
+                        LIMIT 100
+                    ) sub
+                    ORDER BY created_at ASC
+                `;
+                params = [playerId];
+            }
+            const [history] = await db.query(query, params);
             return res.status(200).json(history);
         }
 
@@ -192,19 +219,42 @@ export const getPlayerPriceHistory = async (req, res) => {
         }
 
         // Aggregate into OHLC buckets using GROUP_CONCAT for open (first) and close (last)
-        const [history] = await db.query(`
-            SELECT
-                FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(created_at) / ?) * ?) AS bucket_time,
-                CAST(SUBSTRING_INDEX(GROUP_CONCAT(price ORDER BY created_at ASC  SEPARATOR ','), ',', 1) AS DECIMAL(15,6)) AS open,
-                MAX(price)  AS high,
-                MIN(price)  AS low,
-                CAST(SUBSTRING_INDEX(GROUP_CONCAT(price ORDER BY created_at DESC SEPARATOR ','), ',', 1) AS DECIMAL(15,6)) AS close
-            FROM player_prices
-            WHERE player_id = ?
-            GROUP BY FLOOR(UNIX_TIMESTAMP(created_at) / ?)
-            ORDER BY bucket_time ASC
-            LIMIT 100
-        `, [bucket, bucket, playerId, bucket]);
+        let ohlcQuery, ohlcParams;
+        if (before) {
+            ohlcQuery = `
+                SELECT
+                    FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(created_at) / ?) * ?) AS bucket_time,
+                    CAST(SUBSTRING_INDEX(GROUP_CONCAT(price ORDER BY created_at ASC  SEPARATOR ','), ',', 1) AS DECIMAL(15,6)) AS open,
+                    MAX(price)  AS high,
+                    MIN(price)  AS low,
+                    CAST(SUBSTRING_INDEX(GROUP_CONCAT(price ORDER BY created_at DESC SEPARATOR ','), ',', 1) AS DECIMAL(15,6)) AS close
+                FROM player_prices
+                WHERE player_id = ? AND created_at < ?
+                GROUP BY FLOOR(UNIX_TIMESTAMP(created_at) / ?)
+                ORDER BY bucket_time DESC
+                LIMIT 100
+            `;
+            ohlcParams = [bucket, bucket, playerId, before, bucket];
+        } else {
+            ohlcQuery = `
+                SELECT
+                    FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(created_at) / ?) * ?) AS bucket_time,
+                    CAST(SUBSTRING_INDEX(GROUP_CONCAT(price ORDER BY created_at ASC  SEPARATOR ','), ',', 1) AS DECIMAL(15,6)) AS open,
+                    MAX(price)  AS high,
+                    MIN(price)  AS low,
+                    CAST(SUBSTRING_INDEX(GROUP_CONCAT(price ORDER BY created_at DESC SEPARATOR ','), ',', 1) AS DECIMAL(15,6)) AS close
+                FROM player_prices
+                WHERE player_id = ?
+                GROUP BY FLOOR(UNIX_TIMESTAMP(created_at) / ?)
+                ORDER BY bucket_time DESC
+                LIMIT 100
+            `;
+            ohlcParams = [bucket, bucket, playerId, bucket];
+        }
+
+        const [rawHistory] = await db.query(ohlcQuery, ohlcParams);
+        // Return in ASC order regardless of how we fetched
+        const history = before ? rawHistory.reverse() : rawHistory.reverse();
 
         return res.status(200).json(history);
     } catch (error) {

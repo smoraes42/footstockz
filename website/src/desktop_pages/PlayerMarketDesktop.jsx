@@ -106,35 +106,7 @@ export default function PlayerMarketDesktop() {
                 getPlayerById(playerId)
             ]);
 
-            let formattedHistory;
-            if (tf === 'line') {
-                // Raw ticks: format created_at as HH:MM:SS label
-                formattedHistory = (history || []).map(h => {
-                    const t = new Date(h.time);
-                    return {
-                        price: parseFloat(h.price) || 0,
-                        time: isNaN(t.getTime()) ? '' : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone, hour12: false })
-                    };
-                });
-            } else {
-                // Aggregated OHLC: use close as price, format bucket_time
-                formattedHistory = (history || []).map(h => {
-                    const t = new Date(h.bucket_time);
-                    const label = tf === '2h'
-                        ? t.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
-                        : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
-                    return {
-                        price: parseFloat(h.close) || 0,
-                        open: parseFloat(h.open) || 0,
-                        high: parseFloat(h.high) || 0,
-                        low: parseFloat(h.low) || 0,
-                        time: label,
-                        timestamp: t.getTime()
-                    };
-                });
-            }
-
-            setPriceHistory(formattedHistory);
+            setPriceHistory(formatHistory(history, tf));
             setTradeHistory(trades || []);
             setPortfolio(port);
             setCurrentPlayer(pData);
@@ -142,6 +114,47 @@ export default function PlayerMarketDesktop() {
             console.error('Fetch error:', err);
         }
     }, [playerId, timeframe, timezone]);
+
+    // Format raw API history into chart-ready data points
+    const formatHistory = useCallback((history, tf) => {
+        if (tf === 'line') {
+            return (history || []).map(h => {
+                const t = new Date(h.time);
+                return {
+                    price: parseFloat(h.price) || 0,
+                    timestamp: isNaN(t.getTime()) ? Date.now() : t.getTime(),
+                    time: isNaN(t.getTime()) ? '' : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone, hour12: false })
+                };
+            });
+        } else {
+            return (history || []).map(h => {
+                const t = new Date(h.bucket_time);
+                const label = tf === '2h'
+                    ? t.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
+                    : t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
+                return {
+                    price: parseFloat(h.close) || 0,
+                    open: parseFloat(h.open) || 0,
+                    high: parseFloat(h.high) || 0,
+                    low: parseFloat(h.low) || 0,
+                    time: label,
+                    timestamp: t.getTime()
+                };
+            });
+        }
+    }, [timezone]);
+
+    // Load older historical data when user drags left past the buffer
+    const handleLoadMore = useCallback(async (beforeIso) => {
+        try {
+            const older = await getPlayerHistory(playerId, timeframe, beforeIso);
+            return formatHistory(older, timeframe);
+        } catch (err) {
+            console.error('Load more history error:', err);
+            return [];
+        }
+    }, [playerId, timeframe, formatHistory]);
+
 
     // Initial Fetch
     useEffect(() => {
@@ -446,6 +459,7 @@ export default function PlayerMarketDesktop() {
                                 priceHistory={priceHistory}
                                 timeframe={timeframe}
                                 onTimeframeChange={setTimeframe}
+                                onLoadMore={handleLoadMore}
                             />
                         </div>
 

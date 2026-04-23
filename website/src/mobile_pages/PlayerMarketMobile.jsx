@@ -102,6 +102,30 @@ const PlayerMarketMobile = () => {
         setHoverInfo({ timestamp: payload.timestamp, price: payload.price });
     };
 
+    // Format raw API history rows into chart-ready data points
+    const formatHistory = useCallback((history, tf) => {
+        if (tf === 'line') {
+            return (history || []).map(h => {
+                const t = new Date(h.time);
+                return {
+                    timestamp: isNaN(t.getTime()) ? Date.now() : t.getTime(),
+                    price: parseFloat(h.price) || 0
+                };
+            });
+        } else {
+            return (history || []).map(h => {
+                const t = new Date(h.bucket_time);
+                return {
+                    price: parseFloat(h.close) || 0,
+                    open: parseFloat(h.open) || 0,
+                    high: parseFloat(h.high) || 0,
+                    low: parseFloat(h.low) || 0,
+                    timestamp: t.getTime()
+                };
+            });
+        }
+    }, []);
+
     const fetchData = useCallback(async (tf = timeframe) => {
         if (!playerId) return;
         setFetchError(null);
@@ -123,28 +147,7 @@ const PlayerMarketMobile = () => {
             }
 
             if (historyRes.status === 'fulfilled') {
-                let formattedHistory;
-                if (tf === 'line') {
-                    formattedHistory = (historyRes.value || []).map(h => {
-                        const t = new Date(h.time);
-                        return {
-                            timestamp: isNaN(t.getTime()) ? Date.now() : t.getTime(),
-                            price: parseFloat(h.price) || 0
-                        };
-                    });
-                } else {
-                    formattedHistory = (historyRes.value || []).map(h => {
-                        const t = new Date(h.bucket_time);
-                        return {
-                            price: parseFloat(h.close) || 0,
-                            open: parseFloat(h.open) || 0,
-                            high: parseFloat(h.high) || 0,
-                            low: parseFloat(h.low) || 0,
-                            timestamp: t.getTime()
-                        };
-                    });
-                }
-                setPriceHistory(formattedHistory);
+                setPriceHistory(formatHistory(historyRes.value, tf));
             }
 
             if (tradesRes.status === 'fulfilled') {
@@ -160,7 +163,19 @@ const PlayerMarketMobile = () => {
             console.error('Fetch error:', err);
             setFetchError('Error de conexión.');
         }
-    }, [playerId, timeframe, timezone]);
+    }, [playerId, timeframe, timezone, formatHistory]);
+
+    // Load older history when user drags chart left to the edge
+    const handleLoadMore = useCallback(async (beforeIso) => {
+        try {
+            const older = await getPlayerHistory(playerId, timeframe, beforeIso);
+            return formatHistory(older, timeframe);
+        } catch (err) {
+            console.error('Load more history error:', err);
+            return [];
+        }
+    }, [playerId, timeframe, formatHistory]);
+
 
     useEffect(() => {
         const fetchConfig = async () => {
@@ -385,6 +400,7 @@ const PlayerMarketMobile = () => {
                     onMouseLeave={() => setHoverInfo(null)}
                     timeframe={timeframe}
                     onTimeframeChange={setTimeframe}
+                    onLoadMore={handleLoadMore}
                 />
 
                 {/* Trade Tabs */}
