@@ -59,12 +59,19 @@ export default function PlayerMarketChart({
                     >
                         <CartesianGrid strokeDasharray="3 3" stroke="#1a1a1a" vertical={false} />
                         <XAxis
-                            dataKey="time"
-                            type="category"
+                            dataKey="timestamp"
+                            type="number"
+                            scale="time"
+                            domain={['dataMin', 'dataMax']}
                             stroke="#444"
                             fontSize={11}
                             tick={{ fill: '#555' }}
-                            interval={Math.floor(priceHistory.length / 6)}
+                            tickFormatter={t => {
+                                const date = new Date(t);
+                                return timeframe === 'line' || timeframe === '5m' || timeframe === '30m' || timeframe === '1h'
+                                    ? date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
+                                    : date.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', timeZone: timezone, hour12: false });
+                            }}
                             axisLine={false}
                             tickLine={false}
                         />
@@ -81,21 +88,18 @@ export default function PlayerMarketChart({
                         />
                         <Tooltip
                             animationDuration={0}
-                            labelFormatter={(label, payload) => {
-                                if (payload && payload.length > 0) {
-                                    const data = payload[0].payload;
-                                    return new Date(data.timestamp).toLocaleString('es-ES', {
-                                        day: '2-digit',
-                                        month: '2-digit',
-                                        year: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        second: timeframe === 'line' ? '2-digit' : undefined,
-                                        timeZone: timezone,
-                                        hour12: false
-                                    });
-                                }
-                                return label;
+                            labelFormatter={(ts) => {
+                                if (!ts) return '';
+                                return new Date(ts).toLocaleString('es-ES', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: timeframe === 'line' ? '2-digit' : undefined,
+                                    timeZone: timezone,
+                                    hour12: false
+                                });
                             }}
                             contentStyle={{
                                 backgroundColor: 'rgba(10, 10, 10, 0.95)',
