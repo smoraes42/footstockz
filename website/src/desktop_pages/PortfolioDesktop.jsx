@@ -31,6 +31,9 @@ const PortfolioDesktop = () => {
     const [updatedPlayerId, setUpdatedPlayerId] = useState(null);
     const { socket, connected, subscribeToUser, unsubscribeFromUser } = useSocket();
     const { user } = useAuth();
+    const lastUpdateRef = React.useRef(0);
+    const throttleTimeoutRef = React.useRef(null);
+    const holdingsBufferRef = React.useRef({});
 
 
     const [sortConfig, setSortConfig] = useState({ key: 'player_name', direction: 'asc' });
@@ -67,30 +70,60 @@ const PortfolioDesktop = () => {
     useEffect(() => {
         if (!socket || !connected) return;
 
-        const handlePriceUpdate = (data) => {
-            setUpdatedPlayerId(data.playerId);
-            setTimeout(() => setUpdatedPlayerId(null), 1000);
+        const applyBufferedHoldings = () => {
+            const updates = holdingsBufferRef.current;
+            if (Object.keys(updates).length === 0) return;
 
             setPortfolio(prev => {
                 if (!prev) return prev;
                 const k = 0.0001; // CONFIG.PRICE_IMPACT_FACTOR
                 const updatedHoldings = (prev.holdings || []).map(h => {
-                    if (h.player_id === data.playerId) {
-                        const newPrice = data.price;
+                    const update = updates[h.player_id];
+                    if (update) {
                         if (h.type === 'team') {
-                            const newValue = h.shares_owned * newPrice;
-                            return { ...h, current_price: newPrice, position_value: newValue };
+                            const newValue = h.shares_owned * update.price;
+                            return { ...h, current_price: update.price, position_value: newValue };
                         } else {
                             const shares = parseFloat(h.shares_owned) || 0;
-                            // AMM liquidation value
-                            const newValue = (newPrice / k) * (1 - Math.exp(-k * shares));
-                            return { ...h, current_price: newPrice, position_value: newValue };
+                            const newValue = (update.price / k) * (1 - Math.exp(-k * shares));
+                            return { ...h, current_price: update.price, position_value: newValue };
                         }
                     }
                     return h;
                 });
                 return { ...prev, holdings: updatedHoldings };
             });
+
+            holdingsBufferRef.current = {};
+        };
+
+        const throttledPortfolioUpdate = (data) => {
+            holdingsBufferRef.current[data.playerId] = { price: data.price };
+
+            const now = Date.now();
+            const timeSinceLastUpdate = now - lastUpdateRef.current;
+            const THROTTLE_INTERVAL = 3000; // 3 seconds for Portfolio page
+
+            if (timeSinceLastUpdate >= THROTTLE_INTERVAL) {
+                lastUpdateRef.current = now;
+                applyBufferedHoldings();
+            } else {
+                if (!throttleTimeoutRef.current) {
+                    throttleTimeoutRef.current = setTimeout(() => {
+                        lastUpdateRef.current = Date.now();
+                        applyBufferedHoldings();
+                        throttleTimeoutRef.current = null;
+                    }, THROTTLE_INTERVAL - timeSinceLastUpdate);
+                }
+            }
+        };
+
+        const handlePriceUpdate = (data) => {
+            setUpdatedPlayerId(data.playerId);
+            setTimeout(() => setUpdatedPlayerId(null), 1000);
+
+            // Use throttled update for the portfolio state
+            throttledPortfolioUpdate(data);
         };
 
         const handlePortfolioUpdate = () => {
@@ -102,6 +135,7 @@ const PortfolioDesktop = () => {
         socket.on('portfolio_update', handlePortfolioUpdate);
 
         return () => {
+            if (throttleTimeoutRef.current) clearTimeout(throttleTimeoutRef.current);
             socket.off('price_update', handlePriceUpdate);
             socket.off('portfolio_update', handlePortfolioUpdate);
         };
