@@ -8,7 +8,10 @@ export const PlayerPrice = ({ price, isUpdated, className = '' }) => {
     });
 
     return (
-        <span className={`${styles.price} ${isUpdated ? styles.pulse : ''} ${className}`}>
+        <span 
+            key={price}
+            className={`${styles.price} ${isUpdated ? styles['animate-pop'] : ''} ${className}`}
+        >
             {formattedPrice} €
         </span>
     );

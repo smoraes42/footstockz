@@ -25,6 +25,11 @@ const HomeDesktop = () => {
   const { user } = useAuth();
   const lastFetchRef = React.useRef(0);
   const throttleTimeoutRef = React.useRef(null);
+  
+  // Throttling for Top Jugadores
+  const lastPlayersUpdateRef = React.useRef(0);
+  const playersUpdateTimeoutRef = React.useRef(null);
+  const playersBufferRef = React.useRef({});
 
 
 
@@ -65,7 +70,6 @@ const HomeDesktop = () => {
         fetchPortfolioData();
         fetchHistory();
       } else {
-        // If an update comes in during the cooldown, schedule one at the end of the interval
         if (!throttleTimeoutRef.current) {
           throttleTimeoutRef.current = setTimeout(() => {
             lastFetchRef.current = Date.now();
@@ -77,32 +81,62 @@ const HomeDesktop = () => {
       }
     };
 
-    const handlePriceUpdate = (data) => {
-      // 1. Update existing players in state if found
+    const applyBufferedPlayers = () => {
+      const updates = playersBufferRef.current;
+      if (Object.keys(updates).length === 0) return;
+
       setPlayers(prev => {
-        const updated = prev.map(p => 
-          p.id === data.playerId ? { ...p, price: data.price, change: data.change } : p
-        );
-        // Re-sort players by price descending
+        const updated = prev.map(p => {
+          if (updates[p.id]) {
+            return { ...p, price: updates[p.id].price, change: updates[p.id].change };
+          }
+          return p;
+        });
         return [...updated].sort((a, b) => b.price - a.price);
       });
 
-      // 2. Visual highlight
-      setUpdatedPlayerId(data.playerId);
+      // Highlight the players that changed in this batch
+      const lastUpdatedId = Object.keys(updates)[0]; // Just highlight the first one for now to keep it clean
+      setUpdatedPlayerId(Number(lastUpdatedId));
       setTimeout(() => setUpdatedPlayerId(null), 1000);
 
-      // 3. Debounced re-fetch of the full top players list from API
+      playersBufferRef.current = {};
+    };
+
+    const throttledPlayersUpdate = (data) => {
+      // Buffer the update
+      playersBufferRef.current[data.playerId] = { price: data.price, change: data.change };
+
+      const now = Date.now();
+      const timeSinceLastUpdate = now - lastPlayersUpdateRef.current;
+      const THROTTLE_INTERVAL = 1500; // 1.5 seconds
+
+      if (timeSinceLastUpdate >= THROTTLE_INTERVAL) {
+        lastPlayersUpdateRef.current = now;
+        applyBufferedPlayers();
+      } else {
+        if (!playersUpdateTimeoutRef.current) {
+          playersUpdateTimeoutRef.current = setTimeout(() => {
+            lastPlayersUpdateRef.current = Date.now();
+            applyBufferedPlayers();
+            playersUpdateTimeoutRef.current = null;
+          }, THROTTLE_INTERVAL - timeSinceLastUpdate);
+        }
+      }
+    };
+
+    const handlePriceUpdate = (data) => {
+      // Use throttled logic for the list
+      throttledPlayersUpdate(data);
+
+      // Debounced re-fetch of the full top players list from API
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
         fetchPlayers();
       }, 3000);
-
-      // Note: We removed the real-time portfolio recalculation here 
-      // to stabilize the main display value on the home page.
     };
 
     const handlePortfolioUpdate = (data) => {
-      // Use throttled fetch for trade updates
       throttledFetch();
     };
 
@@ -112,6 +146,7 @@ const HomeDesktop = () => {
     return () => {
       clearTimeout(debounceTimer);
       if (throttleTimeoutRef.current) clearTimeout(throttleTimeoutRef.current);
+      if (playersUpdateTimeoutRef.current) clearTimeout(playersUpdateTimeoutRef.current);
       socket.off('price_update', handlePriceUpdate);
       socket.off('portfolio_update', handlePortfolioUpdate);
     };
