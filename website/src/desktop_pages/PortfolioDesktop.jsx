@@ -34,6 +34,7 @@ const PortfolioDesktop = () => {
 
 
     const [sortConfig, setSortConfig] = useState({ key: 'player_name', direction: 'asc' });
+    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchPortfolioData = async () => {
         try {
@@ -185,6 +186,19 @@ const PortfolioDesktop = () => {
 
                 {/* Tab Selection Toggle */}
                 <div className={styles['tabs-row']}>
+                    <div className={styles['search-wrapper']}>
+                        <svg className={styles['search-icon']} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input 
+                            type="text" 
+                            className={styles['search-input']} 
+                            placeholder="Buscar en tu cartera..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+
                     <div className={styles['tabs-container']}>
                         <button
                             onClick={() => setActiveTab('players')}
@@ -335,11 +349,21 @@ const PortfolioDesktop = () => {
                                             return h.type !== 'team';
                                         });
 
+                                        // Apply search filter
+                                        if (searchQuery.trim() !== '') {
+                                            const query = searchQuery.toLowerCase();
+                                            displayData = displayData.filter(h => 
+                                                (h.player_name || '').toLowerCase().includes(query)
+                                            );
+                                        }
+
                                         if (displayData.length === 0) {
                                             return (
                                                 <tr>
                                                     <td colSpan="5" className={styles['no-data-cell']}>
-                                                        No tienes inversiones en este mercado. ¡Explora!
+                                                        {searchQuery.trim() !== '' 
+                                                            ? `No se encontraron resultados para "${searchQuery}"` 
+                                                            : 'No tienes inversiones en este mercado. ¡Explora!'}
                                                     </td>
                                                 </tr>
                                             );
