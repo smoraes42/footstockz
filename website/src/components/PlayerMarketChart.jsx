@@ -324,13 +324,15 @@ export default function PlayerMarketChart({
 
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart
-                        data={formattedVisible}
+                        data={visibleData}
                         onMouseMove={onMouseMove}
                         onMouseLeave={onMouseLeave}
                     >
                         <XAxis
-                            dataKey="time"
-                            type="category"
+                            dataKey="timestamp"
+                            type="number"
+                            scale="time"
+                            domain={['dataMin', 'dataMax']}
                             hide
                         />
                         <YAxis domain={yDomain} hide allowDataOverflow />
@@ -384,14 +386,22 @@ export default function PlayerMarketChart({
             >
                 <ChartHint />
                 <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={formattedVisible}>
+                    <LineChart data={visibleData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#1a1a1a" />
                         <XAxis
-                            dataKey="time"
+                            dataKey="timestamp"
+                            type="number"
+                            scale="time"
+                            domain={['dataMin', 'dataMax']}
                             stroke="#444"
                             fontSize={11}
                             tick={{ fill: '#555' }}
-                            interval="preserveStartEnd"
+                            tickFormatter={t => {
+                                const date = new Date(t);
+                                return timeframe === 'line' || timeframe === '5m' || timeframe === '30m' || timeframe === '1h'
+                                    ? date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
+                                    : date.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', timeZone: timezone, hour12: false });
+                            }}
                         />
                         <YAxis
                             domain={yDomain}
@@ -404,23 +414,18 @@ export default function PlayerMarketChart({
                         />
                         <Tooltip
                             animationDuration={0}
-                            labelFormatter={(value, payload) => {
-                                if (payload && payload.length > 0) {
-                                    const data = payload[0].payload;
-                                    if (data.timestamp) {
-                                        return new Date(data.timestamp).toLocaleString('es-ES', {
-                                            day: '2-digit',
-                                            month: '2-digit',
-                                            year: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            second: timeframe === 'line' ? '2-digit' : undefined,
-                                            timeZone: timezone,
-                                            hour12: false
-                                        });
-                                    }
-                                }
-                                return value;
+                            labelFormatter={(ts) => {
+                                if (!ts) return '';
+                                return new Date(ts).toLocaleString('es-ES', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: timeframe === 'line' ? '2-digit' : undefined,
+                                    timeZone: timezone,
+                                    hour12: false
+                                });
                             }}
                             contentStyle={{
                                 backgroundColor: '#0a0a0a',
@@ -433,7 +438,7 @@ export default function PlayerMarketChart({
                             formatter={v => [`€${Number(v).toFixed(2)}`, 'Price']}
                         />
                         <Line
-                            type="monotone"
+                            type="stepAfter"
                             dataKey="price"
                             stroke="var(--accent-neon)"
                             strokeWidth={2.5}
