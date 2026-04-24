@@ -156,9 +156,11 @@ export const getTeamById = async (id) => {
     }
 };
 
-export const getTeamHistory = async (id) => {
+export const getTeamHistory = async (id, timeframe = 'line', before = null) => {
     try {
-        const response = await api.get(`/v1/teams/${id}/history`);
+        const params = { timeframe };
+        if (before) params.before = before;
+        const response = await api.get(`/v1/teams/${id}/history`, { params });
         return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.error || 'Error fetching team history');

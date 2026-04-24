@@ -102,19 +102,87 @@ export const getTeamById = async (req, res) => {
 export const getTeamHistory = async (req, res) => {
     try {
         const teamId = req.params.id;
-        const query = `
-            SELECT 
-                DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:00') as time,
-                SUM(pp.price) as price
-            FROM player_prices pp
-            JOIN players p ON pp.player_id = p.id
-            WHERE p.team_id = ?
-            GROUP BY time
-            ORDER BY time ASC
-            LIMIT 200
-        `;
-        const [history] = await db.query(query, [teamId]);
-        res.status(200).json(history);
+        const timeframe = req.query.timeframe || 'line';
+        const before = req.query.before || null;
+
+        const bucketSeconds = {
+            '5m':  300,
+            '30m': 1800,
+            '1h':  3600,
+            '2h':  7200,
+        };
+
+        if (timeframe === 'line') {
+            let query, params;
+            if (before) {
+                query = `
+                    SELECT price, time FROM (
+                        SELECT SUM(pp.price) as price, DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:00') as time
+                        FROM player_prices pp
+                        JOIN players p ON pp.player_id = p.id
+                        WHERE p.team_id = ? AND pp.created_at < ?
+                        GROUP BY time
+                        ORDER BY time DESC
+                        LIMIT 100
+                    ) sub
+                    ORDER BY time ASC
+                `;
+                params = [teamId, before];
+            } else {
+                query = `
+                    SELECT price, time FROM (
+                        SELECT SUM(pp.price) as price, DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:00') as time
+                        FROM player_prices pp
+                        JOIN players p ON pp.player_id = p.id
+                        WHERE p.team_id = ?
+                        GROUP BY time
+                        ORDER BY time DESC
+                        LIMIT 100
+                    ) sub
+                    ORDER BY time ASC
+                `;
+                params = [teamId];
+            }
+            const [history] = await db.query(query, params);
+            return res.status(200).json(history);
+        }
+
+        const bucket = bucketSeconds[timeframe];
+        if (!bucket) {
+            return res.status(400).json({ message: 'Invalid timeframe. Use: line, 5m, 30m, 1h, 2h' });
+        }
+
+        let ohlcQuery, ohlcParams;
+        if (before) {
+            ohlcQuery = `
+                SELECT 
+                    FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(pp.created_at) / ?) * ?) AS bucket_time,
+                    SUM(pp.price) as price
+                FROM player_prices pp
+                JOIN players p ON pp.player_id = p.id
+                WHERE p.team_id = ? AND pp.created_at < ?
+                GROUP BY FLOOR(UNIX_TIMESTAMP(pp.created_at) / ?)
+                ORDER BY bucket_time DESC
+                LIMIT 100
+            `;
+            ohlcParams = [bucket, bucket, teamId, before, bucket];
+        } else {
+            ohlcQuery = `
+                SELECT 
+                    FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(pp.created_at) / ?) * ?) AS bucket_time,
+                    SUM(pp.price) as price
+                FROM player_prices pp
+                JOIN players p ON pp.player_id = p.id
+                WHERE p.team_id = ?
+                GROUP BY FLOOR(UNIX_TIMESTAMP(pp.created_at) / ?)
+                ORDER BY bucket_time DESC
+                LIMIT 100
+            `;
+            ohlcParams = [bucket, bucket, teamId, bucket];
+        }
+
+        const [rawHistory] = await db.query(ohlcQuery, ohlcParams);
+        res.status(200).json(rawHistory.reverse());
     } catch (error) {
         console.error('Error fetching team history:', error);
         res.status(500).json({ message: "Internal server error", error: error.message });

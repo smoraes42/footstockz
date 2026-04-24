@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
-} from 'recharts';
 import { toast } from 'react-toastify';
 import { getPortfolio, getTeamById, getTeamHistory, getMe, teamMarketBuy, teamMarketSell, getTradeConfig } from '../services/api';
 import Navbar from '../components/Navbar';
@@ -10,16 +7,15 @@ import { useSocket } from '../context/SocketContext';
 import { useSettings } from '../context/SettingsContext';
 import { PlayerPrice, PlayerChange } from '../components/PriceDisplay';
 import styles from '../styles/TeamMarketDetail.module.css';
+import MarketChart from '../components/MarketChart';
 
 const formatEU = (val, decimals = 2) => {
     if (val === null || val === undefined || val === '') return '';
     let num;
     if (typeof val === 'string') {
-        // If it contains a comma, it's likely already Spanish format (e.g. "1.234,56")
         if (val.includes(',')) {
             num = parseFloat(val.replace(/\./g, '').replace(',', '.'));
         } else {
-            // Otherwise, treat it as a standard float string (e.g. "0.524")
             num = parseFloat(val);
         }
     } else {
@@ -31,7 +27,6 @@ const formatEU = (val, decimals = 2) => {
 
 const parseEU = (str) => {
     if (typeof str !== 'string' || !str) return typeof str === 'number' ? str : 0;
-    // Handle both Spanish (1.234,56) and standard (1234.56) formats
     if (str.includes(',')) {
         const sanitized = str.replace(/\./g, '').replace(',', '.');
         return parseFloat(sanitized) || 0;
@@ -46,6 +41,7 @@ export default function TeamMarketDetailDesktop() {
     const [team, setTeam] = useState(null);
     const [portfolio, setPortfolio] = useState(null);
     const [priceHistory, setPriceHistory] = useState([]);
+    const [timeframe, setTimeframe] = useState('line');
     const [marketBuyTotal, setMarketBuyTotal] = useState('');
     const [marketBuyQty, setMarketBuyQty] = useState('');
     const [marketSellQty, setMarketSellQty] = useState('');
@@ -56,40 +52,83 @@ export default function TeamMarketDetailDesktop() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
-    const [kFactor, setKFactor] = useState(0.0001); // Default, will fetch from config
+    const [kFactor, setKFactor] = useState(0.0001);
 
     const { socket, connected, subscribeToUser, unsubscribeFromUser } = useSocket();
 
-    const fetchData = useCallback(async () => {
+    const formatHistory = useCallback((history, tf) => {
+        const GRID_SIZE = 100;
+        const bucketMs = { 'line': 10000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+        const bMs = bucketMs[tf] || 300000;
+        
+        const now = Date.now();
+        const endTs = Math.floor(now / bMs) * bMs;
+        const grid = [];
+        for (let i = 0; i < GRID_SIZE; i++) {
+            const ts = endTs - (GRID_SIZE - 1 - i) * bMs;
+            const date = new Date(ts);
+            const label = tf === '2h'
+                ? date.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
+                : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
+            
+            grid.push({
+                timestamp: ts,
+                time: label,
+                price: null,
+                isFiller: true
+            });
+        }
+
+        if (!history || history.length === 0) return grid;
+
+        const sortedHistory = [...history].sort((a, b) => new Date(a.time || a.bucket_time).getTime() - new Date(b.time || b.bucket_time).getTime());
+        let lastKnownPrice = sortedHistory[0] ? (parseFloat(sortedHistory[0].price) || 0) : 0;
+
+        sortedHistory.forEach(h => {
+            const hTs = new Date(h.time || h.bucket_time).getTime();
+            const roundedTs = Math.floor(hTs / bMs) * bMs;
+            const slotIndex = grid.findIndex(g => g.timestamp === roundedTs);
+            if (slotIndex !== -1) {
+                const price = parseFloat(h.price) || 0;
+                grid[slotIndex].price = price;
+                grid[slotIndex].isFiller = false;
+                lastKnownPrice = price;
+            }
+        });
+
+        let currentPrice = lastKnownPrice;
+        for (let i = 0; i < grid.length; i++) {
+            if (grid[i].price === null) grid[i].price = currentPrice;
+            else currentPrice = grid[i].price;
+        }
+        return grid;
+    }, [timezone]);
+
+    const fetchData = useCallback(async (tf = timeframe) => {
         if (!teamId) return;
 
         try {
             const [history, port, tData] = await Promise.all([
-                getTeamHistory(teamId),
+                getTeamHistory(teamId, tf),
                 getPortfolio(),
                 getTeamById(teamId)
             ]);
 
-            const formattedHistory = (history || []).map(h => {
-                const time = new Date(h.time);
-                return {
-                    ...h,
-                    price: parseFloat(h.price) || 0,
-                    time: isNaN(time.getTime()) ? 'Invalid' : time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
-                };
-            });
-
-            setPriceHistory(formattedHistory);
+            setPriceHistory(formatHistory(history, tf));
             setPortfolio(port);
             setTeam(tData);
         } catch (err) {
             console.error('Fetch error:', err);
         }
-    }, [teamId]);
+    }, [teamId, timeframe, formatHistory]);
 
     useEffect(() => {
         fetchData();
     }, [fetchData]);
+
+    useEffect(() => {
+        fetchData(timeframe);
+    }, [timeframe, fetchData]);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -125,26 +164,21 @@ export default function TeamMarketDetailDesktop() {
     useEffect(() => {
         if (!socket || !connected || !teamId) return;
 
-        // Note: For teams, the server might not have a specific 'team' subscription,
-        // but we can listen to all 'price_update' events and recalculate if needed,
-        // or the server might emit 'team_price_update'.
-        // Based on backend/services/socketService.js, emitPriceUpdate is called for players.
-        // Teams are aggregate, so we might need a general listener or a specific team one if implemented.
-        
         const handlePriceUpdate = (data) => {
-            // If the updated player belongs to this team, we should probably refresh the team data
-            // or perform a partial update. For now, hitting fetchData is safest for index consistency.
+            // Update the live team price if any player in the team changed
             if (team && team.players && team.players.some(p => p.id === data.playerId)) {
-                fetchData();
+                // For teams, the index is a sum. We can't easily recalculate the sum 
+                // without knowing ALL current prices. So we refresh team data.
+                // However, to keep the chart moving, we can also refresh the history.
+                fetchData(timeframe);
             }
         };
 
         socket.on('price_update', handlePriceUpdate);
-
         return () => {
             socket.off('price_update', handlePriceUpdate);
         };
-    }, [socket, connected, teamId, team, fetchData]);
+    }, [socket, connected, teamId, team, fetchData, timeframe]);
 
     const calculateQuantityFromBuyValue = (value, p0) => {
         if (!value || !p0 || p0 <= 0) return '';
@@ -293,15 +327,11 @@ export default function TeamMarketDetailDesktop() {
                                 </span>}
                             </h2>
                             <div className={styles['chart-container']}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <LineChart data={priceHistory}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#222" />
-                                        <XAxis dataKey="time" stroke="#666" fontSize={12} />
-                                        <YAxis domain={['auto', 'auto']} stroke="#666" fontSize={12} />
-                                        <Tooltip animationDuration={0} contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid #333' }} />
-                                        <Line type="monotone" dataKey="price" stroke="var(--accent-neon)" strokeWidth={3} dot={false} isAnimationActive={false} />
-                                    </LineChart>
-                                </ResponsiveContainer>
+                                <MarketChart
+                                    priceHistory={priceHistory}
+                                    timeframe={timeframe}
+                                    onTimeframeChange={setTimeframe}
+                                />
                             </div>
                         </div>
 
