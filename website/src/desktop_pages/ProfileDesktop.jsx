@@ -64,6 +64,59 @@ const ProfileDesktop = () => {
             );
         }
 
+        if (activeSection === 'referidos') {
+            return (
+                <div className={`${styles['section-detail-card']} glass-panel`}>
+                    <h3 className={styles['detail-title']}>Programa de Referidos</h3>
+                    <p className={styles['detail-desc']}>Invita a tus amigos a Footstockz y gana el 10% de sus comisiones de trading para siempre.</p>
+                    
+                    <div className={styles['referral-stats-grid']}>
+                        <div className={`${styles['ref-stat-card']} glass-panel`}>
+                            <span className={styles['ref-stat-label']}>Amigos Invitados</span>
+                            <span className={styles['ref-stat-number']}>0</span>
+                        </div>
+                        <div className={`${styles['ref-stat-card']} glass-panel`}>
+                            <span className={styles['ref-stat-label']}>Comisiones Ganadas</span>
+                            <span className={styles['ref-stat-number']}>0.00€</span>
+                        </div>
+                    </div>
+
+                    <div className={styles['setting-row']}>
+                        <label>Tu Enlace de Referido</label>
+                        <div className={styles['referral-link-box']}>
+                            <input 
+                                type="text" 
+                                readOnly 
+                                value={`https://footstockz.com/register?ref=${user?.username}`} 
+                                className={styles['referral-input']}
+                            />
+                            <button 
+                                className={styles['copy-referral-btn']}
+                                onClick={() => {
+                                    navigator.clipboard.writeText(`https://footstockz.com/register?ref=${user?.username}`);
+                                }}
+                            >
+                                Copiar Enlace
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className={styles['referral-level-section']}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                            <span style={{ fontWeight: 700 }}>Nivel Actual: Novato</span>
+                            <span style={{ color: 'var(--accent-neon)', fontWeight: 700 }}>Próximo: Bronce</span>
+                        </div>
+                        <div className={styles['mobile-exp-bar']} style={{ height: '12px' }}>
+                            <div className={styles['mobile-exp-fill']} style={{ width: '10%' }}></div>
+                        </div>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.75rem' }}>
+                            Invita a 5 amigos más para subir de nivel y aumentar tus beneficios.
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
         const section = sections.find(s => s.id === activeSection);
         return (
             <div className={`${styles['coming-soon-card']} glass-panel`}>
@@ -101,7 +154,7 @@ const ProfileDesktop = () => {
                 </header>
 
                 <div className={styles['content-grid']}>
-                    {/* Left Column: Profile & Referral */}
+                    {/* Left Column: Profile */}
                     <div className={styles['left-col']}>
                         <div className={`${styles['user-card']} glass-panel`}>
                             <div className={styles['avatar-container']}>
@@ -110,54 +163,7 @@ const ProfileDesktop = () => {
                             <h2 className={styles['user-name']}>{user?.username}</h2>
                             <p className={styles['user-email']}>{user?.email}</p>
                             
-                            <div className={`${styles['desktop-referral-card']} glass-panel`}>
-                                <div className={styles['referral-header']}>
-                                    <div className={styles['referral-title-box']}>
-                                        <span className={styles['mobile-card-title']}>Programa de Referidos</span>
-                                        <p className={styles['referral-desc']}>Gana el 10% de las comisiones de tus referidos</p>
-                                    </div>
-                                    <div className={styles['referral-stats-mini']}>
-                                        <div className={styles['ref-stat']}>
-                                            <span className={styles['ref-stat-val']}>0</span>
-                                            <span className={styles['ref-stat-lab']}>Amigos</span>
-                                        </div>
-                                        <div className={styles['ref-stat']}>
-                                            <span className={styles['ref-stat-val']}>0.00€</span>
-                                            <span className={styles['ref-stat-lab']}>Ganado</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div className={styles['referral-link-box']}>
-                                    <input 
-                                        type="text" 
-                                        readOnly 
-                                        value={`https://footstockz.com/register?ref=${user?.username}`} 
-                                        className={styles['referral-input']}
-                                    />
-                                    <button 
-                                        className={styles['copy-referral-btn']}
-                                        onClick={() => {
-                                            navigator.clipboard.writeText(`https://footstockz.com/register?ref=${user?.username}`);
-                                            // Optional: add a toast here
-                                        }}
-                                    >
-                                        Copiar
-                                    </button>
-                                </div>
-
-                                <div className={styles['mobile-exp-container']}>
-                                    <div className={styles['mobile-exp-bar']}>
-                                        <div className={styles['mobile-exp-fill']} style={{ width: '10%' }}></div>
-                                    </div>
-                                    <div className={styles['mobile-exp-text']}>
-                                        <span>Nivel Actual: Novato</span>
-                                        <span>Próximo: Bronce</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button onClick={handleLogout} className={styles['desktop-logout-btn-card']}>
+                            <button onClick={handleLogout} className={styles['desktop-logout-btn-card']} style={{ marginTop: '2rem' }}>
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                                 Cerrar Sesión
                             </button>
