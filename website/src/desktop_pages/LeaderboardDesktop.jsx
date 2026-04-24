@@ -63,7 +63,7 @@ export default function LeaderboardDesktop() {
             <main className={styles['main-content']}>
                 <header className={styles.header}>
                     <h1 className={styles.title}>Leaderboard</h1>
-                    <p className={styles.subtitle}>Top usuarios por valor de portafolio</p>
+                    <p className={styles.subtitle}>Ranking de los mejores inversores</p>
                 </header>
 
                 <div className={`glass-panel ${styles['table-container']}`}>
@@ -77,7 +77,6 @@ export default function LeaderboardDesktop() {
                                 <tr className={styles['table-head-row']}>
                                     <th className={styles['table-header-cell']}>Rango</th>
                                     <th className={styles['table-header-cell']}>Usuario</th>
-                                    <th className={styles['table-header-cell']}>Portfolio Value</th>
                                     <th className={styles['table-header-cell']}>24h Change</th>
                                 </tr>
                             </thead>
@@ -98,9 +97,6 @@ export default function LeaderboardDesktop() {
                                                 </div>
                                                 <p className={styles['user-name']}>{user.username}</p>
                                             </div>
-                                        </td>
-                                        <td className={`${styles['table-cell']} ${styles['value-cell']}`}>
-                                            {Number(user.portfolio_value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                                         </td>
                                         <td className={`${styles['table-cell']} ${styles['change-cell']} ${user.change24h >= 0 ? styles['change-positive'] : styles['change-negative']}`}>
                                             {user.change24h > 0 ? '+' : ''}{Number(user.change24h).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%

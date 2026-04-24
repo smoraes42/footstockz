@@ -71,7 +71,7 @@ const LeaderboardMobile = () => {
             <main className={styles['mobile-main']}>
                 <header className={styles['mobile-section-header']}>
                     <h2 className={styles['mobile-section-title']}>Leaderboard</h2>
-                    <p className={styles['mobile-section-subtitle']}>Top usuarios por valor de portfolio</p>
+                    <p className={styles['mobile-section-subtitle']}>Ranking de los mejores inversores</p>
                 </header>
 
                 <div className={styles['mobile-user-list']}>
@@ -101,9 +101,6 @@ const LeaderboardMobile = () => {
                                     </div>
                                 </div>
 
-                                <div className={styles['mobile-user-value-box']}>
-                                    <p className={styles['mobile-user-value']}>{Number(item.portfolio_value).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
-                                </div>
                             </Link>
                         ))
                     )}
