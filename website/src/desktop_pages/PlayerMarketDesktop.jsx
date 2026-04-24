@@ -97,7 +97,7 @@ export default function PlayerMarketDesktop() {
 
 
     // Format raw API history into a fixed-size normalized grid
-    const formatHistory = useCallback((history, tf) => {
+    const formatHistory = useCallback((history, tf, currentSpotPrice) => {
         const GRID_SIZE = tf === 'line' ? 200 : 100;
         const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
         const bMs = bucketMs[tf] || 300000;
@@ -124,15 +124,17 @@ export default function PlayerMarketDesktop() {
             gridMap.set(ts, point);
         }
 
-        if (!history || history.length === 0) return grid;
+        const dataPoints = [...(history || [])];
+        if (currentSpotPrice !== undefined && currentSpotPrice !== null) {
+            dataPoints.push({ price: currentSpotPrice, time: new Date().toISOString() });
+        }
 
-        const sortedHistory = [...history].sort((a, b) => new Date(a.time || a.bucket_time).getTime() - new Date(b.time || b.bucket_time).getTime());
+        const sortedHistory = dataPoints.sort((a, b) => new Date(a.time || a.bucket_time || a.timestamp).getTime() - new Date(b.time || b.bucket_time || b.timestamp).getTime());
         let lastKnownPrice = sortedHistory[0] ? (parseFloat(sortedHistory[0].price || sortedHistory[0].close) || 0) : 0;
 
         sortedHistory.forEach(h => {
-            const hTs = new Date(h.time || h.bucket_time).getTime();
+            const hTs = new Date(h.time || h.bucket_time || h.timestamp).getTime();
             const roundedTs = Math.floor(hTs / bMs) * bMs;
-            
             const point = gridMap.get(roundedTs);
             if (point) {
                 const price = parseFloat(h.price || h.close) || 0;
@@ -151,15 +153,15 @@ export default function PlayerMarketDesktop() {
         return grid;
     }, [timezone]);
 
-    const fetchHistory = useCallback(async (tf = timeframe) => {
+    const fetchHistory = useCallback(async (tf = timeframe, currentPrice = currentPlayer?.price) => {
         if (!playerId) return;
         try {
             const history = await getPlayerHistory(playerId, tf);
-            setPriceHistory(formatHistory(history, tf));
+            setPriceHistory(formatHistory(history, tf, currentPrice));
         } catch (err) {
-            console.error('Fetch history error:', err);
+            console.error(err);
         }
-    }, [playerId, timeframe, formatHistory]);
+    }, [playerId, formatHistory, currentPlayer?.price]);
 
     const fetchBaseData = useCallback(async () => {
         if (!playerId) return;
@@ -172,17 +174,18 @@ export default function PlayerMarketDesktop() {
             setTradeHistory(trades || []);
             setPortfolio(port);
             setCurrentPlayer(pData);
+            // Fetch history with the fresh player data
+            const history = await getPlayerHistory(playerId, timeframe);
+            setPriceHistory(formatHistory(history, timeframe, pData.price));
         } catch (err) {
-            console.error('Fetch base data error:', err);
+            console.error(err);
         }
-    }, [playerId]);
+    }, [playerId, timeframe, formatHistory]);
 
     useEffect(() => {
         fetchBaseData();
-        fetchHistory(timeframe);
-    }, [fetchBaseData, fetchHistory]);
+    }, [fetchBaseData]);
 
-    // Re-fetch chart data only when timeframe changes
     useEffect(() => {
         fetchHistory(timeframe);
     }, [timeframe, fetchHistory]);

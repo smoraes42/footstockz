@@ -59,7 +59,7 @@ export default function TeamMarketDetailMobile() {
 
     const { socket, connected } = useSocket();
 
-    const formatHistory = useCallback((history, tf) => {
+    const formatHistory = useCallback((history, tf, currentSpotPrice) => {
         const GRID_SIZE = tf === 'line' ? 200 : 100;
         const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
         const bMs = bucketMs[tf] || 300000;
@@ -86,13 +86,16 @@ export default function TeamMarketDetailMobile() {
             gridMap.set(ts, point);
         }
 
-        if (!history || history.length === 0) return grid;
+        const dataPoints = [...(history || [])];
+        if (currentSpotPrice !== undefined && currentSpotPrice !== null) {
+            dataPoints.push({ price: currentSpotPrice, time: new Date().toISOString() });
+        }
 
-        const sortedHistory = [...history].sort((a, b) => new Date(a.time || a.bucket_time).getTime() - new Date(b.time || b.bucket_time).getTime());
+        const sortedHistory = dataPoints.sort((a, b) => new Date(a.time || a.bucket_time || a.timestamp).getTime() - new Date(b.time || b.bucket_time || b.timestamp).getTime());
         let lastKnownPrice = sortedHistory[0] ? (parseFloat(sortedHistory[0].price) || 0) : 0;
 
         sortedHistory.forEach(h => {
-            const hTs = new Date(h.time || h.bucket_time).getTime();
+            const hTs = new Date(h.time || h.bucket_time || h.timestamp).getTime();
             const roundedTs = Math.floor(hTs / bMs) * bMs;
             const point = gridMap.get(roundedTs);
             if (point) {
@@ -111,15 +114,15 @@ export default function TeamMarketDetailMobile() {
         return grid;
     }, [timezone]);
 
-    const fetchHistory = useCallback(async (tf = timeframe) => {
+    const fetchHistory = useCallback(async (tf = timeframe, currentPrice = team?.price) => {
         if (!teamId) return;
         try {
             const history = await getTeamHistory(teamId, tf);
-            setPriceHistory(formatHistory(history, tf));
+            setPriceHistory(formatHistory(history, tf, currentPrice));
         } catch (err) {
             console.error(err);
         }
-    }, [teamId, formatHistory]);
+    }, [teamId, formatHistory, team?.price]);
 
     const fetchBaseData = useCallback(async () => {
         if (!teamId) return;
@@ -130,15 +133,17 @@ export default function TeamMarketDetailMobile() {
             ]);
             setPortfolio(port);
             setTeam(tData);
+            // Fetch history with fresh spot price
+            const history = await getTeamHistory(teamId, timeframe);
+            setPriceHistory(formatHistory(history, timeframe, tData.price));
         } catch (err) {
             console.error(err);
         }
-    }, [teamId]);
+    }, [teamId, timeframe, formatHistory]);
 
     useEffect(() => {
         fetchBaseData();
-        fetchHistory(timeframe);
-    }, [fetchBaseData, fetchHistory]);
+    }, [fetchBaseData]);
 
     useEffect(() => {
         fetchHistory(timeframe);
@@ -160,26 +165,30 @@ export default function TeamMarketDetailMobile() {
 
         const handlePriceUpdate = (data) => {
             if (team && team.players && team.players.some(p => p.id === data.playerId)) {
-                // Optimistic Update
-                getTeamById(teamId).then(setTeam).catch(console.error);
+                // Refresh team price and patch chart
+                getTeamById(teamId).then(tData => {
+                    setTeam(tData);
+                    
+                    setPriceHistory(prev => {
+                        const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+                        const bMs = bucketMs[timeframe] || 300000;
+                        const roundedTs = Math.floor(Date.now() / bMs) * bMs;
 
-                setPriceHistory(prev => {
-                    const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
-                    const bMs = bucketMs[timeframe] || 300000;
-                    const roundedTs = Math.floor(Date.now() / bMs) * bMs;
+                        const updated = [...prev];
+                        const lastPoint = updated[updated.length - 1];
 
-                    const updated = [...prev];
-                    const lastPoint = updated[updated.length - 1];
-
-                    if (lastPoint && lastPoint.timestamp === roundedTs) {
-                        if (timeframe === 'line') {
-                            getTeamHistory(teamId, timeframe).then(h => setPriceHistory(formatHistory(h, timeframe)));
+                        if (lastPoint && lastPoint.timestamp === roundedTs) {
+                            updated[updated.length - 1] = {
+                                ...lastPoint,
+                                price: tData.price,
+                                isFiller: false
+                            };
+                        } else if (lastPoint && roundedTs > lastPoint.timestamp) {
+                            fetchHistory(timeframe, tData.price);
                         }
-                    } else if (lastPoint && roundedTs > lastPoint.timestamp) {
-                        fetchHistory(timeframe);
-                    }
-                    return updated;
-                });
+                        return updated;
+                    });
+                }).catch(console.error);
             }
         };
 

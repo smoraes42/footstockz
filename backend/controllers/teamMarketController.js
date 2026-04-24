@@ -103,86 +103,72 @@ export const getTeamHistory = async (req, res) => {
     try {
         const teamId = req.params.id;
         const timeframe = req.query.timeframe || 'line';
-        const before = req.query.before || null;
+        
+        const [players] = await db.query('SELECT id, initial_price as current_price FROM players WHERE team_id = ?', [teamId]);
+        if (players.length === 0) return res.status(200).json([]);
+        const playerIds = players.map(p => p.id);
 
-        const bucketSeconds = {
-            '5m':  300,
-            '30m': 1800,
-            '1h':  3600,
-            '2h':  7200,
+        const bucketConfig = {
+            'line': { interval: '1 HOUR' },
+            '5m':   { interval: '24 HOUR' },
+            '30m':  { interval: '7 DAY' },
+            '1h':   { interval: '30 DAY' },
+            '2h':   { interval: '60 DAY' }
         };
+        const config = bucketConfig[timeframe] || bucketConfig['5m'];
 
-        if (timeframe === 'line') {
-            let query, params;
-            if (before) {
-                query = `
-                    SELECT price, time FROM (
-                        SELECT SUM(pp.price) as price, DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:%s') as time
-                        FROM player_prices pp
-                        JOIN players p ON pp.player_id = p.id
-                        WHERE p.team_id = ? AND pp.created_at < ?
-                        GROUP BY pp.created_at
-                        ORDER BY pp.created_at DESC
-                        LIMIT 100
-                    ) sub
-                    ORDER BY time ASC
-                `;
-                params = [teamId, before];
-            } else {
-                query = `
-                    SELECT price, time FROM (
-                        SELECT SUM(pp.price) as price, DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:%s') as time
-                        FROM player_prices pp
-                        JOIN players p ON pp.player_id = p.id
-                        WHERE p.team_id = ?
-                        GROUP BY pp.created_at
-                        ORDER BY pp.created_at DESC
-                        LIMIT 100
-                    ) sub
-                    ORDER BY time ASC
-                `;
-                params = [teamId];
+        const historyQuery = `
+            SELECT 
+                player_id,
+                price,
+                created_at as time
+            FROM player_prices
+            WHERE player_id IN (?)
+              AND created_at >= NOW() - INTERVAL ${config.interval}
+            ORDER BY created_at ASC
+        `;
+        const [priceUpdates] = await db.query(historyQuery, [playerIds]);
+
+        const startingPricesQuery = `
+            SELECT player_id, price
+            FROM (
+                SELECT player_id, price, ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY created_at DESC) as rn
+                FROM player_prices
+                WHERE player_id IN (?) AND created_at < NOW() - INTERVAL ${config.interval}
+            ) sub
+            WHERE rn = 1
+        `;
+        const [startResults] = await db.query(startingPricesQuery, [playerIds]);
+        
+        const currentPricesMap = new Map();
+        players.forEach(p => currentPricesMap.set(p.id, parseFloat(p.current_price) || 0));
+        startResults.forEach(r => currentPricesMap.set(r.player_id, parseFloat(r.price) || 0));
+
+        const buckets = [];
+        const intervalMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 }[timeframe] || 300000;
+        
+        const now = Date.now();
+        let updateIdx = 0;
+        const bucketCount = 100;
+        for (let i = 0; i < bucketCount; i++) {
+            const bucketEndTime = now - (bucketCount - 1 - i) * intervalMs;
+            
+            while (updateIdx < priceUpdates.length && new Date(priceUpdates[updateIdx].time).getTime() <= bucketEndTime) {
+                const up = priceUpdates[updateIdx];
+                currentPricesMap.set(up.player_id, parseFloat(up.price));
+                updateIdx++;
             }
-            const [history] = await db.query(query, params);
-            return res.status(200).json(history);
+
+            let totalTeamPrice = 0;
+            currentPricesMap.forEach(price => totalTeamPrice += price);
+
+            buckets.push({
+                price: parseFloat(totalTeamPrice.toFixed(2)),
+                time: new Date(bucketEndTime).toISOString()
+            });
         }
 
-        const bucket = bucketSeconds[timeframe];
-        if (!bucket) {
-            return res.status(400).json({ message: 'Invalid timeframe. Use: line, 5m, 30m, 1h, 2h' });
-        }
-
-        let ohlcQuery, ohlcParams;
-        if (before) {
-            ohlcQuery = `
-                SELECT 
-                    FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(pp.created_at) / ?) * ?) AS bucket_time,
-                    SUM(pp.price) as price
-                FROM player_prices pp
-                JOIN players p ON pp.player_id = p.id
-                WHERE p.team_id = ? AND pp.created_at < ?
-                GROUP BY FLOOR(UNIX_TIMESTAMP(pp.created_at) / ?)
-                ORDER BY bucket_time DESC
-                LIMIT 100
-            `;
-            ohlcParams = [bucket, bucket, teamId, before, bucket];
-        } else {
-            ohlcQuery = `
-                SELECT 
-                    FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(pp.created_at) / ?) * ?) AS bucket_time,
-                    SUM(pp.price) as price
-                FROM player_prices pp
-                JOIN players p ON pp.player_id = p.id
-                WHERE p.team_id = ?
-                GROUP BY FLOOR(UNIX_TIMESTAMP(pp.created_at) / ?)
-                ORDER BY bucket_time DESC
-                LIMIT 100
-            `;
-            ohlcParams = [bucket, bucket, teamId, bucket];
-        }
-
-        const [rawHistory] = await db.query(ohlcQuery, ohlcParams);
-        res.status(200).json(rawHistory.reverse());
+        res.status(200).json(buckets);
     } catch (error) {
         console.error('Error fetching team history:', error);
         res.status(500).json({ message: "Internal server error", error: error.message });

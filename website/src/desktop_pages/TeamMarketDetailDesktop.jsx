@@ -56,7 +56,7 @@ export default function TeamMarketDetailDesktop() {
 
     const { socket, connected, subscribeToUser, unsubscribeFromUser } = useSocket();
 
-    const formatHistory = useCallback((history, tf) => {
+    const formatHistory = useCallback((history, tf, currentSpotPrice) => {
         const GRID_SIZE = tf === 'line' ? 200 : 100;
         const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
         const bMs = bucketMs[tf] || 300000;
@@ -83,13 +83,17 @@ export default function TeamMarketDetailDesktop() {
             gridMap.set(ts, point);
         }
 
-        if (!history || history.length === 0) return grid;
+        const dataPoints = [...(history || [])];
+        // Inject current spot price as the most recent point to ensure chart tail matches live price
+        if (currentSpotPrice !== undefined && currentSpotPrice !== null) {
+            dataPoints.push({ price: currentSpotPrice, time: new Date().toISOString() });
+        }
 
-        const sortedHistory = [...history].sort((a, b) => new Date(a.time || a.bucket_time).getTime() - new Date(b.time || b.bucket_time).getTime());
+        const sortedHistory = dataPoints.sort((a, b) => new Date(a.time || a.bucket_time || a.timestamp).getTime() - new Date(b.time || b.bucket_time || b.timestamp).getTime());
         let lastKnownPrice = sortedHistory[0] ? (parseFloat(sortedHistory[0].price) || 0) : 0;
 
         sortedHistory.forEach(h => {
-            const hTs = new Date(h.time || h.bucket_time).getTime();
+            const hTs = new Date(h.time || h.bucket_time || h.timestamp).getTime();
             const roundedTs = Math.floor(hTs / bMs) * bMs;
             const point = gridMap.get(roundedTs);
             if (point) {
@@ -108,15 +112,15 @@ export default function TeamMarketDetailDesktop() {
         return grid;
     }, [timezone]);
 
-    const fetchHistory = useCallback(async (tf = timeframe) => {
+    const fetchHistory = useCallback(async (tf = timeframe, currentPrice = team?.price) => {
         if (!teamId) return;
         try {
             const history = await getTeamHistory(teamId, tf);
-            setPriceHistory(formatHistory(history, tf));
+            setPriceHistory(formatHistory(history, tf, currentPrice));
         } catch (err) {
-            console.error('Fetch history error:', err);
+            console.error(err);
         }
-    }, [teamId, formatHistory]);
+    }, [teamId, formatHistory, team?.price]);
 
     const fetchBaseData = useCallback(async () => {
         if (!teamId) return;
@@ -127,17 +131,18 @@ export default function TeamMarketDetailDesktop() {
             ]);
             setPortfolio(port);
             setTeam(tData);
+            // After getting base data, fetch history with the correct spot price
+            const history = await getTeamHistory(teamId, timeframe);
+            setPriceHistory(formatHistory(history, timeframe, tData.price));
         } catch (err) {
-            console.error('Fetch base data error:', err);
+            console.error(err);
         }
-    }, [teamId]);
+    }, [teamId, timeframe, formatHistory]);
 
     useEffect(() => {
         fetchBaseData();
-        fetchHistory(timeframe);
-    }, [fetchBaseData, fetchHistory]);
+    }, [fetchBaseData]);
 
-    // Re-fetch only history when timeframe changes
     useEffect(() => {
         fetchHistory(timeframe);
     }, [timeframe, fetchHistory]);
@@ -172,41 +177,37 @@ export default function TeamMarketDetailDesktop() {
         }
     }, [user, subscribeToUser, unsubscribeFromUser]);
 
-    // WebSocket Listeners for team price updates
+    // WebSocket price update handling
     useEffect(() => {
         if (!socket || !connected || !teamId) return;
 
         const handlePriceUpdate = (data) => {
-            // Update the live team price if any player in the team changed
             if (team && team.players && team.players.some(p => p.id === data.playerId)) {
-                // Optimistic Update: Refresh Team Details for the live price display
-                getTeamById(teamId).then(setTeam).catch(console.error);
-                
-                // Patch the latest point in history without full refresh
-                setPriceHistory(prev => {
-                    const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
-                    const bMs = bucketMs[timeframe] || 300000;
-                    const nowTs = Date.now();
-                    const roundedTs = Math.floor(nowTs / bMs) * bMs;
+                // Optimistic Update: Refresh Team Details and use the new price for the chart
+                getTeamById(teamId).then(tData => {
+                    setTeam(tData);
+                    
+                    setPriceHistory(prev => {
+                        const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+                        const bMs = bucketMs[timeframe] || 300000;
+                        const roundedTs = Math.floor(Date.now() / bMs) * bMs;
 
-                    const updated = [...prev];
-                    const lastPoint = updated[updated.length - 1];
+                        const updated = [...prev];
+                        const lastPoint = updated[updated.length - 1];
 
-                    // If it belongs to the current last bucket, update it
-                    if (lastPoint && lastPoint.timestamp === roundedTs) {
-                        // We need the NEW team price. Since we just fetched tData, 
-                        // this is slightly asynchronous. For a "real" atomic update,
-                        // we'd need to calculate the sum here, but that's complex.
-                        // For now, we'll fetch just the history ticks if it's 'line'
-                        if (timeframe === 'line') {
-                            getTeamHistory(teamId, timeframe).then(h => setPriceHistory(formatHistory(h, timeframe)));
+                        if (lastPoint && lastPoint.timestamp === roundedTs) {
+                            updated[updated.length - 1] = {
+                                ...lastPoint,
+                                price: tData.price,
+                                isFiller: false
+                            };
+                        } else if (lastPoint && roundedTs > lastPoint.timestamp) {
+                            // New bucket started
+                            fetchHistory(timeframe, tData.price);
                         }
-                    } else if (lastPoint && roundedTs > lastPoint.timestamp) {
-                        // New bucket! Full refresh history is safest once per bucket
-                        fetchHistory(timeframe);
-                    }
-                    return updated;
-                });
+                        return updated;
+                    });
+                }).catch(console.error);
             }
         };
 
