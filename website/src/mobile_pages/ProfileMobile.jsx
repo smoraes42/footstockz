@@ -177,6 +177,17 @@ const ProfileMobile = () => {
 
                                 {/* Demo/Real Switch */}
                                 <div className={styles['mobile-mode-switch-container']}>
+                                    <div className={styles['mobile-mode-switch']}>
+                                        <button className={`${styles['mobile-mode-btn']} ${styles['mobile-mode-btn-active']}`}>
+                                            DEMO
+                                        </button>
+                                        <button className={styles['mobile-mode-btn']} disabled>
+                                            REAL
+                                            <span className={styles['mobile-coming-soon']}>Próximamente</span>
+                                        </button>
+                                        <div className={styles['mobile-mode-slider']}></div>
+                                    </div>
+                                </div>
 
                                 {/* History Section */}
                                 <div className={styles['mobile-menu-section']}>
