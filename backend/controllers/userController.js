@@ -33,21 +33,51 @@ export const getPublicProfile = async (req, res) => {
     }
     const user = userRows[0];
 
-    const [holdingRows] = await db1.query(`
+    // Player holdings
+    const [playerHoldings] = await db1.query(`
         SELECT p.id as player_id, p.full_name as player_name, pp.proportion as shares_owned, p.initial_price as current_price
         FROM player_positions pp
         JOIN players p ON pp.player_id = p.id
         WHERE pp.user_id = ? AND pp.proportion > 0
     `, [userId]);
 
-    const holdings = holdingRows.map(h => {
+    // Team holdings
+    const [teamHoldings] = await db1.query(`
+        SELECT t.id as team_id, t.name as team_name, tp.proportion as shares_owned
+        FROM team_positions tp
+        JOIN teams t ON tp.team_id = t.id
+        WHERE tp.user_id = ? AND tp.proportion > 0
+    `, [userId]);
+
+    const holdings = [];
+
+    // Process players
+    for (const h of playerHoldings) {
       const shares = parseFloat(h.shares_owned);
       const p0 = parseFloat(h.current_price);
-      const positionValue = (p0 / k) * (1 - Math.exp(-k * shares));
-      return { ...h, position_value: parseFloat(positionValue.toFixed(2)) };
-    });
+      const val = (p0 / k) * (1 - Math.exp(-k * shares));
+      holdings.push({
+        ...h,
+        value: parseFloat(val.toFixed(2)),
+        current_price: p0
+      });
+    }
 
-    const totalHoldingsValue = holdings.reduce((sum, h) => sum + h.position_value, 0);
+    // Process teams
+    for (const h of teamHoldings) {
+      const shares = parseFloat(h.shares_owned);
+      // Team price is sum of player prices
+      const [teamPlayers] = await db1.query('SELECT initial_price FROM players WHERE team_id = ?', [h.team_id]);
+      const teamPrice = teamPlayers.reduce((sum, p) => sum + (parseFloat(p.initial_price) || 0), 0);
+      const val = (teamPrice / k) * (1 - Math.exp(-k * shares));
+      holdings.push({
+        ...h,
+        value: parseFloat(val.toFixed(2)),
+        current_price: parseFloat(teamPrice.toFixed(2))
+      });
+    }
+
+    const totalHoldingsValue = holdings.reduce((sum, h) => sum + h.value, 0);
 
     res.status(200).json({ user, holdings, totalHoldingsValue: parseFloat(totalHoldingsValue.toFixed(2)) });
   } catch (error) {

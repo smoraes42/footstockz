@@ -88,6 +88,12 @@
     gap: 2rem;
 }
 
+.profile-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
 .profile-card {
     padding: 2rem;
     border-radius: 24px;
@@ -207,4 +213,9 @@
     padding: 3rem;
     text-align: center;
     color: var(--text-muted);
+}
+
+.asset-cell {
+    display: flex;
+    flex-direction: column;
 }
