@@ -31,8 +31,8 @@ import socketService from './services/socketService.js';
 // Express Middleware
 const app = express();
 
-if (process.env.MODE === "production"){
-app.set('trust proxy', 1);
+if (process.env.MODE === "production") {
+  app.set('trust proxy', 1);
 }
 app.use(cors({
   origin: process.env.MODE === "production" ? process.env.ORIGIN : '*',
@@ -98,6 +98,6 @@ server.listen(PORT, async () => {
   socketService.init(server);
   await testDbConnection(db1, process.env.DB_NAME);
   startSnapshotJob();
-  //startSimulation();
+  startSimulation();
 });
 
