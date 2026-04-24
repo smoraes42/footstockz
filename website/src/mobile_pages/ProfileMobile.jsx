@@ -126,42 +126,57 @@ const ProfileMobile = () => {
                             </div>
                             <div className={styles['mobile-user-details']}>
                                 <h2 className={styles['mobile-user-name']}>{user?.username}</h2>
-                                {isOwnProfile && <span className={styles['mobile-user-id']}>#{user?.id}</span>}
+                                <p className={styles['mobile-user-email']} style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>{user?.email}</p>
                             </div>
                         </div>
 
                         {isOwnProfile && (
                             <>
-                                {/* Demo/Real Switch */}
-                                <div className={styles['mobile-mode-switch-container']}>
-                                    <div className={styles['mobile-mode-switch']}>
-                                        <button className={`${styles['mobile-mode-btn']} ${styles['mobile-mode-btn-active']}`}>
-                                            DEMO
+                                {/* Referral Program Enhancement Mobile */}
+                                <div className={`${styles['mobile-referral-card']} glass-panel`} style={{ marginTop: '1.5rem' }}>
+                                    <div className={styles['referral-header']}>
+                                        <div className={styles['referral-title-box']}>
+                                            <span className={styles['mobile-card-title']}>Programa de Referidos</span>
+                                            <p className={styles['referral-desc']}>Gana 10% de comisiones</p>
+                                        </div>
+                                        <div className={styles['referral-stats-mini']}>
+                                            <div className={styles['ref-stat']}>
+                                                <span className={styles['ref-stat-val']} style={{ fontSize: '1rem' }}>0</span>
+                                                <span className={styles['ref-stat-lab']}>Amigos</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className={styles['referral-link-box']}>
+                                        <input 
+                                            type="text" 
+                                            readOnly 
+                                            value={`https://footstockz.com/register?ref=${user?.username}`} 
+                                            className={styles['referral-input']}
+                                        />
+                                        <button 
+                                            className={styles['copy-referral-btn']}
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(`https://footstockz.com/register?ref=${user?.username}`);
+                                            }}
+                                        >
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                         </button>
-                                        <button className={styles['mobile-mode-btn']} disabled>
-                                            REAL
-                                            <span className={styles['mobile-coming-soon']}>Próximamente</span>
-                                        </button>
-                                        <div className={styles['mobile-mode-slider']}></div>
+                                    </div>
+
+                                    <div className={styles['mobile-exp-container']}>
+                                        <div className={styles['mobile-exp-bar']}>
+                                            <div className={styles['mobile-exp-fill']} style={{ width: '10%' }}></div>
+                                        </div>
+                                        <div className={styles['mobile-exp-text']}>
+                                            <span>Novato</span>
+                                            <span>Próximo: Bronce</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                {/* Referral / Level Card */}
-                                <div className={`${styles['mobile-referral-card']} glass-panel`}>
-                                    <div className={styles['mobile-card-header']}>
-                                        <span className={styles['mobile-card-title']}>Programa de Referidos</span>
-                                        <span className={styles['mobile-level-badge']}>Nivel 1</span>
-                                    </div>
-                                    <div className={styles['mobile-exp-container']}>
-                                        <div className={styles['mobile-exp-bar']}>
-                                            <div className={styles['mobile-exp-fill']} style={{ width: '35%' }}></div>
-                                        </div>
-                                        <div className={styles['mobile-exp-text']}>
-                                            <span>2 / 5</span>
-                                            <span>Próximo Nivel: Bronce</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                {/* Demo/Real Switch */}
+                                <div className={styles['mobile-mode-switch-container']}>
 
                                 {/* History Section */}
                                 <div className={styles['mobile-menu-section']}>

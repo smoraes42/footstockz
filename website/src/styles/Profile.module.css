@@ -284,37 +284,82 @@
     margin-bottom: 1.5rem;
 }
 
-.user-stats-row {
+.referral-header {
     display: flex;
-    width: 100%;
-    gap: 1px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    overflow: hidden;
+    justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: 1.5rem;
 }
 
-.user-stat-item {
-    flex: 1;
-    padding: 0.75rem;
-    background: var(--bg-main);
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+.referral-title-box {
+    text-align: left;
 }
 
-.stat-value {
-    font-weight: 800;
-    font-size: 0.9rem;
+.referral-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+}
+
+.referral-stats-mini {
+    display: flex;
+    gap: 1rem;
+}
+
+.ref-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.ref-stat-val {
+    font-size: 1.1rem;
+    font-weight: 700;
     color: var(--accent-neon);
 }
 
-.stat-label {
+.ref-stat-lab {
     font-size: 0.65rem;
-    font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+.referral-link-box {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0.5rem;
+    margin-bottom: 1.5rem;
+    gap: 0.5rem;
+}
+
+.referral-input {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 0.85rem;
+    flex: 1;
+    padding-left: 0.5rem;
+    outline: none;
+}
+
+.copy-referral-btn {
+    background: var(--accent-neon);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.copy-referral-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
 }
 
 .desktop-referral-card {

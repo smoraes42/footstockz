@@ -110,29 +110,49 @@ const ProfileDesktop = () => {
                             <h2 className={styles['user-name']}>{user?.username}</h2>
                             <p className={styles['user-email']}>{user?.email}</p>
                             
-                            <div className={styles['user-stats-row']}>
-                                <div className={styles['user-stat-item']}>
-                                    <span className={styles['stat-value']}>Nivel 1</span>
-                                    <span className={styles['stat-label']}>Rango</span>
-                                </div>
-                                <div className={styles['user-stat-item']}>
-                                    <span className={styles['stat-value']}>#{user?.id}</span>
-                                    <span className={styles['stat-label']}>ID Usuario</span>
-                                </div>
-                            </div>
-
                             <div className={`${styles['desktop-referral-card']} glass-panel`}>
-                                <div className={styles['mobile-card-header']}>
-                                    <span className={styles['mobile-card-title']}>Programa de Referidos</span>
-                                    <span className={styles['mobile-level-badge']}>Nivel 1</span>
+                                <div className={styles['referral-header']}>
+                                    <div className={styles['referral-title-box']}>
+                                        <span className={styles['mobile-card-title']}>Programa de Referidos</span>
+                                        <p className={styles['referral-desc']}>Gana el 10% de las comisiones de tus referidos</p>
+                                    </div>
+                                    <div className={styles['referral-stats-mini']}>
+                                        <div className={styles['ref-stat']}>
+                                            <span className={styles['ref-stat-val']}>0</span>
+                                            <span className={styles['ref-stat-lab']}>Amigos</span>
+                                        </div>
+                                        <div className={styles['ref-stat']}>
+                                            <span className={styles['ref-stat-val']}>0.00€</span>
+                                            <span className={styles['ref-stat-lab']}>Ganado</span>
+                                        </div>
+                                    </div>
                                 </div>
+                                
+                                <div className={styles['referral-link-box']}>
+                                    <input 
+                                        type="text" 
+                                        readOnly 
+                                        value={`https://footstockz.com/register?ref=${user?.username}`} 
+                                        className={styles['referral-input']}
+                                    />
+                                    <button 
+                                        className={styles['copy-referral-btn']}
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(`https://footstockz.com/register?ref=${user?.username}`);
+                                            // Optional: add a toast here
+                                        }}
+                                    >
+                                        Copiar
+                                    </button>
+                                </div>
+
                                 <div className={styles['mobile-exp-container']}>
                                     <div className={styles['mobile-exp-bar']}>
-                                        <div className={styles['mobile-exp-fill']} style={{ width: '35%' }}></div>
+                                        <div className={styles['mobile-exp-fill']} style={{ width: '10%' }}></div>
                                     </div>
                                     <div className={styles['mobile-exp-text']}>
-                                        <span>2 / 5</span>
-                                        <span>Próximo Nivel: Bronce</span>
+                                        <span>Nivel Actual: Novato</span>
+                                        <span>Próximo: Bronce</span>
                                     </div>
                                 </div>
                             </div>
