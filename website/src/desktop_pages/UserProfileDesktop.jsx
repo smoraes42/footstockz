@@ -81,16 +81,6 @@ const UserProfileDesktop = () => {
                                     timeZone: timezone
                                 })}
                             </p>
-                            <div className={styles['stats-box']}>
-                                <p className={styles['stats-label']}>ID de Usuario</p>
-                                <p className={styles['stats-value']}>#{user.id}</p>
-                            </div>
-                            <div className={styles['stats-box']} style={{ marginTop: '1.5rem' }}>
-                                <p className={styles['stats-label']}>Valor Total de Acciones</p>
-                                <p className={styles['stats-value']}>
-                                    {Number(totalHoldingsValue || 0).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
-                                </p>
-                            </div>
                         </div>
                     </div>
 
@@ -124,24 +114,9 @@ const UserProfileDesktop = () => {
                                                         </span>
                                                     </div>
                                                 </td>
-                                                <td className={styles['table-cell']}>
-                                                    {Number(h.shares_owned || h.proportion).toLocaleString('es-ES', { 
-                                                        minimumFractionDigits: 0, 
-                                                        maximumFractionDigits: 4 
-                                                    })}
-                                                </td>
-                                                <td className={styles['table-cell']}>
-                                                    {Number(h.current_price).toLocaleString('es-ES', { 
-                                                        minimumFractionDigits: 2, 
-                                                        maximumFractionDigits: 2 
-                                                    })} €
-                                                </td>
-                                                <td className={`${styles['table-cell']} ${styles['accent-value']} ${styles['table-cell-bold']}`}>
-                                                    {Number(h.value).toLocaleString('es-ES', { 
-                                                        minimumFractionDigits: 2, 
-                                                        maximumFractionDigits: 2 
-                                                    })} €
-                                                </td>
+                                                <td className={styles['table-cell']}>****</td>
+                                                <td className={styles['table-cell']}>****</td>
+                                                <td className={`${styles['table-cell']} ${styles['accent-value']} ${styles['table-cell-bold']}`}>****</td>
                                             </tr>
                                         ))}
                                     </tbody>

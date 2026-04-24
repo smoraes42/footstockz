@@ -126,7 +126,7 @@ const ProfileMobile = () => {
                             </div>
                             <div className={styles['mobile-user-details']}>
                                 <h2 className={styles['mobile-user-name']}>{user?.username}</h2>
-                                <span className={styles['mobile-user-id']}>#{user?.id}</span>
+                                {isOwnProfile && <span className={styles['mobile-user-id']}>#{user?.id}</span>}
                             </div>
                         </div>
 
