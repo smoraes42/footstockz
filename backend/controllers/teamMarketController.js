@@ -117,12 +117,12 @@ export const getTeamHistory = async (req, res) => {
             if (before) {
                 query = `
                     SELECT price, time FROM (
-                        SELECT SUM(pp.price) as price, DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:00') as time
+                        SELECT SUM(pp.price) as price, DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:%s') as time
                         FROM player_prices pp
                         JOIN players p ON pp.player_id = p.id
                         WHERE p.team_id = ? AND pp.created_at < ?
-                        GROUP BY time
-                        ORDER BY time DESC
+                        GROUP BY pp.created_at
+                        ORDER BY pp.created_at DESC
                         LIMIT 100
                     ) sub
                     ORDER BY time ASC
@@ -131,12 +131,12 @@ export const getTeamHistory = async (req, res) => {
             } else {
                 query = `
                     SELECT price, time FROM (
-                        SELECT SUM(pp.price) as price, DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:00') as time
+                        SELECT SUM(pp.price) as price, DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:%s') as time
                         FROM player_prices pp
                         JOIN players p ON pp.player_id = p.id
                         WHERE p.team_id = ?
-                        GROUP BY time
-                        ORDER BY time DESC
+                        GROUP BY pp.created_at
+                        ORDER BY pp.created_at DESC
                         LIMIT 100
                     ) sub
                     ORDER BY time ASC

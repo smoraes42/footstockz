@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import PlayerMarketChart from '../components/PlayerMarketChart';
+import MarketChart from '../components/MarketChart';
 import { toast } from 'react-toastify';
 import {
     getPortfolio, getPlayerById, getPlayerHistory, getPlayerTradeHistory, getTradeConfig, marketBuy, marketSell, getMe
@@ -102,110 +102,113 @@ const PlayerMarketMobile = () => {
         setHoverInfo({ timestamp: payload.timestamp, price: payload.price });
     };
 
-    // Format raw API history rows into chart-ready data points
+    // Format raw API history into a fixed-size normalized grid
     const formatHistory = useCallback((history, tf) => {
-        if (tf === 'line') {
-            return (history || []).map(h => {
-                const t = new Date(h.time);
-                return {
-                    timestamp: isNaN(t.getTime()) ? Date.now() : t.getTime(),
-                    price: parseFloat(h.price) || 0
-                };
-            });
-        } else {
-            return (history || []).map(h => {
-                const t = new Date(h.bucket_time);
-                return {
-                    price: parseFloat(h.close) || 0,
-                    open: parseFloat(h.open) || 0,
-                    high: parseFloat(h.high) || 0,
-                    low: parseFloat(h.low) || 0,
-                    timestamp: t.getTime()
-                };
-            });
-        }
-    }, []);
+        const GRID_SIZE = tf === 'line' ? 200 : 100;
+        const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+        const bMs = bucketMs[tf] || 300000;
+        
+        const now = Date.now();
+        const endTs = Math.floor(now / bMs) * bMs;
+        const grid = [];
+        const gridMap = new Map();
 
-    const fetchData = useCallback(async (tf = timeframe) => {
+        for (let i = 0; i < GRID_SIZE; i++) {
+            const ts = endTs - (GRID_SIZE - 1 - i) * bMs;
+            const date = new Date(ts);
+            const label = tf === '2h'
+                ? date.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
+                : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
+            
+            const point = {
+                timestamp: ts,
+                time: label,
+                price: null,
+                isFiller: true
+            };
+            grid.push(point);
+            gridMap.set(ts, point);
+        }
+
+        if (!history || history.length === 0) return grid;
+
+        const sortedHistory = [...history].sort((a, b) => new Date(a.time || a.bucket_time).getTime() - new Date(b.time || b.bucket_time).getTime());
+        let lastKnownPrice = sortedHistory[0] ? (parseFloat(sortedHistory[0].price || sortedHistory[0].close) || 0) : 0;
+
+        sortedHistory.forEach(h => {
+            const hTs = new Date(h.time || h.bucket_time).getTime();
+            const roundedTs = Math.floor(hTs / bMs) * bMs;
+            
+            const point = gridMap.get(roundedTs);
+            if (point) {
+                const price = parseFloat(h.price || h.close) || 0;
+                point.price = price;
+                point.isFiller = false;
+                lastKnownPrice = price;
+            }
+        });
+
+        let currentPrice = lastKnownPrice;
+        for (let i = 0; i < grid.length; i++) {
+            if (grid[i].price === null) grid[i].price = currentPrice;
+            else currentPrice = grid[i].price;
+        }
+
+        return grid;
+    }, [timezone]);
+
+    const fetchHistory = useCallback(async (tf = timeframe) => {
+        if (!playerId) return;
+        try {
+            const history = await getPlayerHistory(playerId, tf);
+            setPriceHistory(formatHistory(history, tf));
+        } catch (err) {
+            console.error('Fetch history error:', err);
+        }
+    }, [playerId, timeframe, formatHistory]);
+
+    const fetchBaseData = useCallback(async () => {
         if (!playerId) return;
         setFetchError(null);
         try {
-            const results = await Promise.allSettled([
-                getPlayerHistory(playerId, tf),
+            const [trades, port, pData, uData] = await Promise.all([
                 getPlayerTradeHistory(playerId),
                 getPortfolio(),
                 getPlayerById(playerId),
                 getMe()
             ]);
-
-            const [historyRes, tradesRes, portRes, pDataRes, userRes] = results;
-
-            if (pDataRes.status === 'fulfilled') {
-                setCurrentPlayer(pDataRes.value);
-            } else {
-                setFetchError('Jugador no encontrado.');
-            }
-
-            if (historyRes.status === 'fulfilled') {
-                setPriceHistory(formatHistory(historyRes.value, tf));
-            }
-
-            if (tradesRes.status === 'fulfilled') {
-                setTradeHistory(tradesRes.value || []);
-            }
-            if (portRes.status === 'fulfilled') {
-                setPortfolio(portRes.value);
-            }
-            if (userRes.status === 'fulfilled') {
-                setUser(userRes.value);
-            }
+            setTradeHistory(trades || []);
+            setPortfolio(port);
+            setCurrentPlayer(pData);
+            setUser(uData);
         } catch (err) {
-            console.error('Fetch error:', err);
+            console.error('Fetch base data error:', err);
             setFetchError('Error de conexión.');
         }
-    }, [playerId, timeframe, timezone, formatHistory]);
-
-    // Load older history when user drags chart left to the edge
-    const handleLoadMore = useCallback(async (beforeIso) => {
-        try {
-            const older = await getPlayerHistory(playerId, timeframe, beforeIso);
-            return formatHistory(older, timeframe);
-        } catch (err) {
-            console.error('Load more history error:', err);
-            return [];
-        }
-    }, [playerId, timeframe, formatHistory]);
-
+    }, [playerId]);
 
     useEffect(() => {
+        fetchBaseData();
+        fetchHistory(timeframe);
         const fetchConfig = async () => {
             try {
                 const config = await getTradeConfig();
-                if (config.PRICE_IMPACT_FACTOR) {
-                    setKFactor(config.PRICE_IMPACT_FACTOR);
-                }
-            } catch (error) {
-                console.error('Failed to fetch config:', error);
-            }
+                if (config.PRICE_IMPACT_FACTOR) setKFactor(config.PRICE_IMPACT_FACTOR);
+            } catch (error) { console.error(error); }
         };
         fetchConfig();
-        fetchData();
-        // Removed polling in favor of WebSockets
-    }, [fetchData]);
+    }, [fetchBaseData, fetchHistory]);
 
-    // Re-fetch chart data when timeframe changes
+    // Re-fetch only history when timeframe changes
     useEffect(() => {
-        fetchData(timeframe);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [timeframe, timezone]);
+        fetchHistory(timeframe);
+    }, [timeframe, fetchHistory]);
 
-    // WebSocket Price Updates
+    // WebSocket Listeners
     useEffect(() => {
         if (!socket || !connected || !playerId) return;
 
         subscribeToPlayer(playerId);
-
-        const bucketMs = { '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
 
         const handlePriceUpdate = (data) => {
             if (data.playerId !== parseInt(playerId)) return;
@@ -217,35 +220,37 @@ const PlayerMarketMobile = () => {
             setIsUpdated(true);
             setTimeout(() => setIsUpdated(false), 1000);
 
+            // Patch history atomically
             setPriceHistory(prev => {
+                const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+                const bMs = bucketMs[timeframe] || 300000;
                 const newTs = new Date(data.timestamp).getTime();
-
-                if (timeframe === 'line') {
-                    return [...prev, { timestamp: newTs, price: data.price }].slice(-100);
-                }
-
-                const bMs = bucketMs[timeframe];
                 const thisBucket = Math.floor(newTs / bMs) * bMs;
+                
                 const updated = [...prev];
-                const last = updated[updated.length - 1];
+                const lastPoint = updated[updated.length - 1];
 
-                if (last && Math.floor((last.timestamp || 0) / bMs) * bMs === thisBucket) {
+                if (lastPoint && lastPoint.timestamp === thisBucket) {
                     updated[updated.length - 1] = {
-                        ...last,
+                        ...lastPoint,
                         price: data.price,
-                        high: Math.max(last.high || data.price, data.price),
-                        low: Math.min(last.low || data.price, data.price),
+                        isFiller: false
                     };
-                } else {
+                } else if (lastPoint && thisBucket > lastPoint.timestamp) {
+                    const date = new Date(thisBucket);
+                    const label = timeframe === '2h'
+                        ? date.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
+                        : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
+                    
                     updated.push({
+                        timestamp: thisBucket,
+                        time: label,
                         price: data.price,
-                        open: data.price,
-                        high: data.price,
-                        low: data.price,
-                        timestamp: thisBucket
+                        isFiller: false
                     });
+                    if (updated.length > 100) updated.shift();
                 }
-                return updated.slice(-100);
+                return updated;
             });
         };
 
@@ -269,7 +274,7 @@ const PlayerMarketMobile = () => {
             socket.off('trade_executed', handleTradeExecuted);
             socket.off('portfolio_update', handlePortfolioUpdate);
         };
-    }, [socket, connected, playerId, timeframe, timezone, subscribeToPlayer, unsubscribeFromPlayer]);
+    }, [socket, connected, playerId, timeframe, timezone, subscribeToPlayer, unsubscribeFromPlayer, fetchHistory, formatHistory]);
 
 
     const handleMarketBuy = async () => {
@@ -292,7 +297,7 @@ const PlayerMarketMobile = () => {
             toast.success("Compra Exitosa", { position: "top-center", theme: "dark" });
             setMarketBuyTotal('');
             setMarketBuyQty('');
-            fetchData();
+            fetchBaseData();
         } catch (err) {
             setError(err.message);
         } finally {
@@ -321,7 +326,7 @@ const PlayerMarketMobile = () => {
             toast.success("Venta Exitosa", { position: "top-center", theme: "dark" });
             setMarketSellQty('');
             setMarketSellTotal('');
-            fetchData();
+            fetchBaseData();
         } catch (err) {
             setError(err.message);
         } finally {
@@ -392,15 +397,10 @@ const PlayerMarketMobile = () => {
                     )}
                 </div>
 
-                <PlayerMarketChart
-                    variant="mobile"
+                <MarketChart
                     priceHistory={priceHistory}
-                    hoverInfo={hoverInfo}
-                    onMouseMove={handleChartMouseMove}
-                    onMouseLeave={() => setHoverInfo(null)}
                     timeframe={timeframe}
                     onTimeframeChange={setTimeframe}
-                    onLoadMore={handleLoadMore}
                 />
 
                 {/* Trade Tabs */}

@@ -60,13 +60,15 @@ export default function TeamMarketDetailMobile() {
     const { socket, connected } = useSocket();
 
     const formatHistory = useCallback((history, tf) => {
-        const GRID_SIZE = 100;
-        const bucketMs = { 'line': 10000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+        const GRID_SIZE = tf === 'line' ? 200 : 100;
+        const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
         const bMs = bucketMs[tf] || 300000;
         
         const now = Date.now();
         const endTs = Math.floor(now / bMs) * bMs;
         const grid = [];
+        const gridMap = new Map();
+
         for (let i = 0; i < GRID_SIZE; i++) {
             const ts = endTs - (GRID_SIZE - 1 - i) * bMs;
             const date = new Date(ts);
@@ -74,12 +76,14 @@ export default function TeamMarketDetailMobile() {
                 ? date.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
                 : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
             
-            grid.push({
+            const point = {
                 timestamp: ts,
                 time: label,
                 price: null,
                 isFiller: true
-            });
+            };
+            grid.push(point);
+            gridMap.set(ts, point);
         }
 
         if (!history || history.length === 0) return grid;
@@ -90,11 +94,11 @@ export default function TeamMarketDetailMobile() {
         sortedHistory.forEach(h => {
             const hTs = new Date(h.time || h.bucket_time).getTime();
             const roundedTs = Math.floor(hTs / bMs) * bMs;
-            const slotIndex = grid.findIndex(g => g.timestamp === roundedTs);
-            if (slotIndex !== -1) {
+            const point = gridMap.get(roundedTs);
+            if (point) {
                 const price = parseFloat(h.price) || 0;
-                grid[slotIndex].price = price;
-                grid[slotIndex].isFiller = false;
+                point.price = price;
+                point.isFiller = false;
                 lastKnownPrice = price;
             }
         });
@@ -107,24 +111,40 @@ export default function TeamMarketDetailMobile() {
         return grid;
     }, [timezone]);
 
-    const fetchData = useCallback(async (tf = timeframe) => {
+    const fetchHistory = useCallback(async (tf = timeframe) => {
         if (!teamId) return;
         try {
-            const [history, port, tData] = await Promise.all([
-                getTeamHistory(teamId, tf),
+            const history = await getTeamHistory(teamId, tf);
+            setPriceHistory(formatHistory(history, tf));
+        } catch (err) {
+            console.error(err);
+        }
+    }, [teamId, formatHistory]);
+
+    const fetchBaseData = useCallback(async () => {
+        if (!teamId) return;
+        try {
+            const [port, tData] = await Promise.all([
                 getPortfolio(),
                 getTeamById(teamId)
             ]);
-            setPriceHistory(formatHistory(history, tf));
             setPortfolio(port);
             setTeam(tData);
         } catch (err) {
             console.error(err);
         }
-    }, [teamId, timeframe, formatHistory]);
+    }, [teamId]);
 
     useEffect(() => {
-        fetchData();
+        fetchBaseData();
+        fetchHistory(timeframe);
+    }, [fetchBaseData, fetchHistory]);
+
+    useEffect(() => {
+        fetchHistory(timeframe);
+    }, [timeframe, fetchHistory]);
+
+    useEffect(() => {
         const fetchConfig = async () => {
             try {
                 const config = await getTradeConfig();
@@ -132,11 +152,7 @@ export default function TeamMarketDetailMobile() {
             } catch (err) { console.error(err); }
         };
         fetchConfig();
-    }, [fetchData]);
-
-    useEffect(() => {
-        fetchData(timeframe);
-    }, [timeframe, fetchData]);
+    }, []);
 
     // WebSocket price update handling
     useEffect(() => {
@@ -144,7 +160,26 @@ export default function TeamMarketDetailMobile() {
 
         const handlePriceUpdate = (data) => {
             if (team && team.players && team.players.some(p => p.id === data.playerId)) {
-                fetchData(timeframe);
+                // Optimistic Update
+                getTeamById(teamId).then(setTeam).catch(console.error);
+
+                setPriceHistory(prev => {
+                    const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+                    const bMs = bucketMs[timeframe] || 300000;
+                    const roundedTs = Math.floor(Date.now() / bMs) * bMs;
+
+                    const updated = [...prev];
+                    const lastPoint = updated[updated.length - 1];
+
+                    if (lastPoint && lastPoint.timestamp === roundedTs) {
+                        if (timeframe === 'line') {
+                            getTeamHistory(teamId, timeframe).then(h => setPriceHistory(formatHistory(h, timeframe)));
+                        }
+                    } else if (lastPoint && roundedTs > lastPoint.timestamp) {
+                        fetchHistory(timeframe);
+                    }
+                    return updated;
+                });
             }
         };
 
@@ -152,7 +187,7 @@ export default function TeamMarketDetailMobile() {
         return () => {
             socket.off('price_update', handlePriceUpdate);
         };
-    }, [socket, connected, teamId, team, fetchData, timeframe]);
+    }, [socket, connected, teamId, team, fetchHistory, timeframe, formatHistory]);
 
     const calculateQuantityFromBuyValue = (value, p0) => {
         if (!value || !p0 || p0 <= 0) return '';
@@ -193,7 +228,7 @@ export default function TeamMarketDetailMobile() {
             toast.success("Compra Exitosa");
             setMarketBuyTotal('');
             setMarketBuyQty('');
-            fetchData();
+            fetchBaseData();
         } catch (err) {
             setError(err.message);
         } finally {
@@ -210,7 +245,7 @@ export default function TeamMarketDetailMobile() {
             toast.success("Venta Exitosa");
             setMarketSellQty('');
             setMarketSellTotal('');
-            fetchData();
+            fetchBaseData();
         } catch (err) {
             setError(err.message);
         } finally {

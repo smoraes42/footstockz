@@ -57,13 +57,15 @@ export default function TeamMarketDetailDesktop() {
     const { socket, connected, subscribeToUser, unsubscribeFromUser } = useSocket();
 
     const formatHistory = useCallback((history, tf) => {
-        const GRID_SIZE = 100;
-        const bucketMs = { 'line': 10000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+        const GRID_SIZE = tf === 'line' ? 200 : 100;
+        const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
         const bMs = bucketMs[tf] || 300000;
         
         const now = Date.now();
         const endTs = Math.floor(now / bMs) * bMs;
         const grid = [];
+        const gridMap = new Map();
+
         for (let i = 0; i < GRID_SIZE; i++) {
             const ts = endTs - (GRID_SIZE - 1 - i) * bMs;
             const date = new Date(ts);
@@ -71,12 +73,14 @@ export default function TeamMarketDetailDesktop() {
                 ? date.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false })
                 : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: timezone, hour12: false });
             
-            grid.push({
+            const point = {
                 timestamp: ts,
                 time: label,
                 price: null,
                 isFiller: true
-            });
+            };
+            grid.push(point);
+            gridMap.set(ts, point);
         }
 
         if (!history || history.length === 0) return grid;
@@ -87,11 +91,11 @@ export default function TeamMarketDetailDesktop() {
         sortedHistory.forEach(h => {
             const hTs = new Date(h.time || h.bucket_time).getTime();
             const roundedTs = Math.floor(hTs / bMs) * bMs;
-            const slotIndex = grid.findIndex(g => g.timestamp === roundedTs);
-            if (slotIndex !== -1) {
+            const point = gridMap.get(roundedTs);
+            if (point) {
                 const price = parseFloat(h.price) || 0;
-                grid[slotIndex].price = price;
-                grid[slotIndex].isFiller = false;
+                point.price = price;
+                point.isFiller = false;
                 lastKnownPrice = price;
             }
         });
@@ -104,31 +108,39 @@ export default function TeamMarketDetailDesktop() {
         return grid;
     }, [timezone]);
 
-    const fetchData = useCallback(async (tf = timeframe) => {
+    const fetchHistory = useCallback(async (tf = timeframe) => {
         if (!teamId) return;
-
         try {
-            const [history, port, tData] = await Promise.all([
-                getTeamHistory(teamId, tf),
+            const history = await getTeamHistory(teamId, tf);
+            setPriceHistory(formatHistory(history, tf));
+        } catch (err) {
+            console.error('Fetch history error:', err);
+        }
+    }, [teamId, formatHistory]);
+
+    const fetchBaseData = useCallback(async () => {
+        if (!teamId) return;
+        try {
+            const [port, tData] = await Promise.all([
                 getPortfolio(),
                 getTeamById(teamId)
             ]);
-
-            setPriceHistory(formatHistory(history, tf));
             setPortfolio(port);
             setTeam(tData);
         } catch (err) {
-            console.error('Fetch error:', err);
+            console.error('Fetch base data error:', err);
         }
-    }, [teamId, timeframe, formatHistory]);
+    }, [teamId]);
 
     useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        fetchBaseData();
+        fetchHistory(timeframe);
+    }, [fetchBaseData, fetchHistory]);
 
+    // Re-fetch only history when timeframe changes
     useEffect(() => {
-        fetchData(timeframe);
-    }, [timeframe, fetchData]);
+        fetchHistory(timeframe);
+    }, [timeframe, fetchHistory]);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -167,10 +179,34 @@ export default function TeamMarketDetailDesktop() {
         const handlePriceUpdate = (data) => {
             // Update the live team price if any player in the team changed
             if (team && team.players && team.players.some(p => p.id === data.playerId)) {
-                // For teams, the index is a sum. We can't easily recalculate the sum 
-                // without knowing ALL current prices. So we refresh team data.
-                // However, to keep the chart moving, we can also refresh the history.
-                fetchData(timeframe);
+                // Optimistic Update: Refresh Team Details for the live price display
+                getTeamById(teamId).then(setTeam).catch(console.error);
+                
+                // Patch the latest point in history without full refresh
+                setPriceHistory(prev => {
+                    const bucketMs = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+                    const bMs = bucketMs[timeframe] || 300000;
+                    const nowTs = Date.now();
+                    const roundedTs = Math.floor(nowTs / bMs) * bMs;
+
+                    const updated = [...prev];
+                    const lastPoint = updated[updated.length - 1];
+
+                    // If it belongs to the current last bucket, update it
+                    if (lastPoint && lastPoint.timestamp === roundedTs) {
+                        // We need the NEW team price. Since we just fetched tData, 
+                        // this is slightly asynchronous. For a "real" atomic update,
+                        // we'd need to calculate the sum here, but that's complex.
+                        // For now, we'll fetch just the history ticks if it's 'line'
+                        if (timeframe === 'line') {
+                            getTeamHistory(teamId, timeframe).then(h => setPriceHistory(formatHistory(h, timeframe)));
+                        }
+                    } else if (lastPoint && roundedTs > lastPoint.timestamp) {
+                        // New bucket! Full refresh history is safest once per bucket
+                        fetchHistory(timeframe);
+                    }
+                    return updated;
+                });
             }
         };
 
@@ -178,7 +214,7 @@ export default function TeamMarketDetailDesktop() {
         return () => {
             socket.off('price_update', handlePriceUpdate);
         };
-    }, [socket, connected, teamId, team, fetchData, timeframe]);
+    }, [socket, connected, teamId, team, fetchHistory, timeframe, formatHistory]);
 
     const calculateQuantityFromBuyValue = (value, p0) => {
         if (!value || !p0 || p0 <= 0) return '';
@@ -236,7 +272,7 @@ export default function TeamMarketDetailDesktop() {
 
             setMarketBuyTotal('');
             setMarketBuyQty('');
-            fetchData(); 
+            fetchBaseData();
         } catch (err) {
             setError(err.message);
         } finally {
@@ -261,7 +297,7 @@ export default function TeamMarketDetailDesktop() {
 
             setMarketSellQty('');
             setMarketSellTotal('');
-            fetchData();
+            fetchBaseData();
         } catch (err) {
             setError(err.message);
         } finally {
