@@ -163,325 +163,44 @@
 }
 
 /* Mobile Styles */
-.mobile-container {
-    background-color: var(--bg-main);
-    height: 100dvh;
-    overflow: hidden;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
 
-.mobile-header {
-    padding: 0 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    background-color: rgba(16, 16, 16, 0.9);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 60px;
-    box-sizing: border-box;
-}
 
-.mobile-logo {
-    height: 22px;
-}
 
-.mobile-main {
-    flex: 1;
-    padding: 1.5rem;
-    padding-bottom: 80px;
-    overflow-y: auto;
-}
 
-.mobile-section-title {
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: var(--accent-neon);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 1.5rem;
-    margin-top: 0;
-    text-align: left;
-}
 
-.mobile-portfolio-value {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 2rem;
-    font-size: 2.2rem;
-    font-weight: 900;
-}
 
-.mobile-portfolio-variation {
-    font-weight: 600;
-    font-size: 1rem;
-    margin-top: 0.5rem;
-    padding: 4px 12px;
-    border-radius: 20px;
-}
 
-.mobile-variation-positive {
-    color: var(--accent-neon);
-    background-color: rgba(57, 255, 20, 0.1);
-}
 
-.mobile-variation-negative {
-    color: var(--error-red);
-    background-color: rgba(255, 77, 77, 0.1);
-}
 
-.mobile-timeframe-container {
-    display: flex;
-    gap: 0.5rem;
-    overflow-x: auto;
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
 
-.mobile-timeframe-container::-webkit-scrollbar {
-    display: none;
-}
 
-.mobile-timeframe-list {
-    display: flex;
-    gap: 4px;
-    background-color: var(--surface-dark);
-    padding: 4px;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    min-width: max-content;
-}
 
-.mobile-chart-container {
-    height: 220px;
-    width: 100%;
-    margin-bottom: 2rem;
-    margin-left: -15px;
-    min-width: 0;
-    position: relative;
-}
 
-.mobile-top-players-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
 
-.mobile-top-players-title {
-    font-size: 0.90rem;
-    font-weight: 800;
-    color: var(--accent-neon);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
-    margin-top: 0;
-    text-align: left;
-}
 
-.mobile-view-all {
-    color: var(--accent-neon);
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
 
-.mobile-player-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
 
-.mobile-player-card {
-    padding: 1rem;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    text-decoration: none;
-    color: inherit;
-    position: relative;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
 
-.mobile-player-card-active {
-    animation: flash-update-card 1.5s ease-out;
-    border: 1px solid var(--accent-neon);
-}
 
-.mobile-player-rank {
-    position: absolute;
-    left: 0;
-    top: 0;
-    padding: 2px 6px;
-    background-color: rgba(57, 255, 20, 0.1);
-    color: var(--accent-neon);
-    font-size: 0.6rem;
-    font-weight: 900;
-    border-bottom-right-radius: 8px;
-}
 
-.mobile-player-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
 
-.mobile-player-avatar-box {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    background-color: var(--surface-dark);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-.mobile-player-avatar-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
 
-.mobile-player-avatar-placeholder {
-    font-size: 1.25rem;
-    position: absolute;
-}
 
-.mobile-player-name {
-    font-weight: 800;
-    margin: 0;
-    font-size: 0.9rem;
-    color: #fff;
-}
 
-.mobile-player-team {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    margin: 0;
-    font-weight: 500;
-}
 
-.mobile-player-price-box {
-    text-align: right;
-}
 
-.mobile-player-price {
-    font-weight: 900;
-    margin: 0;
-    font-size: 1rem;
-    color: var(--text-main);
-}
 
-.mobile-player-change {
-    margin: 0;
-    font-size: 0.75rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 3px;
-}
 
-.mobile-bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(28, 28, 28, 0.95);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    z-index: 20;
-    padding-bottom: env(safe-area-inset-bottom);
-}
 
-.mobile-nav-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 12px 0;
-    text-decoration: none;
-    color: var(--text-muted);
-}
 
-.mobile-nav-link-active {
-    color: var(--accent-neon);
-    position: relative;
-}
 
-.mobile-nav-link-active-bar {
-    width: 20px;
-    height: 2px;
-    background-color: var(--accent-neon);
-    border-radius: 2px;
-    position: absolute;
-    top: 0;
-}
 
-.mobile-nav-text {
-    font-size: 0.75rem;
-    font-weight: 500;
-}
 
-.mobile-nav-text-active {
-    font-weight: 600;
-}
 
-.mobile-nav-avatar {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: var(--surface-lighter);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 0.7rem;
-}
 
-.mobile-tooltip {
-    background-color: rgba(20, 20, 20, 0.95);
-    border: 1px solid rgba(57, 255, 20, 0.4);
-    border-radius: 8px;
-    padding: 8px 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(8px);
-}
 
-.mobile-tooltip-time {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.65rem;
-    margin-bottom: 2px;
-    text-transform: uppercase;
-}
 
-.mobile-price-up {
-    color: var(--accent-neon);
-}
 
-.mobile-price-down {
-    color: var(--error-red);
-}
 
-.mobile-empty-box {
-    text-align: center;
-    padding: 1rem;
-}
 
-.mobile-nav-spacer {
-    width: 22px;
-}

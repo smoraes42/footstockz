@@ -3,28 +3,17 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LandingDesktop from './desktop_pages/LandingDesktop';
 import LandingMobile from './mobile_pages/LandingMobile';
 import LoginDesktop from './desktop_pages/LoginDesktop';
-import LoginMobile from './mobile_pages/LoginMobile';
 import RegisterDesktop from './desktop_pages/RegisterDesktop';
-import RegisterMobile from './mobile_pages/RegisterMobile';
 import HomeDesktop from './desktop_pages/HomeDesktop';
-import HomeMobile from './mobile_pages/HomeMobile';
 import MarketDesktop from './desktop_pages/MarketDesktop';
-import MarketMobile from './mobile_pages/MarketMobile';
 import VerifyDesktop from './desktop_pages/VerifyDesktop';
-import VerifyMobile from './mobile_pages/VerifyMobile';
 import PlayerMarketDesktop from './desktop_pages/PlayerMarketDesktop';
-import PlayerMarketMobile from './mobile_pages/PlayerMarketMobile';
 import TeamMarketDetailDesktop from './desktop_pages/TeamMarketDetailDesktop';
-import TeamMarketDetailMobile from './mobile_pages/TeamMarketDetailMobile';
 import PortfolioDesktop from './desktop_pages/PortfolioDesktop';
-import PortfolioMobile from './mobile_pages/PortfolioMobile';
 import LeaderboardDesktop from './desktop_pages/LeaderboardDesktop';
-import LeaderboardMobile from './mobile_pages/LeaderboardMobile';
 import ProfileDesktop from './desktop_pages/ProfileDesktop';
-import ProfileMobile from './mobile_pages/ProfileMobile';
 import UserProfileDesktop from './desktop_pages/UserProfileDesktop';
 import TradeDetailDesktop from './desktop_pages/TradeDetailDesktop';
-import TradeDetailMobile from './mobile_pages/TradeDetailMobile';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import fsLogo from './assets/fs-logo.png';
@@ -90,20 +79,20 @@ function App() {
                   <Routes>
                     {/* Public routes */}
                     <Route path="/" element={isMobile ? <LandingMobile /> : <LandingDesktop />} />
-                    <Route path="/login" element={isMobile ? <LoginMobile /> : <LoginDesktop />} />
-                    <Route path="/register" element={isMobile ? <RegisterMobile /> : <RegisterDesktop />} />
-                    <Route path="/verify" element={isMobile ? <VerifyMobile /> : <VerifyDesktop />} />
+                    <Route path="/login" element={<LoginDesktop />} />
+                    <Route path="/register" element={<RegisterDesktop />} />
+                    <Route path="/verify" element={<VerifyDesktop />} />
 
                     {/* Protected routes */}
-                    <Route path="/home" element={<ProtectedRoute>{isMobile ? <HomeMobile /> : <HomeDesktop />}</ProtectedRoute>} />
-                    <Route path="/market" element={<ProtectedRoute>{isMobile ? <MarketMobile /> : <MarketDesktop />}</ProtectedRoute>} />
-                    <Route path="/market/player/:playerId" element={<ProtectedRoute>{isMobile ? <PlayerMarketMobile /> : <PlayerMarketDesktop />}</ProtectedRoute>} />
-                    <Route path="/market/team/:teamId" element={<ProtectedRoute>{isMobile ? <TeamMarketDetailMobile /> : <TeamMarketDetailDesktop />}</ProtectedRoute>} />
-                    <Route path="/portfolio" element={<ProtectedRoute>{isMobile ? <PortfolioMobile /> : <PortfolioDesktop />}</ProtectedRoute>} />
-                    <Route path="/leaderboard" element={<ProtectedRoute>{isMobile ? <LeaderboardMobile /> : <LeaderboardDesktop />}</ProtectedRoute>} />
-                    <Route path="/profile" element={<ProtectedRoute>{isMobile ? <ProfileMobile /> : <ProfileDesktop />}</ProtectedRoute>} />
-                    <Route path="/profile/:userId" element={<ProtectedRoute>{isMobile ? <ProfileMobile /> : <UserProfileDesktop />}</ProtectedRoute>} />
-                    <Route path="/trades/:tradeId" element={<ProtectedRoute>{isMobile ? <TradeDetailMobile /> : <TradeDetailDesktop />}</ProtectedRoute>} />
+                    <Route path="/home" element={<ProtectedRoute><HomeDesktop /></ProtectedRoute>} />
+                    <Route path="/market" element={<ProtectedRoute><MarketDesktop /></ProtectedRoute>} />
+                    <Route path="/market/player/:playerId" element={<ProtectedRoute><PlayerMarketDesktop /></ProtectedRoute>} />
+                    <Route path="/market/team/:teamId" element={<ProtectedRoute><TeamMarketDetailDesktop /></ProtectedRoute>} />
+                    <Route path="/portfolio" element={<ProtectedRoute><PortfolioDesktop /></ProtectedRoute>} />
+                    <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardDesktop /></ProtectedRoute>} />
+                    <Route path="/profile" element={<ProtectedRoute><ProfileDesktop /></ProtectedRoute>} />
+                    <Route path="/profile/:userId" element={<ProtectedRoute><UserProfileDesktop /></ProtectedRoute>} />
+                    <Route path="/trades/:tradeId" element={<ProtectedRoute><TradeDetailDesktop /></ProtectedRoute>} />
 
                     {/* 404 fallback */}
                     <Route path="*" element={<Navigate to="/home" replace />} />

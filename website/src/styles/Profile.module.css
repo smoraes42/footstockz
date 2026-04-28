@@ -8,205 +8,36 @@
     color: var(--text-main);
 }
 
-.mobile-container {
-    background-color: var(--bg-main);
-    height: 100dvh;
-    overflow: hidden;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
 
-.mobile-main {
-    flex: 1;
-    padding: 1rem;
-    padding-bottom: 90px;
-    overflow-y: auto;
-}
 
 /* New Profile Card */
-.mobile-profile-card {
-    padding: 1.5rem;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    margin-bottom: 1rem;
-}
 
-.mobile-avatar {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background-color: var(--surface-lighter);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: var(--accent-neon);
-    border: 2px solid rgba(0, 255, 136, 0.2);
-    flex-shrink: 0;
-}
 
-.mobile-user-details {
-    flex: 1;
-}
 
-.mobile-user-name {
-    font-size: 1.2rem;
-    font-weight: 800;
-    margin: 0 0 4px 0;
-    color: #fff;
-}
 
-.mobile-user-id {
-    font-size: 0.8rem;
-    color: var(--accent-neon);
-    font-weight: 700;
-    font-family: monospace;
-    opacity: 0.8;
-}
 
 /* Referral Card */
-.mobile-referral-card {
-    padding: 1.25rem;
-    border-radius: 20px;
-    margin-bottom: 1.5rem;
-}
 
-.mobile-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
 
-.mobile-card-title {
-    font-size: 0.8rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-muted);
-}
 
-.mobile-level-badge {
-    background: rgba(0, 255, 136, 0.1);
-    color: var(--accent-neon);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 800;
-    border: 1px solid rgba(0, 255, 136, 0.2);
-}
 
-.mobile-exp-container {
-    width: 100%;
-}
 
-.mobile-exp-bar {
-    height: 6px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-bottom: 6px;
-}
 
-.mobile-exp-fill {
-    height: 100%;
-    background: var(--accent-neon);
-    box-shadow: 0 0 10px var(--accent-neon);
-}
 
-.mobile-exp-text {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-}
 
 /* Menu Sections */
-.mobile-menu-section {
-    margin-bottom: 1.5rem;
-}
 
-.mobile-section-label {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-left: 0.5rem;
-    margin-bottom: 0.75rem;
-    letter-spacing: 1px;
-}
 
-.mobile-menu-list {
-    border-radius: 20px;
-    overflow: hidden;
-}
 
-.mobile-menu-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.1rem 1.25rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    color: #fff;
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.02);
-    transition: background 0.2s;
-}
 
-.mobile-menu-item:last-child {
-    border-bottom: none;
-}
 
-.mobile-menu-item:active {
-    background: rgba(255, 255, 255, 0.05);
-}
 
-.mobile-menu-item-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
 
-.mobile-menu-icon {
-    width: 20px;
-    height: 20px;
-    color: var(--text-muted);
-}
 
-.mobile-menu-text {
-    font-size: 0.9rem;
-    font-weight: 600;
-}
 
-.mobile-menu-arrow {
-    color: rgba(255, 255, 255, 0.2);
-    font-size: 1.1rem;
-}
 
 /* Logout Button */
-.mobile-logout-btn-container {
-    margin-top: 1rem;
-    padding-bottom: 1rem;
-}
 
-.mobile-logout-full-btn {
-    width: 100%;
-    padding: 1rem;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 82, 82, 0.2);
-    background: rgba(255, 82, 82, 0.05);
-    color: #ff5252;
-    font-size: 0.9rem;
-    font-weight: 800;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
 
 /* Desktop Specific Redesign Styles */
 .container {
@@ -651,160 +482,29 @@
 }
 
 /* Portfolio Section Styles */
-.mobile-portfolio-section {
-    margin-bottom: 2rem;
-}
 
-.mobile-section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding: 0 0.5rem;
-}
 
-.mobile-view-all {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--accent-neon);
-    text-decoration: none;
-}
 
-.mobile-portfolio-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
 
-.mobile-portfolio-item {
-    padding: 1rem 1.25rem;
-    border-radius: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: transform 0.2s;
-}
 
-.mobile-portfolio-item:active {
-    transform: scale(0.98);
-}
 
-.mobile-item-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
 
-.mobile-item-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
 
-.mobile-item-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
 
-.mobile-avatar-emoji {
-    font-size: 1.2rem;
-}
 
-.mobile-item-name {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #fff;
-    margin: 0;
-}
 
-.mobile-item-shares {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin: 2px 0 0 0;
-}
 
-.mobile-item-stats {
-    text-align: right;
-}
 
-.mobile-item-price {
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: #fff;
-    margin: 0;
-}
 
-.mobile-item-change {
-    margin-top: 2px;
-}
 
-.mobile-empty-portfolio {
-    padding: 2rem;
-    text-align: center;
-    border-radius: 20px;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
 
 /* Mode Switch Mobile (Refined) */
-.mobile-mode-switch-container {
-    margin: 0.5rem 0 1.5rem 0;
-}
 
-.mobile-mode-switch {
-    display: flex;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 4px;
-    border-radius: 12px;
-    position: relative;
-    width: 100%;
-    height: 44px;
-    align-items: center;
-}
 
-.mobile-mode-btn {
-    flex: 1;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    font-weight: 800;
-    z-index: 1;
-}
 
-.mobile-mode-btn-active {
-    color: #000;
-}
 
-.mobile-mode-slider {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: calc(50% - 4px);
-    height: calc(100% - 8px);
-    background: var(--accent-neon);
-    border-radius: 8px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-.mobile-coming-soon {
-    font-size: 0.55rem;
-    opacity: 0.7;
-    display: block;
-}
 
-.mobile-detail-view {
-    padding: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
 
 @media (max-width: 768px) {
     .section-detail-card {

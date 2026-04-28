@@ -194,157 +194,26 @@
 }
 
 /* Mobile Styles */
-.mobile-container {
-    background-color: var(--bg-main);
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-}
 
-.mobile-main {
-    flex: 1;
-    padding: 1.5rem;
-    padding-bottom: 100px;
-    overflow-y: auto;
-}
 
-.mobile-detail-header {
-    margin-bottom: 1.5rem;
-}
 
-.mobile-title {
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin: 0;
-}
 
-.mobile-trade-id {
-    color: var(--accent-neon);
-    font-family: monospace;
-    font-size: 0.9rem;
-    font-weight: 700;
-    opacity: 0.8;
-}
 
-.mobile-asset-card {
-    padding: 1.25rem;
-    border-radius: 24px;
-    margin-bottom: 1rem;
-}
 
-.mobile-asset-row {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-}
 
-.mobile-asset-preview {
-    width: 60px;
-    height: 60px;
-    border-radius: 16px;
-    background: var(--surface-lighter);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
 
-.mobile-player-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
 
-.mobile-team-icon {
-    font-size: 2rem;
-}
 
-.mobile-asset-name {
-    font-size: 1.2rem;
-    font-weight: 800;
-    margin: 0;
-}
 
-.mobile-asset-type {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    margin: 2px 0 0 0;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
 
-.mobile-stats-card {
-    padding: 1.5rem;
-    border-radius: 24px;
-    margin-bottom: 1rem;
-}
 
-.mobile-stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
 
-.mobile-stat-row:last-child {
-    margin-bottom: 0;
-}
 
-.mobile-stat-label {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    font-weight: 600;
-}
 
-.mobile-stat-value {
-    font-weight: 700;
-    font-size: 1rem;
-}
 
-.mobile-divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.05);
-    margin: 1rem 0;
-}
 
-.mobile-stat-label-total {
-    font-weight: 800;
-    font-size: 1.1rem;
-}
 
-.mobile-stat-value-total {
-    font-weight: 800;
-    font-size: 1.3rem;
-    color: var(--accent-neon);
-}
 
-.mobile-time-card {
-    padding: 1.5rem;
-    border-radius: 24px;
-}
 
-.mobile-status-badge {
-    color: var(--accent-neon);
-    font-weight: 800;
-    font-size: 0.85rem;
-}
 
-.mobile-loading, .mobile-error {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: var(--text-muted);
-}
 
-.mobile-back-btn {
-    margin-top: 1rem;
-    padding: 0.75rem 2rem;
-    background: var(--accent-neon);
-    color: #000;
-    border: none;
-    border-radius: 12px;
-    font-weight: 800;
-}
