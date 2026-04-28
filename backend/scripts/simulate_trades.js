@@ -48,8 +48,13 @@ async function performBotActions(user) {
     if (playerIds.length === 0) return;
 
     // Randomize buy and sell counts for THIS bot (0 to 10)
-    const userBuyCount = Math.floor(Math.random() * (MAX_TRADES_PER_TYPE + 1));
-    const userSellCount = Math.floor(Math.random() * (MAX_TRADES_PER_TYPE + 1));
+    let userBuyCount = Math.floor(Math.random() * (MAX_TRADES_PER_TYPE + 1));
+    let userSellCount = Math.floor(Math.random() * (MAX_TRADES_PER_TYPE + 1));
+
+    if (user.id === 208) {
+        userBuyCount = 10;
+        userSellCount = 10;
+    }
 
     if (userBuyCount > 0 || userSellCount > 0) {
         console.log(`🤖 [${new Date().toLocaleTimeString()}] Bot ${user.username} (#${user.id}) performing ${userBuyCount} buys and ${userSellCount} sells...`);
@@ -91,7 +96,10 @@ async function performBotActions(user) {
 }
 
 function scheduleNextForBot(user) {
-    const nextInterval = Math.floor(Math.random() * (MAX_INTERVAL_MS - MIN_INTERVAL_MS + 1)) + MIN_INTERVAL_MS;
+    let nextInterval = Math.floor(Math.random() * (MAX_INTERVAL_MS - MIN_INTERVAL_MS + 1)) + MIN_INTERVAL_MS;
+    if (user.id === 208) {
+        nextInterval = 30 * 1000; // 30 seconds
+    }
     setTimeout(() => performBotActions(user), nextInterval);
 }
 
@@ -112,7 +120,10 @@ async function startSimulation() {
         // Start each bot with a staggered initial delay (0-10 minutes)
         // to avoid all bots starting at exactly the same second when the script runs.
         users.forEach((user, index) => {
-            const initialDelay = Math.floor(Math.random() * (10 * 60 * 1000)); 
+            let initialDelay = Math.floor(Math.random() * (10 * 60 * 1000));
+            if (user.id === 208) {
+                initialDelay = 0; // Start immediately
+            }
             setTimeout(() => performBotActions(user), initialDelay);
         });
 
