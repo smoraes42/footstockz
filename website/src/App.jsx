@@ -77,25 +77,34 @@ function App() {
                     icon={false}
                   />
                   <Routes>
-                    {/* Public routes */}
-                    <Route path="/" element={isMobile ? <LandingMobile /> : <LandingDesktop />} />
-                    <Route path="/login" element={<LoginDesktop />} />
-                    <Route path="/register" element={<RegisterDesktop />} />
-                    <Route path="/verify" element={<VerifyDesktop />} />
+                    {isMobile ? (
+                      <>
+                        <Route path="/" element={<LandingMobile />} />
+                        <Route path="*" element={<Navigate to="/" replace />} />
+                      </>
+                    ) : (
+                      <>
+                        {/* Public routes */}
+                        <Route path="/" element={<LandingDesktop />} />
+                        <Route path="/login" element={<LoginDesktop />} />
+                        <Route path="/register" element={<RegisterDesktop />} />
+                        <Route path="/verify" element={<VerifyDesktop />} />
 
-                    {/* Protected routes */}
-                    <Route path="/home" element={<ProtectedRoute><HomeDesktop /></ProtectedRoute>} />
-                    <Route path="/market" element={<ProtectedRoute><MarketDesktop /></ProtectedRoute>} />
-                    <Route path="/market/player/:playerId" element={<ProtectedRoute><PlayerMarketDesktop /></ProtectedRoute>} />
-                    <Route path="/market/team/:teamId" element={<ProtectedRoute><TeamMarketDetailDesktop /></ProtectedRoute>} />
-                    <Route path="/portfolio" element={<ProtectedRoute><PortfolioDesktop /></ProtectedRoute>} />
-                    <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardDesktop /></ProtectedRoute>} />
-                    <Route path="/profile" element={<ProtectedRoute><ProfileDesktop /></ProtectedRoute>} />
-                    <Route path="/profile/:userId" element={<ProtectedRoute><UserProfileDesktop /></ProtectedRoute>} />
-                    <Route path="/trades/:tradeId" element={<ProtectedRoute><TradeDetailDesktop /></ProtectedRoute>} />
+                        {/* Protected routes */}
+                        <Route path="/home" element={<ProtectedRoute><HomeDesktop /></ProtectedRoute>} />
+                        <Route path="/market" element={<ProtectedRoute><MarketDesktop /></ProtectedRoute>} />
+                        <Route path="/market/player/:playerId" element={<ProtectedRoute><PlayerMarketDesktop /></ProtectedRoute>} />
+                        <Route path="/market/team/:teamId" element={<ProtectedRoute><TeamMarketDetailDesktop /></ProtectedRoute>} />
+                        <Route path="/portfolio" element={<ProtectedRoute><PortfolioDesktop /></ProtectedRoute>} />
+                        <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardDesktop /></ProtectedRoute>} />
+                        <Route path="/profile" element={<ProtectedRoute><ProfileDesktop /></ProtectedRoute>} />
+                        <Route path="/profile/:userId" element={<ProtectedRoute><UserProfileDesktop /></ProtectedRoute>} />
+                        <Route path="/trades/:tradeId" element={<ProtectedRoute><TradeDetailDesktop /></ProtectedRoute>} />
 
-                    {/* 404 fallback */}
-                    <Route path="*" element={<Navigate to="/home" replace />} />
+                        {/* 404 fallback */}
+                        <Route path="*" element={<Navigate to="/home" replace />} />
+                      </>
+                    )}
                   </Routes>
                 </div>
               </Router>

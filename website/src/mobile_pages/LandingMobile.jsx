@@ -14,10 +14,9 @@ const LandingMobile = () => {
                 <nav className={styles['mobile-nav']}>
                     <div className={styles['mobile-nav-logo-box']}>
                         <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
-                        <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-nav-logo']} />
-                    </Link>
+                            <img src={fsLogo} alt="Futstocks Logo" className={styles['mobile-nav-logo']} />
+                        </Link>
                     </div>
-                    <Link to="/login" className={`${styles['mobile-nav-btn']} neon-button`}>Entrar</Link>
                 </nav>
 
                 {/* Hero Section Mobile */}
@@ -33,13 +32,16 @@ const LandingMobile = () => {
                         </div>
 
                         <p className={`${styles['mobile-hero-description']} fade-in-up delay-2`}>
-                            Ficha a tus jugadores favoritos y especula con su valor. El precio sube o baja según la <strong>oferta y demanda</strong> del mercado.
+                            La experiencia de Futstocks está diseñada exclusivamente para móviles. Descarga nuestra App Oficial para fichar a tus jugadores favoritos y empezar a jugar.
                         </p>
 
-                        <div className={`${styles['mobile-hero-cta']} fade-in-up delay-3`}>
-                            <Link to="/register" className={`${styles['mobile-hero-btn']} neon-button`}>
-                                Empezar a Jugar
-                            </Link>
+                        <div className={`${styles['mobile-hero-cta']} fade-in-up delay-3`} style={{ display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center', width: '100%' }}>
+                            <a href="#" className={`${styles['mobile-hero-btn']} neon-button`} style={{ width: '85%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontSize: '1.2em' }}>🍏</span> App Store
+                            </a>
+                            <a href="#" className={`${styles['mobile-hero-btn']} neon-button`} style={{ width: '85%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontSize: '1.2em' }}>▶️</span> Google Play
+                            </a>
                         </div>
                     </div>
                 </main>
