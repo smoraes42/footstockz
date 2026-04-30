@@ -378,7 +378,7 @@ const MarketScreen = () => {
           <FlatList
             data={teams}
             renderItem={({ item }) => (
-              <Link href={`/team/${item.id}` as any} asChild>
+              <Link href={`/(tabs)/team/${item.id}` as any} asChild>
                 <TouchableOpacity style={styles.playerCard}>
                   <View style={styles.playerInfo}>
                     <View style={styles.avatarPlaceholder}>

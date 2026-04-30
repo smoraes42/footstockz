@@ -13,7 +13,7 @@ const PortfolioScreen = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [kFactor, setKFactor] = useState(0.0001);
-  const [groupByTeam, setGroupByTeam] = useState(false);
+  const [activeTab, setActiveTab] = useState<'players' | 'indices'>('players');
   const [sortConfig, setSortConfig] = useState({ key: 'player_name', direction: 'asc' });
   const { socket, connected } = useSocket();
   const insets = useSafeAreaInsets();
@@ -130,15 +130,22 @@ const PortfolioScreen = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.dark.accentNeon} />
         }
       >
-        {/* Section Header */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>{groupByTeam ? 'Equipos' : 'Tus Traspasos'}</Text>
+        {/* Section Header - Selector */}
+        <View style={styles.selectorContainer}>
           <TouchableOpacity 
-            style={[styles.toggleBtn, groupByTeam && styles.activeToggleBtn]} 
-            onPress={() => setGroupByTeam(!groupByTeam)}
+            style={[styles.selectorBtn, activeTab === 'players' && styles.activeSelectorBtn]} 
+            onPress={() => setActiveTab('players')}
           >
-            <Text style={[styles.toggleBtnText, groupByTeam && styles.activeToggleText]}>
-              {groupByTeam ? 'Ver Jugadores' : 'Agrupar'}
+            <Text style={[styles.selectorText, activeTab === 'players' && styles.activeSelectorText]}>
+              Jugadores
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.selectorBtn, activeTab === 'indices' && styles.activeSelectorBtn]} 
+            onPress={() => setActiveTab('indices')}
+          >
+            <Text style={[styles.selectorText, activeTab === 'indices' && styles.activeSelectorText]}>
+              Índices
             </Text>
           </TouchableOpacity>
         </View>
@@ -180,38 +187,10 @@ const PortfolioScreen = () => {
           let rawHoldings = portfolio?.holdings || [];
           let displayData = [];
           
-          if (groupByTeam) {
-            const groups: any = {};
-            rawHoldings.forEach((h: any) => {
-              if (h.type === 'team') return; 
-              const team = h.team_name || 'Sin Equipo';
-              if (!groups[team]) {
-                groups[team] = {
-                  id: team,
-                  player_name: team, 
-                  shares_owned: 0,
-                  position_value: 0,
-                  variation_24h: 0,
-                  count: 0,
-                  type: 'player_group'
-                };
-              }
-              groups[team].shares_owned += h.shares_owned;
-              groups[team].position_value += h.position_value;
-              groups[team].variation_24h += h.variation_24h;
-              groups[team].count += 1;
-            });
-            
-            const groupedPlayers = Object.values(groups).map((g: any) => ({
-              ...g,
-              current_price: g.position_value / Math.max(g.shares_owned, 1),
-              variation_24h: g.variation_24h / Math.max(g.count, 1)
-            }));
-            
-            const dedicatedTeams = rawHoldings.filter((h: any) => h.type === 'team');
-            displayData = [...dedicatedTeams, ...groupedPlayers];
+          if (activeTab === 'players') {
+            displayData = rawHoldings.filter((h: any) => h.type !== 'team');
           } else {
-            displayData = [...rawHoldings];
+            displayData = rawHoldings.filter((h: any) => h.type === 'team');
           }
 
           displayData.sort((a, b) => {
@@ -252,7 +231,7 @@ const PortfolioScreen = () => {
                   <View>
                     <Text style={styles.playerName}>{h.player_name}</Text>
                     <Text style={styles.playerShares}>
-                      {isGroup ? `${h.count} Jugadores` : `${h.shares_owned.toFixed(4)} acciones`}
+                      {`${h.shares_owned.toFixed(4)} acciones`}
                     </Text>
                   </View>
                 </View>
@@ -266,11 +245,10 @@ const PortfolioScreen = () => {
             );
 
             if (isTeam) {
-              return <Link key={idx} href={`/team/${h.team_id}` as any} asChild>{CardContent}</Link>;
-            } else if (!isGroup) {
+              return <Link key={idx} href={`/(tabs)/team/${h.team_id}` as any} asChild>{CardContent}</Link>;
+            } else {
               return <Link key={idx} href={`/(tabs)/player/${h.player_id}` as any} asChild>{CardContent}</Link>;
             }
-            return <View key={idx}>{CardContent}</View>;
           });
         })()}
       </ScrollView>
@@ -283,11 +261,11 @@ const PortfolioScreen = () => {
         </View>
         <View style={[styles.barItem, styles.centerItem]}>
           <Text style={styles.barLabel}>CARTERA</Text>
-          <Text style={styles.barValue}>{((portfolio?.walletBalance + (portfolio?.holdings?.reduce((acc: number, h: any) => acc + h.position_value, 0) || 0)) - portfolio?.walletBalance).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</Text>
+          <Text style={styles.barValue}>{(portfolio?.holdings?.reduce((acc: number, h: any) => acc + Number(h.position_value || 0), 0) || 0).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</Text>
         </View>
         <View style={[styles.barItem, styles.rightItem]}>
           <Text style={styles.barLabel}>TOTAL</Text>
-          <Text style={styles.barValueTotal}>{(portfolio?.walletBalance + (portfolio?.holdings?.reduce((acc: number, h: any) => acc + h.position_value, 0) || 0)).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</Text>
+          <Text style={styles.barValueTotal}>{((Number(portfolio?.walletBalance) || 0) + (portfolio?.holdings?.reduce((acc: number, h: any) => acc + Number(h.position_value || 0), 0) || 0)).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -326,38 +304,31 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 100,
   },
-  sectionHeader: {
+  selectorContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 15,
+    marginHorizontal: 20,
+    marginBottom: 20,
     marginTop: 20,
-  },
-  toggleBtn: {
     backgroundColor: 'rgba(255,255,255,0.05)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    borderRadius: 12,
+    padding: 4,
+  },
+  selectorBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
   },
-  activeToggleBtn: {
-    backgroundColor: 'rgba(57,255,20,0.1)',
-    borderColor: Colors.dark.accentNeon,
+  activeSelectorBtn: {
+    backgroundColor: Colors.dark.accentNeon,
   },
-  toggleBtnText: {
+  selectorText: {
     color: Colors.dark.tabIconDefault,
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '700',
   },
-  activeToggleText: {
-    color: Colors.dark.accentNeon,
-  },
-  sectionTitle: {
-    color: Colors.dark.text,
-    fontSize: 20,
-    fontWeight: '900',
+  activeSelectorText: {
+    color: '#000',
   },
   holdingCard: {
     flexDirection: 'row',

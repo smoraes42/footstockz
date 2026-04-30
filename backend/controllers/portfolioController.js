@@ -162,7 +162,7 @@ export const getPortfolioHistory = async (req, res) => {
 
             for (const row of teamHoldingsRows) {
                 const [teamPlayers] = await connection.query('SELECT initial_price FROM players WHERE team_id = ?', [row.team_id]);
-                const teamPriceSpot = teamPlayers.reduce((sum, p) => sum + p.initial_price, 0);
+                const teamPriceSpot = teamPlayers.reduce((sum, p) => sum + parseFloat(p.initial_price), 0);
                 const v = (teamPriceSpot / k) * (1 - Math.exp(-k * row.shares));
                 holdingsValue += v;
             }
@@ -184,6 +184,6 @@ export const getPortfolioHistory = async (req, res) => {
         }
     } catch (error) {
         console.error('Error fetching portfolio history:', error);
-        res.status(500).json({ error: 'Failed to retrieve portfolio history.' });
+        res.status(500).json({ error: 'Failed to retrieve portfolio history.', details: error.message, stack: error.stack });
     }
 };

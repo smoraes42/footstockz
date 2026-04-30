@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Dimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LineChart } from 'react-native-wagmi-charts';
 import { Image } from 'expo-image';
 import Colors from '@/constants/Colors';
 import { getPlayerHistory, getPortfolio, getPlayerById, marketBuy, marketSell, getConfig } from '../../../services/api';
 import { useSocket } from '../../../context/SocketContext';
+import PlayerChart from '../../../components/PlayerChart';
 
 
 const { width } = Dimensions.get('window');
@@ -33,6 +33,10 @@ const PlayerDetails = () => {
   const [portfolio, setPortfolio] = useState<any>(null);
   const [priceHistory, setPriceHistory] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'buy' | 'sell'>('buy');
+  const [timeframe, setTimeframe] = useState('line');
+  const [chartLoading, setChartLoading] = useState(false);
+  const [historyCache, setHistoryCache] = useState<Record<string, any[]>>({});
+  const timeframeRef = useRef('line');
   
   const [buyQty, setBuyQty] = useState('');
   const [buyTotal, setBuyTotal] = useState('');
@@ -48,13 +52,70 @@ const PlayerDetails = () => {
   const [lastPrice, setLastPrice] = useState<number | null>(null);
 
 
+  // Simple direct mapping — no fake grid padding.
+  // The chart's PlayerChart component handles the windowing internally.
+  const formatHistory = useCallback((history: any[], _tf: string, currentSpotPrice?: number) => {
+    const result = (history || []).map((h: any) => ({
+      timestamp: new Date(h.time || h.bucket_time || h.timestamp).getTime(),
+      value: parseFloat(h.price || h.close) || 0,
+    })).filter((p: any) => p.timestamp > 0 && p.value > 0);
+
+    result.sort((a: any, b: any) => a.timestamp - b.timestamp);
+
+    if (currentSpotPrice != null && currentSpotPrice > 0) {
+      result.push({ timestamp: Date.now(), value: currentSpotPrice });
+    }
+    return result;
+  }, []);
+
+  const handleTimeframeChange = async (tf: string) => {
+    setTimeframe(tf);
+    timeframeRef.current = tf;
+
+    if (historyCache[tf]) {
+      setPriceHistory(formatHistory(historyCache[tf], tf, player?.price));
+      return;
+    }
+
+    setChartLoading(true);
+    try {
+      const data = await getPlayerHistory(id as string, tf);
+      setHistoryCache(prev => ({ ...prev, [tf]: data || [] }));
+      setPriceHistory(formatHistory(data || [], tf, player?.price));
+    } catch (err) {
+      console.error('Failed to fetch history for timeframe:', tf, err);
+    } finally {
+      setChartLoading(false);
+    }
+  };
+
+  /** Fetch older data (before cursor) and prepend to cache. Returns count of new points. */
+  const handleFetchMore = async (before: string): Promise<number> => {
+    const tf = timeframeRef.current;
+    try {
+      const newData = await getPlayerHistory(id as string, tf, before);
+      if (!newData || newData.length === 0) return 0;
+
+      setHistoryCache(prev => {
+        const existing = prev[tf] || [];
+        const combined = [...newData, ...existing];
+        setPriceHistory(formatHistory(combined, tf, player?.price));
+        return { ...prev, [tf]: combined };
+      });
+
+      return newData.length;
+    } catch (err) {
+      console.error('FetchMore error:', err);
+      return 0;
+    }
+  };
+
   const fetchData = useCallback(async () => {
     if (!id) return;
     try {
       setError('');
-      console.log('Fetching details for player:', id);
       const [history, port, playerData, config] = await Promise.all([
-        getPlayerHistory(id),
+        getPlayerHistory(id as string, 'line'), // Always start with 'line' on first load
         getPortfolio(),
         getPlayerById(id),
         getConfig()
@@ -64,16 +125,13 @@ const PlayerDetails = () => {
         setKFactor(config.PRICE_IMPACT_FACTOR);
       }
 
-      if (history) {
-        const formattedHistory = (history || []).map((h: any) => ({
-          timestamp: new Date(h.time).getTime(),
-          value: parseFloat(h.price)
-        }));
-        setPriceHistory(formattedHistory);
-      }
-
+      // Seed the cache with the 'line' data
+      setHistoryCache({ line: history || [] });
       setPortfolio(port);
       setPlayer(playerData);
+
+      // Render line chart immediately
+      setPriceHistory(formatHistory(history || [], 'line', playerData.price));
 
     } catch (err: any) {
       console.error('Fetch error:', err);
@@ -81,7 +139,7 @@ const PlayerDetails = () => {
     } finally {
       setFetching(false);
     }
-  }, [id]);
+  }, [id, formatHistory]);
 
   useEffect(() => {
     fetchData();
@@ -95,19 +153,38 @@ const PlayerDetails = () => {
 
     const handlePriceUpdate = (data: any) => {
       if (data.playerId === parseInt(id as string)) {
-        // Update price history (add new point)
-        setPriceHistory(prev => {
-          const newPoint = {
-            timestamp: new Date(data.timestamp).getTime(),
-            value: parseFloat(data.price)
-          };
-          const updated = [...prev, newPoint];
-          return updated.slice(-100); // Keep last 100 points
-        });
-
         // Update player state to reflect new price and change
         setPlayer((prev: any) => prev ? { ...prev, price: data.price, change: parseFloat(data.change || 0) } : null);
         setLastPrice(data.price);
+
+        // Patch the history state atomically using the ref (no stale closure)
+        setPriceHistory(prev => {
+          if (!prev.length) return prev;
+          const tf = timeframeRef.current;
+          const bucketMs: Record<string, number> = { 'line': 5000, '5m': 300000, '30m': 1800000, '1h': 3600000, '2h': 7200000 };
+          const bMs = bucketMs[tf] || 300000;
+          const newTs = new Date(data.timestamp).getTime();
+          const thisBucket = Math.floor(newTs / bMs) * bMs;
+          
+          const updated = [...prev];
+          const lastPoint = updated[updated.length - 1];
+
+          if (lastPoint && lastPoint.timestamp === thisBucket) {
+              updated[updated.length - 1] = {
+                  ...lastPoint,
+                  value: parseFloat(data.price),
+                  isFiller: false
+              };
+          } else if (lastPoint && thisBucket > lastPoint.timestamp) {
+              updated.push({
+                  timestamp: thisBucket,
+                  value: parseFloat(data.price),
+                  isFiller: false
+              });
+              if (updated.length > 200) updated.shift();
+          }
+          return updated;
+        });
       }
     };
 
@@ -239,20 +316,40 @@ const PlayerDetails = () => {
           </View>
         </View>
 
-        {/* Chart */}
+        {/* Chart Section */}
         <View style={styles.chartSection}>
-          {priceHistory.length > 0 ? (
-            <LineChart.Provider data={priceHistory}>
-              <LineChart width={width} height={200}>
-                <LineChart.Path color={Colors.dark.accentNeon} width={3} />
-                <LineChart.CursorCrosshair color={Colors.dark.accentNeon} />
-              </LineChart>
-            </LineChart.Provider>
-          ) : (
-            <View style={styles.chartPlaceholder}>
-              <Text style={styles.placeholderText}>Sin historial de precios</Text>
+          {/* Timeframe Selector */}
+          <View style={styles.tfRow}>
+            {['line', '5m', '30m', '1h', '2h'].map((tf) => (
+              <TouchableOpacity
+                key={tf}
+                onPress={() => handleTimeframeChange(tf)}
+                style={[styles.tfBtn, timeframe === tf && styles.tfBtnActive]}
+              >
+                <Text style={[styles.tfBtnText, timeframe === tf && styles.tfBtnTextActive]}>
+                  {tf.toUpperCase()}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Chart */}
+          <View style={{ minHeight: 270, position: 'relative' }}>
+            <View style={{ opacity: chartLoading ? 0.3 : 1 }}>
+              <PlayerChart
+                data={priceHistory}
+                timeframe={timeframe}
+                width={width}
+                onFetchMore={handleFetchMore}
+              />
             </View>
-          )}
+
+            {chartLoading && (
+              <View style={styles.chartLoader}>
+                <ActivityIndicator color={Colors.dark.accentNeon} size="large" />
+              </View>
+            )}
+          </View>
         </View>
 
 
@@ -502,15 +599,51 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   chartSection: {
-    height: 240,
     backgroundColor: 'rgba(255,255,255,0.02)',
     borderRadius: 24,
     marginBottom: 30,
-    justifyContent: 'center',
     overflow: 'hidden',
-    // Removed marginLeft to center better
+    paddingTop: 16,
+    paddingBottom: 8,
+    marginHorizontal: -20,
+  },
+  tfRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+  },
+  tfBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  tfBtnActive: {
+    backgroundColor: Colors.dark.accentNeon,
+    borderColor: Colors.dark.accentNeon,
+  },
+  tfBtnText: {
+    color: Colors.dark.tabIconDefault,
+    fontWeight: '700',
+    fontSize: 12,
+  },
+  tfBtnTextActive: {
+    color: '#000',
+    fontWeight: '900',
+  },
+  chartLoader: {
+    position: 'absolute',
+    top: 0, left: 0, right: 0, bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   chartPlaceholder: {
+    height: 240,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   placeholderText: {

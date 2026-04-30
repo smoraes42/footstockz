@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import Colors from '@/constants/Colors';
@@ -9,6 +10,7 @@ const LeaderboardScreen = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const router = useRouter();
 
   const fetchLeaderboardData = useCallback(async () => {
     try {
@@ -33,7 +35,10 @@ const LeaderboardScreen = () => {
   };
 
   const renderUser = ({ item, index }: { item: any, index: number }) => (
-    <View style={styles.userCard}>
+    <TouchableOpacity 
+      style={styles.userCard}
+      onPress={() => router.push(`/(tabs)/user/${item.id}` as any)}
+    >
       <View style={styles.rankSection}>
         <Text style={[styles.rankText, index < 3 && styles.topRankText]}>
           {index + 1}
@@ -49,12 +54,12 @@ const LeaderboardScreen = () => {
         </View>
       </View>
       <View style={styles.statsSection}>
-        <Text style={styles.equityText}>{item.portfolio_value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</Text>
+        <Text style={styles.equityText}>***** €</Text>
         <Text style={[styles.changeText, { color: item.change24h >= 0 ? Colors.dark.accentNeon : Colors.dark.error }]}>
           {item.change24h >= 0 ? '+' : ''}{item.change24h.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

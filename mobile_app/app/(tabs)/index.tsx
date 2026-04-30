@@ -2,12 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Dimensions, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { LineChart } from 'react-native-wagmi-charts';
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 import Colors from '@/constants/Colors';
 import { getPlayers, getPortfolio, getPortfolioHistory, BASE_URL } from '../../services/api';
 import { useSocket } from '../../context/SocketContext';
+import { AnimatedPriceText } from '../../components/AnimatedPriceText';
+import PlayerChart from '../../components/PlayerChart';
 
 
 const { width } = Dimensions.get('window');
@@ -18,21 +19,16 @@ const Home = () => {
   const [activeTimeframe, setActiveTimeframe] = useState('D');
   const [players, setPlayers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [chartLoading, setChartLoading] = useState(false);
 
   const [refreshing, setRefreshing] = useState(false);
   const { socket, connected } = useSocket();
 
 
-  const fetchData = useCallback(async (timeframe = activeTimeframe) => {
+  const fetchHistory = useCallback(async (timeframe = activeTimeframe, showLoading = true) => {
     try {
-      const [portData, histData, playersData] = await Promise.all([
-        getPortfolio(),
-        getPortfolioHistory(timeframe),
-        getPlayers({ sort_by: 'price', sort_dir: 'desc', limit: 30 })
-      ]);
-
-      setPortfolio(portData);
-      
+      if (showLoading) setChartLoading(true);
+      const histData = await getPortfolioHistory(timeframe);
       let formattedHistory = histData.map((h: any) => ({
         timestamp: new Date(h.time).getTime(),
         value: parseFloat(h.value)
@@ -163,7 +159,22 @@ const Home = () => {
       }
 
       setHistory(formattedHistory);
+    } catch (error) {
+      console.error('Error fetching history data:', error);
+    } finally {
+      setChartLoading(false);
+    }
+  }, [portfolio]);
 
+  const fetchData = useCallback(async () => {
+    try {
+      const [portData, playersData] = await Promise.all([
+        getPortfolio(),
+        getPlayers({ sort_by: 'price', sort_dir: 'desc', limit: 30 })
+      ]);
+
+      setPortfolio(portData);
+      
       const playersArray = playersData.data || playersData;
       setPlayers(playersArray.slice(0, 10));
     } catch (error) {
@@ -172,11 +183,15 @@ const Home = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [activeTimeframe]);
+  }, []);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    fetchHistory(activeTimeframe);
+  }, [activeTimeframe, portfolio?.walletCreatedAt, fetchHistory]);
 
   // WebSocket Price Updates
   useEffect(() => {
@@ -197,7 +212,12 @@ const Home = () => {
         
         const updatedHoldings = prevPortfolio.holdings.map((h: any) => {
           if (h.player_id === data.playerId) {
-            return { ...h, current_price: data.price, position_value: h.shares * data.price };
+            // Simplified linear update for index.tsx socket (since we don't have kFactor here readily)
+            // It will be re-fetched on trade_executed anyway
+            const shares = Number(h.shares_owned) || 0;
+            const price = Number(data.price) || 0;
+            const approxNewValue = shares > 0 ? (price * shares) : 0; // fallback approx
+            return { ...h, current_price: price, position_value: approxNewValue };
           }
           return h;
         });
@@ -206,8 +226,14 @@ const Home = () => {
       });
     };
 
+    let debounceTimer: NodeJS.Timeout;
+
     const handleTradeExecuted = (data: any) => {
-      fetchData();
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        fetchData();
+        fetchHistory(activeTimeframe, false);
+      }, 2000);
     };
 
     socket.on('price_update', handlePriceUpdate);
@@ -223,12 +249,11 @@ const Home = () => {
   const onRefresh = () => {
     setRefreshing(true);
     fetchData();
+    fetchHistory(activeTimeframe);
   };
 
   const handleTimeframeChange = (tf: string) => {
     setActiveTimeframe(tf);
-    setLoading(true);
-    fetchData(tf);
   };
 
   if (loading && !refreshing) {
@@ -239,8 +264,9 @@ const Home = () => {
     );
   }
 
-  const totalValue = portfolio?.walletBalance + (portfolio?.holdings?.reduce((acc: number, h: any) => acc + h.position_value, 0) || 0);
-
+  const walletBal = Number(portfolio?.walletBalance) || 0;
+  const holdingsVal = portfolio?.holdings?.reduce((acc: number, h: any) => acc + Number(h.position_value || 0), 0) || 0;
+  const totalValue = walletBal + holdingsVal;
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -266,15 +292,15 @@ const Home = () => {
         {/* Wealth Summary Card (From Portfolio) */}
         <View style={styles.summaryCard}>
           <Text style={styles.summaryLabel}>VALOR TOTAL</Text>
-          <Text style={styles.totalValueDisplay}>{totalValue?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</Text>
+          <AnimatedPriceText value={totalValue} style={styles.totalValueDisplay} />
           <View style={styles.balanceRow}>
             <View style={styles.balanceItem}>
               <Text style={styles.balanceLabel}>CARTERA</Text>
-              <Text style={styles.balanceValue}>{(totalValue - portfolio?.walletBalance)?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</Text>
+              <AnimatedPriceText value={holdingsVal} style={styles.balanceValue} />
             </View>
             <View style={styles.balanceItem}>
               <Text style={styles.balanceLabel}>SALDO</Text>
-              <Text style={styles.balanceValue}>{portfolio?.walletBalance?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</Text>
+              <AnimatedPriceText value={walletBal} style={styles.balanceValue} />
             </View>
           </View>
         </View>
@@ -295,29 +321,27 @@ const Home = () => {
             </View>
           </View>
           
-          {history.length > 0 ? (
-            <LineChart.Provider data={history}>
-              <View style={styles.chartDetails}>
-                <LineChart.PriceText 
-                    style={styles.chartPriceText} 
+          <View style={{ minHeight: 230, position: 'relative' }}>
+            {history.length > 0 ? (
+              <View style={{ opacity: chartLoading ? 0.3 : 1 }}>
+                <PlayerChart 
+                  data={history} 
+                  timeframe={activeTimeframe} 
+                  width={width} 
                 />
-                <LineChart.DatetimeText style={styles.chartDateText} />
               </View>
-              <LineChart width={width - 40} height={180}>
-                <LineChart.Path color={Colors.dark.accentNeon} width={3}>
-                    <LineChart.Gradient />
-                    <LineChart.Tooltip 
-                        at={0} 
-                    />
-                </LineChart.Path>
-                <LineChart.CursorCrosshair color={Colors.dark.accentNeon} />
-              </LineChart>
-            </LineChart.Provider>
-          ) : (
-            <View style={styles.noHistory}>
-              <Text style={styles.noHistoryText}>Sin datos históricos suficientes</Text>
-            </View>
-          )}
+            ) : !chartLoading ? (
+              <View style={styles.noHistory}>
+                <Text style={styles.noHistoryText}>Sin datos históricos suficientes</Text>
+              </View>
+            ) : null}
+
+            {chartLoading && (
+              <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator color={Colors.dark.accentNeon} size="large" />
+              </View>
+            )}
+          </View>
         </View>
 
         {/* Players List Section */}

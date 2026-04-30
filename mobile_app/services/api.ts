@@ -78,7 +78,10 @@ export const getPortfolioHistory = async (timeframe = '1D') => {
         headers: await getAuthHeaders(),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || data.error || 'Error fetching portfolio history');
+    if (!res.ok) {
+        const errorMsg = data.details ? `${data.error}: ${data.details}` : (data.message || data.error || 'Error fetching portfolio history');
+        throw new Error(errorMsg);
+    }
     return data;
 };
 
@@ -128,6 +131,16 @@ export const getMe = async () => {
     return res.json();
 };
 
+export const getPublicProfile = async (userId: string | number) => {
+    const res = await fetch(`${API_BASE}/${userId}/public-profile`, {
+        method: 'GET',
+        headers: await getAuthHeaders(),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || data.error || 'Failed to fetch public profile');
+    return data;
+};
+
 /**
  * Notifies the backend to invalidate the session.
  * Always call this before clearing local storage so the JWT is properly revoked.
@@ -144,8 +157,10 @@ export const logoutUser = async (): Promise<void> => {
     }
 };
 
-export const getPlayerHistory = async (playerId: number | string) => {
-    const res = await fetch(`${API_URL}/api/v1/players/${playerId}/history`, {
+export const getPlayerHistory = async (playerId: number | string, timeframe = 'line', before?: string) => {
+    const params = new URLSearchParams({ timeframe });
+    if (before) params.append('before', before);
+    const res = await fetch(`${API_URL}/api/v1/players/${playerId}/history?${params.toString()}`, {
         method: 'GET',
         headers: await getAuthHeaders(),
     });
@@ -261,8 +276,10 @@ export const getTeamById = async (id: number | string) => {
     return data;
 };
 
-export const getTeamHistory = async (id: number | string) => {
-    const res = await fetch(`${API_URL}/api/v1/teams/${id}/history`, {
+export const getTeamHistory = async (id: number | string, timeframe = 'line', before?: string) => {
+    const params = new URLSearchParams({ timeframe });
+    if (before) params.append('before', before);
+    const res = await fetch(`${API_URL}/api/v1/teams/${id}/history?${params.toString()}`, {
         method: 'GET',
         headers: await getAuthHeaders(),
     });
